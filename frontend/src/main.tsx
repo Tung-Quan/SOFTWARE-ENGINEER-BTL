@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom/client';
 
-import './config/firebase';
 import './index.css';
 
 import App from './app';

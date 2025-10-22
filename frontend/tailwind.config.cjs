@@ -22,10 +22,10 @@ module.exports = {
         black: '#000000',
 
         // PROJECT THEME
-        // Primary
-        primary: '#FBD905',
-        'primary-300': '#FFEE82',
-        'primary-700': '#F9AF18',
+
+        primary: '#0B2878',
+        'primary-300': '#6D7EAE',
+        'primary-700': '#082060',
 
         // Secondary
         secondary: '#5C5B51',

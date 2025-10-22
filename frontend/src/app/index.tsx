@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { ToastContainer } from 'react-toastify';
 
@@ -33,7 +34,8 @@ const AppRouter = () => {
 
 const App = () => {
   return (
-    <>
+    // this gg client id is temporary data
+    <GoogleOAuthProvider clientId={'hello123'}>
       <AppRouter />
       <ToastContainer
         position="top-right"
@@ -47,7 +49,7 @@ const App = () => {
         pauseOnHover
         theme="light"
       />
-    </>
+    </GoogleOAuthProvider>
   );
 };
 
