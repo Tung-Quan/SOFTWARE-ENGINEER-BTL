@@ -10,7 +10,14 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   base: './',
-  plugins: [tanstackRouter(), react(), viteTsconfigPaths()],
+  plugins: [
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+    }),
+    react(),
+    viteTsconfigPaths(),
+  ],
   server: {
     port: 3000,
     allowedHosts: [],
