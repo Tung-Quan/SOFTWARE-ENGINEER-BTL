@@ -2,6 +2,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { ToastContainer } from 'react-toastify';
 
+import { GOOGLE_OAUTH_CLIENT_ID } from '@/config/env';
 import { useAuthStore } from '@/stores';
 
 import { routeTree } from '../routeTree.gen';
@@ -13,7 +14,7 @@ const router = createRouter({
   },
 });
 
-declare module '@tanstack/react-router' {
+declare module '@tanstack/react-router' { 
   interface Register {
     router: typeof router;
   }
@@ -35,7 +36,7 @@ const AppRouter = () => {
 const App = () => {
   return (
     // this gg client id is temporary data
-    <GoogleOAuthProvider clientId={'hello123'}>
+    <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
       <AppRouter />
       <ToastContainer
         position="top-right"

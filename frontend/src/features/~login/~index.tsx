@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import Lottie from 'lottie-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,14 +14,14 @@ import BachKhoaLogo from '../../assets/bachkhoa.png';
 import { WaveLeft, WaveRight, WaveRightRotated } from './wave';
 
 export const Route = createFileRoute('/login/')({
-  // beforeLoad: () => {
-  //   const { isAuthenticated } = useAuthStore.getState();
-  //   if (isAuthenticated) {
-  //     throw redirect({
-  //       to: '/',
-  //     });
-  //   }
-  // },
+  beforeLoad: () => {
+    const { isAuthenticated } = useAuthStore.getState();
+    if (isAuthenticated) {
+      throw redirect({
+        to: '/',
+      });
+    }
+  },
   component: RouteComponent,
 });
 
@@ -41,7 +41,7 @@ function RouteComponent() {
       storage.setItem('token', accessToken);
       setToken(accessToken);
       setIsAuthenticated(true);
-      navigate({ to: '/' });
+      navigate({ to: '/dashboard' });
     } catch (error: unknown) {
       handleAxiosError(error, (message: string) => {
         toast.error(message);
