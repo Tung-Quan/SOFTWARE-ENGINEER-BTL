@@ -5,9 +5,9 @@ import { useAuthStore } from '@/stores';
 export const Route = createFileRoute('/_private')({
   beforeLoad: () => {
     const { isAuthenticated } = useAuthStore.getState();
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       throw redirect({
-        to: '/',
+        to: '/login',
       });
     }
   },
