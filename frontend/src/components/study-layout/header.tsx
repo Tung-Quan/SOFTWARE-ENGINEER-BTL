@@ -28,7 +28,7 @@ const Header = ({
   toggleSidebarDesktop,
   toggleSidebarMobile,
 }: HeaderProps) => {
-  const { setToken, setIsAuthenticated, isAuthenticated } = useAuthStore();
+  const { logout: authLogout, isAuthenticated } = useAuthStore();
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,10 +38,16 @@ const Header = ({
     try {
       setLoading(true);
       // await AuthService.logout();
+      
+      // Use store's logout to clear auth state
+      authLogout();
+      
+      // Clear any legacy token storage
       storage.removeItem('token');
-      setIsAuthenticated(false);
-      setToken('');
+      
+      // Clear user state
       setUser(null);
+      
       navigate({ to: '/login' });
     } catch (error: unknown) {
       handleAxiosError(error, (message: string) => {
@@ -66,7 +72,7 @@ const Header = ({
         className="relative hidden size-8 cursor-pointer fill-tertiary xl:flex"
       />
       <div className="flex flex-1" />
-      {isAuthenticated && user ? (
+      {isAuthenticated ? (
         <>
           <div
             className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-solid border-tertiary p-1 xl:h-12 xl:w-80 xl:justify-between"
