@@ -1,5 +1,6 @@
+import { Listbox, Transition } from '@headlessui/react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 
 import { mockCourses, dataCourses } from '@/components/data/~mockCourses';
 import { Play as PlayIcon } from '@/components/icons';
@@ -22,7 +23,7 @@ function CourseDetailsComponent() {
   const [courseDetail, setCourseDetail] = useState(originalCourseDetail);
   const [activeTab, setActiveTab] = useState<string>('');
   //TODO: PHẢI SET CHANGING LẠI LÀ FALSE KHÔNG LÀ NGAY CẢ SINH VIÊN CŨNG THẤY
-  const [changing, setChanging] = useState(true);
+  const [changing, setChanging] = useState(false);
 
   // Refs for scroll spy - now using string keys from content types
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -66,13 +67,24 @@ function CourseDetailsComponent() {
     note: NoteIcon,
     reference: LinkIcon,
     submission: SubmissionIcon,
-    bookrReference: ReferenceBookIcon,
+    bookReference: ReferenceBookIcon,
   };
 
-  // Read persisted zustand store from localStorage. Persisted shape may be { state: { ... } }
+  // Small list used for the type picker (label + id). Icons are resolved via `typeToIconMap`.
+  const categoryTypes: Array<{ id: string; label: string }> = [
+    { id: 'material', label: 'Tài liệu' },
+    { id: 'movie', label: 'Bản ghi hình' },
+    { id: 'reference', label: 'Đường dẫn' },
+    { id: 'note', label: 'Ghi chú' },
+    { id: 'bookReference', label: 'Sách tham khảo' },
+    { id: 'submission', label: 'Nộp bài' },
+    { id: 'introduction', label: 'Giới thiệu' },
+  ];
+
   const rawUserStore = localStorage.getItem('userStore');
   const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
   const State = userStore?.state ?? null;
+  const userLocalStore = State.user?? null;
   // Set initial active tab when courseDetail loads
   useEffect(() => {
     if (courseDetail?.content && courseDetail.content.length > 0 && !activeTab) {
@@ -137,7 +149,7 @@ function CourseDetailsComponent() {
 
   // Map PDFs placed in `src/data/` to URLs (Vite)
   // If your PDF files are in `frontend/src/data/`, this will resolve them to URLs at build time.
-  const pdfModules = import.meta.glob('../../../data/*', { as: 'url', eager: true }) as Record<string, string>;
+  const pdfModules = import.meta.glob('../../../data/*', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
   const getAssetUrl = (filename?: string) => {
     if (!filename) return '';
     const found = Object.entries(pdfModules).find(([k]) => k.endsWith(filename));
@@ -172,9 +184,9 @@ function CourseDetailsComponent() {
         // Use any[] to avoid TS errors when merging different data shapes
         const updatedContent: any[] = [...(courseDetail.content || [])];
         const prev = updatedContent[index] as any;
-        
-        let newData = { ...(prev?.data || {}), [dataField]: value };
-        
+
+        const newData = { ...(prev?.data || {}), [dataField]: value };
+
         // Special handling for submission status changes
         if (prev?.type === 'submission' && dataField === 'status') {
           // When changing to submitted/graded, ensure submittedFile exists
@@ -195,7 +207,7 @@ function CourseDetailsComponent() {
             delete newData.feedback;
           }
         }
-        
+
         updatedContent[index] = {
           ...prev,
           data: newData,
@@ -226,19 +238,47 @@ function CourseDetailsComponent() {
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <Icon className="size-5 text-gray-600" />
                       </div>
-                      <select
-                        title="Chọn loại danh mục"
-                        className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                        value={item.type}
-                        onChange={(e) => handleUpdateItem('type', e.target.value)}
-                      >
-                        <option value="introduction">Giới thiệu</option>
-                        <option value="material">Tài liệu</option>
-                        <option value="movie">Video</option>
-                        <option value="note">Ghi chú</option>
-                        <option value="reference">Tham khảo</option>
-                        <option value="submission">Bài nộp</option>
-                      </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {/* current icon */}
+                            {(() => {
+                              // const ct = categoryTypes.find((c) => c.id === item.type);
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 shrink-0 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option
+                                  key={type.id}
+                                  value={type.id}
+                                  className={({ active }) => `relative cursor-pointer select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 shrink-0 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                         <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -298,19 +338,42 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <select
-                      title="Chọn loại danh mục"
-                      className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                      value={item.type}
-                      onChange={(e) => handleUpdateItem('type', e.target.value)}
-                    >
-                      <option value="introduction">Giới thiệu</option>
-                      <option value="material">Tài liệu</option>
-                      <option value="movie">Video</option>
-                      <option value="note">Ghi chú</option>
-                      <option value="reference">Tham khảo</option>
-                      <option value="submission">Bài nộp</option>
-                    </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {(() => {
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -334,9 +397,6 @@ function CourseDetailsComponent() {
                   <Icon className="size-6 text-blue-600" />
                   <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
                 </div>
-                <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-                  Tải tất cả
-                </button>
               </div>
             )}
             <div className="space-y-4">
@@ -357,7 +417,7 @@ function CourseDetailsComponent() {
                       placeholder="Nhập tiêu đề tài liệu"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">
                       Mô tả
@@ -431,9 +491,12 @@ function CourseDetailsComponent() {
                           <a
                             href={getAssetUrl(item.data.document.source)}
                             download
-                            className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                            className="inline-flex items-center gap-2 rounded-lg bg-[#0329E9] px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                           >
-                            Tải về
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="shrink-0">
+                              <path d="M15.8337 7.5H12.5003V2.5H7.50033V7.5H4.16699L10.0003 13.3333L15.8337 7.5ZM4.16699 15V16.6667H15.8337V15H4.16699Z" fill="white"/>
+                            </svg>
+                            <span>Tải tài liệu</span>
                           </a>
                         </div>
                       </div>
@@ -476,19 +539,42 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <select
-                      title="Chọn loại danh mục"
-                      className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                      value={item.type}
-                      onChange={(e) => handleUpdateItem('type', e.target.value)}
-                    >
-                      <option value="introduction">Giới thiệu</option>
-                      <option value="material">Tài liệu</option>
-                      <option value="movie">Video</option>
-                      <option value="note">Ghi chú</option>
-                      <option value="reference">Tham khảo</option>
-                      <option value="submission">Bài nộp</option>
-                    </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {(() => {
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -529,7 +615,7 @@ function CourseDetailsComponent() {
                     placeholder="Nhập tiêu đề video"
                   />
                 </div>
-                
+
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">
                     Mô tả video
@@ -610,19 +696,42 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <select
-                      title="Chọn loại danh mục"
-                      className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                      value={item.type}
-                      onChange={(e) => handleUpdateItem('type', e.target.value)}
-                    >
-                      <option value="introduction">Giới thiệu</option>
-                      <option value="material">Tài liệu</option>
-                      <option value="movie">Video</option>
-                      <option value="note">Ghi chú</option>
-                      <option value="reference">Tham khảo</option>
-                      <option value="submission">Bài nộp</option>
-                    </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {(() => {
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -664,7 +773,7 @@ function CourseDetailsComponent() {
                       placeholder="Nhập tiêu đề bài tập"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">
                       Mô tả bài tập
@@ -754,19 +863,42 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <select
-                      title="Chọn loại danh mục"
-                      className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                      value={item.type}
-                      onChange={(e) => handleUpdateItem('type', e.target.value)}
-                    >
-                      <option value="introduction">Giới thiệu</option>
-                      <option value="material">Tài liệu</option>
-                      <option value="movie">Video</option>
-                      <option value="note">Ghi chú</option>
-                      <option value="reference">Tham khảo</option>
-                      <option value="submission">Bài nộp</option>
-                    </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {(() => {
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -808,7 +940,7 @@ function CourseDetailsComponent() {
                       placeholder="Nhập tiêu đề tài liệu tham khảo"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">
                       URL tham khảo
@@ -884,19 +1016,42 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <select
-                      title="Chọn loại danh mục"
-                      className="appearance-none rounded-md border border-gray-300 bg-white py-2 pl-11 pr-10 text-sm font-medium focus:border-blue-500 focus:outline-none"
-                      value={item.type}
-                      onChange={(e) => handleUpdateItem('type', e.target.value)}
-                    >
-                      <option value="introduction">Giới thiệu</option>
-                      <option value="material">Tài liệu</option>
-                      <option value="movie">Video</option>
-                      <option value="note">Ghi chú</option>
-                      <option value="reference">Tham khảo</option>
-                      <option value="submission">Bài nộp</option>
-                    </select>
+                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <div className="relative w-64">
+                        <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span className="flex items-center">
+                            {(() => {
+                              const IconComp = typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                            })()}
+                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                            {categoryTypes.map((type) => {
+                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              return (
+                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                  {({ selected }) => (
+                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
+                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
+                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              );
+                            })}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -1049,34 +1204,7 @@ function CourseDetailsComponent() {
             ) : (
               <>
                 {item.data.status === 'submitted' && item.data.submittedFile && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
-                  <div className="flex size-10 items-center justify-center rounded bg-red-50">
-                    <PaperIcon className="size-6 text-red-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-800">{item.data.submittedFile.name}</p>
-                    <p className="text-sm text-red-600">Submitted at {item.data.submittedFile.submittedAt}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <CalendarIcon className="size-4" />
-                    <span>
-                      Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
-                    </span>
-                  </div>
-                  <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-                    Chỉnh sửa bài nộp
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {item.data.status === 'graded' && item.data.submittedFile && (
-              <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
+                  <div className="space-y-4">
                     <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
                       <div className="flex size-10 items-center justify-center rounded bg-red-50">
                         <PaperIcon className="size-6 text-red-600" />
@@ -1086,44 +1214,71 @@ function CourseDetailsComponent() {
                         <p className="text-sm text-red-600">Submitted at {item.data.submittedFile.submittedAt}</p>
                       </div>
                     </div>
-                  </div>
-                </div>
-
-                {item.data.feedback && (
-                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                    <p className="mb-1 text-sm font-semibold text-gray-700">Nhận xét từ giảng viên:</p>
-                    <p className="text-sm text-gray-600">{item.data.feedback}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <CalendarIcon className="size-4" />
+                        <span>
+                          Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
+                        </span>
+                      </div>
+                      <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                        Chỉnh sửa bài nộp
+                      </button>
+                    </div>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <CalendarIcon className="size-4" />
-                    <span>
-                      Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
-                    </span>
-                  </div>
-                  <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-                    Chỉnh sửa bài nộp
-                  </button>
-                </div>
-              </div>
-            )}
+                {item.data.status === 'graded' && item.data.submittedFile && (
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
+                          <div className="flex size-10 items-center justify-center rounded bg-red-50">
+                            <PaperIcon className="size-6 text-red-600" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-800">{item.data.submittedFile.name}</p>
+                            <p className="text-sm text-red-600">Submitted at {item.data.submittedFile.submittedAt}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-            {item.data.status === 'not-submitted' && (
-              <div className="space-y-4">
-                <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
-                  <p className="mb-4 text-gray-500">Chưa có bài nộp</p>
-                  <button className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700">
-                    + Thêm bài nộp
-                  </button>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CalendarIcon className="size-4" />
-                  <span>Hạn chót: {item.data.dueDate}</span>
-                </div>
-              </div>
-            )}
+                    {item.data.feedback && (
+                      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <p className="mb-1 text-sm font-semibold text-gray-700">Nhận xét từ giảng viên:</p>
+                        <p className="text-sm text-gray-600">{item.data.feedback}</p>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <CalendarIcon className="size-4" />
+                        <span>
+                          Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
+                        </span>
+                      </div>
+                      <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                        Chỉnh sửa bài nộp
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {item.data.status === 'not-submitted' && (
+                  <div className="space-y-4">
+                    <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+                      <p className="mb-4 text-gray-500">Chưa có bài nộp</p>
+                      <button className="rounded-lg bg-[#0329E9] px-6 py-2 font-medium text-white transition hover:bg-blue-700">
+                        + Thêm bài nộp
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <CalendarIcon className="size-4" />
+                      <span>Hạn chót: {item.data.dueDate}</span>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </>
@@ -1145,7 +1300,7 @@ function CourseDetailsComponent() {
           </p>
           <button
             onClick={() => navigate({ to: '/dashboard' })}
-            className="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700"
+            className="rounded-lg bg-[#0329E9] px-6 py-3 text-white transition hover:bg-blue-700"
           >
             Quay lại Dashboard
           </button>
@@ -1214,7 +1369,7 @@ function CourseDetailsComponent() {
             </div>
 
 
-            {State && !State.isStudent && (
+            {userLocalStore && userLocalStore.isManager && (
               <div className="absolute bottom-4 right-4">
                 <label htmlFor="editing-toggle" className="flex cursor-pointer items-center gap-2 text-white">
                   <input
@@ -1256,7 +1411,7 @@ function CourseDetailsComponent() {
                       >
                         <div className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${isActive ? 'border-blue-600' : 'border-gray-300'
                           }`}>
-                          <div className={`size-2 rounded-full transition ${isActive ? 'bg-blue-600' : 'bg-transparent'}`} />
+                          <div className={`size-2 rounded-full transition ${isActive ? 'bg-[#0329E9]' : 'bg-transparent'}`} />
                         </div>
                         <Icon className={`size-5 transition-colors ${isActive ? 'text-blue-600' : 'text-gray-600'}`} />
                         <span className={`font-medium transition-colors ${isActive ? 'text-blue-600' : 'text-gray-700'}`}>
@@ -1279,7 +1434,7 @@ function CourseDetailsComponent() {
                       onClick={() => {
                         // Tạo danh mục mới ngay lập tức
                         const defaultType = 'material';
-                        
+
                         // Tạo dữ liệu mặc định đầy đủ theo từng loại
                         const getDefaultData = (type: string): any => {
                           switch (type) {

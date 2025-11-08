@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { User } from '@/types';
+import { userInfo } from 'os';
 
 type UserStore = {
   user: User | null;
@@ -16,7 +17,7 @@ export const useUserStore = create<UserStore>()(
       setUser: (user) => {
         set(() => ({ user: user }));
       },
-      isStudent: false,
+      isStudent: true,
       lastUpdatedDate: '',
       balance: 0,
     }),
