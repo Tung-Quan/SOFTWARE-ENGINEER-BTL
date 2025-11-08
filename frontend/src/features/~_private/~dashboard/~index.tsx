@@ -9,7 +9,7 @@ import ChevronsLeft from '@/components/icons/double-chevron';
 import ChevronsRight from '@/components/icons/double-chevron';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
-import { mockCourses, type Course } from '@/data/~mockCourses';
+import { mockCourses, type Course } from '@/components/data/~mockCourses';
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
   return (
     <div
       className="flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+      style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
       onClick={() =>
         navigate({ to: '/course/$id', params: { id: course.id } })
       }
