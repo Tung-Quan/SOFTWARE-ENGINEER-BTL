@@ -4,7 +4,7 @@ import ArrowLeft from '@/components/icons/arrow-left';
 import StudyLayout from '@/components/study-layout';
 import { mockCourses } from '@/data/~mockCourses';
 
-export const Route = createFileRoute('/_private/course/$courseId')({
+export const Route = createFileRoute('/_private/course/$id/')({
   component: CourseDetailsComponent,
 });
 
@@ -103,15 +103,15 @@ function CourseDetailsComponent() {
             </h2>
             <div className="space-y-3 text-gray-600">
               <p>
-                <span className="font-semibold">Mã khóa học:</span>{' '}
+                <span className="font-semibold">Mã khóa học:</span>{" "}
                 {course.code}
               </p>
               <p>
-                <span className="font-semibold">Tên khóa học:</span>{' '}
+                <span className="font-semibold">Tên khóa học:</span>{" "}
                 {course.title}
               </p>
               <p>
-                <span className="font-semibold">Giảng viên:</span>{' '}
+                <span className="font-semibold">Giảng viên:</span>{" "}
                 {course.instructor}
               </p>
             </div>
