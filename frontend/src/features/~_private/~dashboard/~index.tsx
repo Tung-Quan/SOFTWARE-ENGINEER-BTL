@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import boxSvg from '@/assets/box.svg';
+import { mockCourses, type Course } from '@/components/data/~mockCourses';
 import ChevronLeft from '@/components/icons/arrow-left';
 import ChevronRight from '@/components/icons/arrow-right';
 import ChevronDown from '@/components/icons/chevron';
@@ -9,10 +10,9 @@ import ChevronsLeft from '@/components/icons/double-chevron';
 import ChevronsRight from '@/components/icons/double-chevron';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
-import { mockCourses, type Course } from '@/components/data/~mockCourses';
 
 const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   return (
     <div

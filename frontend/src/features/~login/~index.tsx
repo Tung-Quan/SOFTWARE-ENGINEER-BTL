@@ -7,9 +7,9 @@ import CustomGoogleButton from '@/components/button/google-button';
 import handleAxiosError from '@/helpers/handle-axios-error';
 import { useAuthStore, useUserStore } from '@/stores';
 
+import mockupUsers from '../../../public/mockupUsers.json';
 import overseaStudent from '../../assets/animations/Uy24MEqryK.json';
 import BachKhoaLogo from '../../assets/bachkhoa.png';
-import mockupUsers from '../../../public/mockupUsers.json';
 
 import { WaveLeft, WaveRight, WaveRightRotated } from './wave';
 
@@ -85,7 +85,7 @@ function RouteComponent() {
         picture: null,
         dateOfBirth: null,
         phone: null,
-        isManager: foundUser.role === 'coordinator',
+        isManager: foundUser.role === 'coordinator' || foundUser.role === 'tutor',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         address: '',

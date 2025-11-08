@@ -131,69 +131,49 @@ export const dataCourses = [{
       type: 'material',
       title: 'Material',
       data: {
-        documents: [
-          {
-            id: 'a1',
-            title: '01_Ch1 Introduction_2025',
-            description: 'Thiết kế bài tập về nhà chương 1: Giới thiệu về ngôn ngữ lập trình',
-            dueDate: '2024-09-15',
-            source: '01_Ch1_Introduction_2025.pdf',
-          },
-          {
-            id: 'a2',
-            title: '02_Ch2 Software Processes',
-            description: 'Bài tập về nhà chương 2: Quy trình phát triển phần mềm',
-            dueDate: '2024-09-22',
-            source: '02_Ch2_Software_Processes.pdf',
-          }
-        ]
+        document: {
+          id: 'a1',
+          title: '01_Ch1 Introduction_2025',
+          description: 'Thiết kế bài tập về nhà chương 1: Giới thiệu về ngôn ngữ lập trình',
+          dueDate: '2024-09-15',
+          source: '01_Ch1_Introduction_2025.pdf',
+        }
       }
     },
     {
       type: 'movie',
       title: 'Movie 1',
       data: {
-        videos: [
-          {
-            id: 'm1',
-            title: 'Giới thiệu về ngôn ngữ lập trình',
-            description: 'Video giới thiệu các khái niệm cơ bản về ngôn ngữ lập trình.',
-            url: 'https://www.youtube.com/watch?v=Kcp48dcm4QA',
-          }
-        ]
+        video: {
+          id: 'm1',
+          title: 'Giới thiệu về ngôn ngữ lập trình',
+          description: 'Video giới thiệu các khái niệm cơ bản về ngôn ngữ lập trình.',
+          url: 'https://www.youtube.com/watch?v=Kcp48dcm4QA',
+        }
       }
     },
     {
       type: 'note',
       title: 'Note for Assignment 1',
       data: {
-        assignments: [
-          {
-            id: 'd1',
-            title: 'Bài tập về nhà 1: Cài đặt ngôn ngữ lập trình đơn giản',
-            description: 'In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\tComposition: An identifier must start with a letter(A- Z or a - z) or an underscore().Subsequent characters can include letters, digits(0 - 9), or underscores.\n\tCase Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n\tLength: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n\tKeywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.',
-            dueDate: '2024-10-01',
-            source: 'assignment1.pdf',
-          }
-        ]
+        assignment: {
+          id: 'd1',
+          title: 'Bài tập về nhà 1: Cài đặt ngôn ngữ lập trình đơn giản',
+          description: 'In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\tComposition: An identifier must start with a letter(A- Z or a - z) or an underscore().Subsequent characters can include letters, digits(0 - 9), or underscores.\n\tCase Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n\tLength: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n\tKeywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.',
+          dueDate: '2024-10-01',
+          source: 'assignment1.pdf',
+        }
       }
     },
     {
       type: 'reference',
       title: 'Reference',
       data: {
-        links: [
-          {
-            id: 'l1',
-            title: 'Giới thiệu về ngôn ngữ lập trình',
-            url: 'https://example.com/intro-to-programming-languages',
-          },
-          {
-            id: 'l2',
-            title: 'Các kiểu dữ liệu cơ bản',
-            url: 'https://example.com/basic-data-types',
-          }
-        ]
+        link: {
+          id: 'l1',
+          title: 'Giới thiệu về ngôn ngữ lập trình',
+          url: 'https://example.com/intro-to-programming-languages',
+        }
       }
     },
     {
@@ -238,18 +218,11 @@ export const dataCourses = [{
       type: 'reference',
       title: 'Reference 2',
       data: {
-        links: [
-          {
-            id: 'l3',
-            title: 'Các cấu trúc dữ liệu cơ bản',
-            url: 'https://example.com/basic-data-structures',
-          },
-          {
-            id: 'l4',
-            title: 'Giới thiệu về giải thuật',
-            url: 'https://example.com/introduction-to-algorithms',
-          }
-        ]
+        link: {
+          id: 'l3',
+          title: 'Các cấu trúc dữ liệu cơ bản',
+          url: 'https://example.com/basic-data-structures',
+        }
       }
     }
   ]
