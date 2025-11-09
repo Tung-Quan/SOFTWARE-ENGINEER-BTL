@@ -66,6 +66,7 @@ import MessengerIcon from './messenger';
 import MessengerColor from './messenger-color';
 import MessengerWhite from './messenger-white';
 import Next from './next';
+import NotificationIcon from './notification';
 import Paper from './paper';
 import Pin from './pin';
 import Play from './play';
@@ -228,4 +229,5 @@ export {
   ViewListIcon,
   RemoveHighlightIcon,
   HighlightIcon,
+  NotificationIcon,
 };

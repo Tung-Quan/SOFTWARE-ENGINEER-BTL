@@ -11,7 +11,13 @@
 import { Route as rootRouteImport } from './features/~__root'
 import { Route as PrivateRouteImport } from './features/~_private'
 import { Route as IndexRouteImport } from './features/~index'
+import { Route as SystemMonitoringIndexRouteImport } from './features/~system-monitoring/~index'
+import { Route as ScheduleIndexRouteImport } from './features/~schedule/~index'
+import { Route as RegistrationHistoryIndexRouteImport } from './features/~registration-history/~index'
+import { Route as RegisterSessionIndexRouteImport } from './features/~register-session/~index'
 import { Route as LoginIndexRouteImport } from './features/~login/~index'
+import { Route as LibraryIndexRouteImport } from './features/~library/~index'
+import { Route as LibraryQueryIndexRouteImport } from './features/~library/~$query/~index'
 import { Route as PrivateDashboardIndexRouteImport } from './features/~_private/~dashboard/~index'
 import { Route as PrivateCourseIndexRouteImport } from './features/~_private/~course/~index'
 import { Route as PrivateCourseIdIndexRouteImport } from './features/~_private/~course/~$id/~index'
@@ -25,9 +31,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemMonitoringIndexRoute = SystemMonitoringIndexRouteImport.update({
+  id: '/system-monitoring/',
+  path: '/system-monitoring/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleIndexRoute = ScheduleIndexRouteImport.update({
+  id: '/schedule/',
+  path: '/schedule/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistrationHistoryIndexRoute =
+  RegistrationHistoryIndexRouteImport.update({
+    id: '/registration-history/',
+    path: '/registration-history/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const RegisterSessionIndexRoute = RegisterSessionIndexRouteImport.update({
+  id: '/register-session/',
+  path: '/register-session/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryQueryIndexRoute = LibraryQueryIndexRouteImport.update({
+  id: '/library/$query/',
+  path: '/library/$query/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateDashboardIndexRoute = PrivateDashboardIndexRouteImport.update({
@@ -48,46 +85,98 @@ const PrivateCourseIdIndexRoute = PrivateCourseIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/library': typeof LibraryIndexRoute
   '/login': typeof LoginIndexRoute
+  '/register-session': typeof RegisterSessionIndexRoute
+  '/registration-history': typeof RegistrationHistoryIndexRoute
+  '/schedule': typeof ScheduleIndexRoute
+  '/system-monitoring': typeof SystemMonitoringIndexRoute
   '/course': typeof PrivateCourseIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
+  '/library/$query': typeof LibraryQueryIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/library': typeof LibraryIndexRoute
   '/login': typeof LoginIndexRoute
+  '/register-session': typeof RegisterSessionIndexRoute
+  '/registration-history': typeof RegistrationHistoryIndexRoute
+  '/schedule': typeof ScheduleIndexRoute
+  '/system-monitoring': typeof SystemMonitoringIndexRoute
   '/course': typeof PrivateCourseIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
+  '/library/$query': typeof LibraryQueryIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_private': typeof PrivateRouteWithChildren
+  '/library/': typeof LibraryIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/register-session/': typeof RegisterSessionIndexRoute
+  '/registration-history/': typeof RegistrationHistoryIndexRoute
+  '/schedule/': typeof ScheduleIndexRoute
+  '/system-monitoring/': typeof SystemMonitoringIndexRoute
   '/_private/course/': typeof PrivateCourseIndexRoute
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
+  '/library/$query/': typeof LibraryQueryIndexRoute
   '/_private/course/$id/': typeof PrivateCourseIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/course' | '/dashboard' | '/course/$id'
+  fullPaths:
+    | '/'
+    | '/library'
+    | '/login'
+    | '/register-session'
+    | '/registration-history'
+    | '/schedule'
+    | '/system-monitoring'
+    | '/course'
+    | '/dashboard'
+    | '/library/$query'
+    | '/course/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/course' | '/dashboard' | '/course/$id'
+  to:
+    | '/'
+    | '/library'
+    | '/login'
+    | '/register-session'
+    | '/registration-history'
+    | '/schedule'
+    | '/system-monitoring'
+    | '/course'
+    | '/dashboard'
+    | '/library/$query'
+    | '/course/$id'
   id:
     | '__root__'
     | '/'
     | '/_private'
+    | '/library/'
     | '/login/'
+    | '/register-session/'
+    | '/registration-history/'
+    | '/schedule/'
+    | '/system-monitoring/'
     | '/_private/course/'
     | '/_private/dashboard/'
+    | '/library/$query/'
     | '/_private/course/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivateRoute: typeof PrivateRouteWithChildren
+  LibraryIndexRoute: typeof LibraryIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  RegisterSessionIndexRoute: typeof RegisterSessionIndexRoute
+  RegistrationHistoryIndexRoute: typeof RegistrationHistoryIndexRoute
+  ScheduleIndexRoute: typeof ScheduleIndexRoute
+  SystemMonitoringIndexRoute: typeof SystemMonitoringIndexRoute
+  LibraryQueryIndexRoute: typeof LibraryQueryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -106,11 +195,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/system-monitoring/': {
+      id: '/system-monitoring/'
+      path: '/system-monitoring'
+      fullPath: '/system-monitoring'
+      preLoaderRoute: typeof SystemMonitoringIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule/': {
+      id: '/schedule/'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof ScheduleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registration-history/': {
+      id: '/registration-history/'
+      path: '/registration-history'
+      fullPath: '/registration-history'
+      preLoaderRoute: typeof RegistrationHistoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register-session/': {
+      id: '/register-session/'
+      path: '/register-session'
+      fullPath: '/register-session'
+      preLoaderRoute: typeof RegisterSessionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login/': {
       id: '/login/'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/$query/': {
+      id: '/library/$query/'
+      path: '/library/$query'
+      fullPath: '/library/$query'
+      preLoaderRoute: typeof LibraryQueryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private/dashboard/': {
@@ -155,7 +286,13 @@ const PrivateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivateRoute: PrivateRouteWithChildren,
+  LibraryIndexRoute: LibraryIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  RegisterSessionIndexRoute: RegisterSessionIndexRoute,
+  RegistrationHistoryIndexRoute: RegistrationHistoryIndexRoute,
+  ScheduleIndexRoute: ScheduleIndexRoute,
+  SystemMonitoringIndexRoute: SystemMonitoringIndexRoute,
+  LibraryQueryIndexRoute: LibraryQueryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

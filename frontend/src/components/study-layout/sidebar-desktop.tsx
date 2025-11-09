@@ -3,6 +3,11 @@ import { ReactNode, useMemo, SVGProps } from 'react';
 
 // import { HomeIcon } from '@/components/icons';
 
+const rawUserStore = localStorage.getItem('userStore');
+const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+const State = userStore?.state ?? null;
+const userLocalStore = State.user ?? null;
+
 type IconProps = SVGProps<SVGSVGElement>;
 // Icon cho "Khóa học"
 const IconKhoaHoc = (props: IconProps) => (
@@ -218,19 +223,23 @@ const SidebarDesktop = ({ opened }: SidebarDesktopProps) => {
             />
           </Item>
 
-          <Item
-            opened={opened}
-            name="Giám sát hệ thống"
-            route="/system-monitoring"
-            current={router.location.pathname}
-          >
-            {/* QUAN TRỌNG: Icon này dùng 'stroke', không dùng 'fill'.
+          {userLocalStore && userLocalStore.isManager && (
+
+            <Item
+              opened={opened}
+              name="Giám sát hệ thống"
+              route="/system-monitoring"
+              current={router.location.pathname}
+            >
+
+              {/* QUAN TRỌNG: Icon này dùng 'stroke', không dùng 'fill'.
         Hãy đổi className thành 'stroke-white' và 'stroke-tertiary'.
-      */}
-            <IconGiamSat
-              className={`${router.location.pathname.startsWith('/system-monitoring') ? 'stroke-white' : 'stroke-tertiary group-hover:stroke-white'} size-6 duration-200 ease-in-out `}
-            />
-          </Item>
+               */}
+              <IconGiamSat
+                className={`${router.location.pathname.startsWith('/system-monitoring') ? 'stroke-white' : 'stroke-tertiary group-hover:stroke-white'} size-6 duration-200 ease-in-out `}
+              />
+            </Item>
+          )}
         </div>
       </div>
     </div>

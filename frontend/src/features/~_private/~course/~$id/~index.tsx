@@ -153,7 +153,27 @@ function CourseDetailsComponent() {
   const getAssetUrl = (filename?: string) => {
     if (!filename) return '';
     const found = Object.entries(pdfModules).find(([k]) => k.endsWith(filename));
-    return found ? found[1] : `@/src/data/${filename}`;
+    const val: any = found ? found[1] : `@/src/data/${filename}`;
+
+    // Normalize possible module shapes to a string URL.
+    if (val == null) return '';
+    if (typeof val === 'string') return val;
+    // Vite may return modules or Response-like objects in some configs — handle common cases.
+    if (typeof val === 'object') {
+      // Common ESM default export
+      if ('default' in val && typeof val.default === 'string') return val.default;
+      // If it's a Response object, use its url
+      if (typeof (val as Response).url === 'string') return (val as Response).url;
+      // If it has a 'url' property
+      if ('url' in val && typeof val.url === 'string') return val.url;
+      // Fallback to string coercion
+      try {
+        return String(val);
+      } catch {
+        return '';
+      }
+    }
+    return String(val);
   };
 
   const renderSectionContent = (item: any, index: number) => {
@@ -439,6 +459,7 @@ function CourseDetailsComponent() {
                       Hạn nộp
                     </label>
                     <input
+                      aria-label="Due date"
                       type="date"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.document?.dueDate || ''}
@@ -795,6 +816,7 @@ function CourseDetailsComponent() {
                       Hạn nộp
                     </label>
                     <input
+                      aria-label="assignment"
                       type="date"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.assignment?.dueDate || ''}
@@ -1100,6 +1122,7 @@ function CourseDetailsComponent() {
                     Trạng thái bài nộp
                   </label>
                   <select
+                    aria-label="Status"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     value={item.data.status || 'not-submitted'}
                     onChange={(e) => handleUpdateData('status', e.target.value)}
@@ -1115,6 +1138,7 @@ function CourseDetailsComponent() {
                     Hạn chót
                   </label>
                   <input
+                    aria-label="Due Date"
                     type="date"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     value={item.data.dueDate || ''}

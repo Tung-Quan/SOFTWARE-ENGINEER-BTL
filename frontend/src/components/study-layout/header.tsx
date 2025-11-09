@@ -4,10 +4,12 @@ import { toast } from 'react-toastify';
 
 import {
   Next,
+  NotificationIcon,
   ProfileIcon,
   SidebarToggleIcon,
   SignOut,
 } from '@/components/icons';
+import ChatPopup from '@/components/study-layout/chat-popup';
 // import vndFormat from '@/helpers/currency-format';
 import handleAxiosError from '@/helpers/handle-axios-error';
 import { useAuthStore } from '@/stores';
@@ -31,6 +33,7 @@ const Header = ({
   const { logout: authLogout, isAuthenticated } = useAuthStore();
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
+  const [chatOpened, setChatOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -74,6 +77,20 @@ const Header = ({
       <div className="flex flex-1" />
       {isAuthenticated ? (
         <>
+          {/* Notification/Chat Icon */}
+          <div
+            className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
+            onClick={() => setChatOpened(!chatOpened)}
+            title="ChatToggle"
+          >
+            <NotificationIcon className="size-6" />
+            {/* Badge for unread messages (optional) */}
+            <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+              {/* sau Này bổ sung logic để lấy ra số lượng tin nhắn chưa đọcta */}
+              3
+            </span>
+          </div>
+
           <div
             className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-solid border-tertiary p-1 xl:h-12 xl:w-80 xl:justify-between"
             onClick={() => setDropdownOpened(!dropdownOpened)}
@@ -135,6 +152,9 @@ const Header = ({
           Đăng nhập
         </Link>
       )}
+
+      {/* Chat Popup */}
+      <ChatPopup isOpen={chatOpened} onClose={() => setChatOpened(false)} />
     </div>
   );
 };
