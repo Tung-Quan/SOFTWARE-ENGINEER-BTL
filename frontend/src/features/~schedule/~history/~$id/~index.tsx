@@ -196,7 +196,7 @@ function RouteComponent() {
               </div>
 
               {/* Cột phải */}
-              <div className="space-y-6">
+              {current.status === 'cancelled' && (<div className="space-y-6">
                 <FormTextarea
                   label="Lý do từ chối:"
                   id="declineReason"
@@ -205,7 +205,7 @@ function RouteComponent() {
                   rows={10}
                   disabled
                 />
-              </div>
+              </div>)}
             </div>
           </div>
         </div>
