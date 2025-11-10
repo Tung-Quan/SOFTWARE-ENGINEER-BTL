@@ -42,7 +42,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
     <div className="mb-6 flex items-center justify-between gap-3">
       <div className="flex flex-1 items-center gap-3">
         <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
-          <Icon className="size-6 text-blue-600" />
+          <Icon className="size-6 text-[#0329E9]" />
         </div>
         <input
           type="text"

@@ -346,7 +346,7 @@ function CourseDetailsComponent() {
               <div className="mb-6 flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
-                    <Icon className="size-6 text-blue-600" />
+                    <Icon className="size-6 text-[#0329E9]" />
                   </div>
                   <input
                     type="text"
@@ -416,7 +416,7 @@ function CourseDetailsComponent() {
             ) : (
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Icon className="size-6 text-blue-600" />
+                  <Icon className="size-6 text-[#0329E9]" />
                   <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
                 </div>
               </div>
@@ -988,7 +988,7 @@ function CourseDetailsComponent() {
                         href={item.data.link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                        className="flex items-center gap-2 text-sm text-[#0329E9] hover:underline"
                       >
                         <LinkIcon className="size-4" />
                         {item.data.link.title || item.data.link.url}
@@ -1005,8 +1005,8 @@ function CourseDetailsComponent() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 rounded-lg p-4 transition hover:bg-blue-50"
                     >
-                      <LinkIcon className="size-5 text-blue-600" />
-                      <span className="font-medium text-blue-600">
+                      <LinkIcon className="size-5 text-[#0329E9]" />
+                      <span className="font-medium text-[#0329E9]">
                         {item.data.link.title}
                       </span>
                     </a>
@@ -1235,7 +1235,7 @@ function CourseDetailsComponent() {
                   </button>
                   <Link
                     to={("/course/" + id + "/" + ((item.title || '').replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase())) as any}
-                    className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+                    className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
                   >
                     Xem bài nộp
                   </Link>
@@ -1451,12 +1451,12 @@ function CourseDetailsComponent() {
                         onClick={() => scrollToSection(sectionKey)}
                         className={`relative ${isFirst ? 'mt-2' : 'mt-8'} flex w-full items-center gap-3 pl-3 text-left transition-colors`}
                       >
-                        <div className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${isActive ? 'border-blue-600' : 'border-gray-300'
+                        <div className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${isActive ? 'border-[#0329E9]' : 'border-gray-300'
                           }`}>
                           <div className={`size-2 rounded-full transition ${isActive ? 'bg-[#0329E9]' : 'bg-transparent'}`} />
                         </div>
-                        <Icon className={`size-5 transition-colors ${isActive ? 'text-blue-600' : 'text-gray-600'}`} />
-                        <span className={`font-medium transition-colors ${isActive ? 'text-blue-600' : 'text-gray-700'}`}>
+                        <Icon className={`size-5 transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-600'}`} />
+                        <span className={`font-medium transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-700'}`}>
                           {item.title}
                         </span>
                       </button>
@@ -1644,7 +1644,7 @@ function CourseDetailsComponent() {
         {/* Course statistics */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
-            <div className="mb-2 text-3xl font-bold text-blue-600">
+            <div className="mb-2 text-3xl font-bold text-[#0329E9]">
               {course.stats.documents}
             </div>
             <div className="text-sm font-medium text-gray-600">

@@ -13,5 +13,10 @@
     "email": "coordinator@gmail.com",
     "password": "coordinator123",
     "role": "coordinator"
+  },
+  {
+    "email": "chairman@gmail.com",
+    "password": "chairman123",
+    "role": "chairman"
   }
 ]

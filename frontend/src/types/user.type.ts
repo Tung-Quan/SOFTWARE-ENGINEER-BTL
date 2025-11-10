@@ -9,6 +9,8 @@ export type User = {
   email: string;
   phone: string | null;
   isManager: boolean;
+  isChairman: boolean;
+  statisticalPermission: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;

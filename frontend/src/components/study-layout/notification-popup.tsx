@@ -190,7 +190,7 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+                className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-[#0329E9] transition hover:bg-blue-50"
                 title="Đánh dấu tất cả là đã đọc"
               >
                 <CheckIcon />
@@ -232,7 +232,7 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
                     {/* Dot indicator for unread */}
                     <div className="mt-1">
                       {!notif.isRead ? (
-                        <div className="size-2.5 rounded-full bg-blue-600" />
+                        <div className="size-2.5 rounded-full bg-[#0329E9]" />
                       ) : (
                         <div className="size-2.5" />
                       )}
@@ -266,7 +266,7 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
         {/* Footer */}
         <div className="border-t border-gray-200 p-3">
           <button
-            className="w-full rounded-lg py-2 text-center text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+            className="w-full rounded-lg py-2 text-center text-sm font-medium text-[#0329E9] transition hover:bg-blue-50"
             onClick={() => {
               // Navigate to full notifications page
               console.log('See all notifications');

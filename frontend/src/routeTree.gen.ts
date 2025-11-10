@@ -12,12 +12,16 @@ import { Route as rootRouteImport } from './features/~__root'
 import { Route as PrivateRouteImport } from './features/~_private'
 import { Route as IndexRouteImport } from './features/~index'
 import { Route as SystemMonitoringIndexRouteImport } from './features/~system-monitoring/~index'
+import { Route as StatisticalIndexRouteImport } from './features/~statistical/~index'
 import { Route as ScheduleIndexRouteImport } from './features/~schedule/~index'
 import { Route as RegistrationHistoryIndexRouteImport } from './features/~registration-history/~index'
 import { Route as RegisterSessionIndexRouteImport } from './features/~register-session/~index'
 import { Route as LoginIndexRouteImport } from './features/~login/~index'
 import { Route as LibraryIndexRouteImport } from './features/~library/~index'
+import { Route as StatisticalReportsIndexRouteImport } from './features/~statistical/~reports/~index'
+import { Route as StatisticalOverviewIndexRouteImport } from './features/~statistical/~overview/~index'
 import { Route as LibraryQueryIndexRouteImport } from './features/~library/~$query/~index'
+import { Route as PrivateProfileIndexRouteImport } from './features/~_private/~profile/~index'
 import { Route as PrivateDashboardIndexRouteImport } from './features/~_private/~dashboard/~index'
 import { Route as PrivateCourseIndexRouteImport } from './features/~_private/~course/~index'
 import { Route as PrivateCourseIdIndexRouteImport } from './features/~_private/~course/~$id/~index'
@@ -38,6 +42,11 @@ const IndexRoute = IndexRouteImport.update({
 const SystemMonitoringIndexRoute = SystemMonitoringIndexRouteImport.update({
   id: '/system-monitoring/',
   path: '/system-monitoring/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticalIndexRoute = StatisticalIndexRouteImport.update({
+  id: '/statistical/',
+  path: '/statistical/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleIndexRoute = ScheduleIndexRouteImport.update({
@@ -66,10 +75,26 @@ const LibraryIndexRoute = LibraryIndexRouteImport.update({
   path: '/library/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatisticalReportsIndexRoute = StatisticalReportsIndexRouteImport.update({
+  id: '/statistical/reports/',
+  path: '/statistical/reports/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticalOverviewIndexRoute =
+  StatisticalOverviewIndexRouteImport.update({
+    id: '/statistical/overview/',
+    path: '/statistical/overview/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LibraryQueryIndexRoute = LibraryQueryIndexRouteImport.update({
   id: '/library/$query/',
   path: '/library/$query/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateProfileIndexRoute = PrivateProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => PrivateRoute,
 } as any)
 const PrivateDashboardIndexRoute = PrivateDashboardIndexRouteImport.update({
   id: '/dashboard/',
@@ -118,10 +143,14 @@ export interface FileRoutesByFullPath {
   '/register-session': typeof RegisterSessionIndexRoute
   '/registration-history': typeof RegistrationHistoryIndexRoute
   '/schedule': typeof ScheduleIndexRoute
+  '/statistical': typeof StatisticalIndexRoute
   '/system-monitoring': typeof SystemMonitoringIndexRoute
   '/course': typeof PrivateCourseIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
+  '/profile': typeof PrivateProfileIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
+  '/statistical/overview': typeof StatisticalOverviewIndexRoute
+  '/statistical/reports': typeof StatisticalReportsIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
   '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
@@ -135,10 +164,14 @@ export interface FileRoutesByTo {
   '/register-session': typeof RegisterSessionIndexRoute
   '/registration-history': typeof RegistrationHistoryIndexRoute
   '/schedule': typeof ScheduleIndexRoute
+  '/statistical': typeof StatisticalIndexRoute
   '/system-monitoring': typeof SystemMonitoringIndexRoute
   '/course': typeof PrivateCourseIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
+  '/profile': typeof PrivateProfileIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
+  '/statistical/overview': typeof StatisticalOverviewIndexRoute
+  '/statistical/reports': typeof StatisticalReportsIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
   '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
@@ -154,10 +187,14 @@ export interface FileRoutesById {
   '/register-session/': typeof RegisterSessionIndexRoute
   '/registration-history/': typeof RegistrationHistoryIndexRoute
   '/schedule/': typeof ScheduleIndexRoute
+  '/statistical/': typeof StatisticalIndexRoute
   '/system-monitoring/': typeof SystemMonitoringIndexRoute
   '/_private/course/': typeof PrivateCourseIndexRoute
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
+  '/_private/profile/': typeof PrivateProfileIndexRoute
   '/library/$query/': typeof LibraryQueryIndexRoute
+  '/statistical/overview/': typeof StatisticalOverviewIndexRoute
+  '/statistical/reports/': typeof StatisticalReportsIndexRoute
   '/_private/course/$id/': typeof PrivateCourseIdIndexRoute
   '/_private/course/$id/$name/': typeof PrivateCourseIdNameIndexRoute
   '/_private/course/$id/members/': typeof PrivateCourseIdMembersIndexRoute
@@ -173,10 +210,14 @@ export interface FileRouteTypes {
     | '/register-session'
     | '/registration-history'
     | '/schedule'
+    | '/statistical'
     | '/system-monitoring'
     | '/course'
     | '/dashboard'
+    | '/profile'
     | '/library/$query'
+    | '/statistical/overview'
+    | '/statistical/reports'
     | '/course/$id'
     | '/course/$id/$name'
     | '/course/$id/members'
@@ -190,10 +231,14 @@ export interface FileRouteTypes {
     | '/register-session'
     | '/registration-history'
     | '/schedule'
+    | '/statistical'
     | '/system-monitoring'
     | '/course'
     | '/dashboard'
+    | '/profile'
     | '/library/$query'
+    | '/statistical/overview'
+    | '/statistical/reports'
     | '/course/$id'
     | '/course/$id/$name'
     | '/course/$id/members'
@@ -208,10 +253,14 @@ export interface FileRouteTypes {
     | '/register-session/'
     | '/registration-history/'
     | '/schedule/'
+    | '/statistical/'
     | '/system-monitoring/'
     | '/_private/course/'
     | '/_private/dashboard/'
+    | '/_private/profile/'
     | '/library/$query/'
+    | '/statistical/overview/'
+    | '/statistical/reports/'
     | '/_private/course/$id/'
     | '/_private/course/$id/$name/'
     | '/_private/course/$id/members/'
@@ -227,8 +276,11 @@ export interface RootRouteChildren {
   RegisterSessionIndexRoute: typeof RegisterSessionIndexRoute
   RegistrationHistoryIndexRoute: typeof RegistrationHistoryIndexRoute
   ScheduleIndexRoute: typeof ScheduleIndexRoute
+  StatisticalIndexRoute: typeof StatisticalIndexRoute
   SystemMonitoringIndexRoute: typeof SystemMonitoringIndexRoute
   LibraryQueryIndexRoute: typeof LibraryQueryIndexRoute
+  StatisticalOverviewIndexRoute: typeof StatisticalOverviewIndexRoute
+  StatisticalReportsIndexRoute: typeof StatisticalReportsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/system-monitoring'
       fullPath: '/system-monitoring'
       preLoaderRoute: typeof SystemMonitoringIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistical/': {
+      id: '/statistical/'
+      path: '/statistical'
+      fullPath: '/statistical'
+      preLoaderRoute: typeof StatisticalIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule/': {
@@ -289,12 +348,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/statistical/reports/': {
+      id: '/statistical/reports/'
+      path: '/statistical/reports'
+      fullPath: '/statistical/reports'
+      preLoaderRoute: typeof StatisticalReportsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistical/overview/': {
+      id: '/statistical/overview/'
+      path: '/statistical/overview'
+      fullPath: '/statistical/overview'
+      preLoaderRoute: typeof StatisticalOverviewIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library/$query/': {
       id: '/library/$query/'
       path: '/library/$query'
       fullPath: '/library/$query'
       preLoaderRoute: typeof LibraryQueryIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_private/profile/': {
+      id: '/_private/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileIndexRouteImport
+      parentRoute: typeof PrivateRoute
     }
     '/_private/dashboard/': {
       id: '/_private/dashboard/'
@@ -351,6 +431,7 @@ declare module '@tanstack/react-router' {
 interface PrivateRouteChildren {
   PrivateCourseIndexRoute: typeof PrivateCourseIndexRoute
   PrivateDashboardIndexRoute: typeof PrivateDashboardIndexRoute
+  PrivateProfileIndexRoute: typeof PrivateProfileIndexRoute
   PrivateCourseIdIndexRoute: typeof PrivateCourseIdIndexRoute
   PrivateCourseIdNameIndexRoute: typeof PrivateCourseIdNameIndexRoute
   PrivateCourseIdMembersIndexRoute: typeof PrivateCourseIdMembersIndexRoute
@@ -361,6 +442,7 @@ interface PrivateRouteChildren {
 const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateCourseIndexRoute: PrivateCourseIndexRoute,
   PrivateDashboardIndexRoute: PrivateDashboardIndexRoute,
+  PrivateProfileIndexRoute: PrivateProfileIndexRoute,
   PrivateCourseIdIndexRoute: PrivateCourseIdIndexRoute,
   PrivateCourseIdNameIndexRoute: PrivateCourseIdNameIndexRoute,
   PrivateCourseIdMembersIndexRoute: PrivateCourseIdMembersIndexRoute,
@@ -379,8 +461,11 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterSessionIndexRoute: RegisterSessionIndexRoute,
   RegistrationHistoryIndexRoute: RegistrationHistoryIndexRoute,
   ScheduleIndexRoute: ScheduleIndexRoute,
+  StatisticalIndexRoute: StatisticalIndexRoute,
   SystemMonitoringIndexRoute: SystemMonitoringIndexRoute,
   LibraryQueryIndexRoute: LibraryQueryIndexRoute,
+  StatisticalOverviewIndexRoute: StatisticalOverviewIndexRoute,
+  StatisticalReportsIndexRoute: StatisticalReportsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

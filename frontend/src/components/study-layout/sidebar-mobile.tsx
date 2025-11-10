@@ -70,6 +70,7 @@ const SidebarMobile = ({ opened, close }: SidebarMobileProps) => {
         <div className="flex w-full flex-col gap-5 overflow-hidden overflow-y-scroll">
           <div className="relative flex h-20 w-full flex-row items-center justify-between md:h-20 3xl:h-24">
             <img
+              aria-label="BachKhoa Logo"
               src={BachKhoaLogo}
               onClick={() => {
                 navigate({ to: '/dashboard' });

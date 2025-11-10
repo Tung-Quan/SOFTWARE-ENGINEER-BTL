@@ -184,7 +184,7 @@ function DashboardComponent() {
             className={`rounded-md p-2 shadow-sm transition-colors ${
               isFirstDisabled
                 ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#0329E9] text-white hover:bg-blue-700'
             }`}
             disabled={isFirstDisabled}
             onClick={() => setCurrentPage(1)}
@@ -197,7 +197,7 @@ function DashboardComponent() {
             className={`rounded-md p-2 shadow-sm transition-colors ${
               isPrevDisabled
                 ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#0329E9] text-white hover:bg-blue-700'
             }`}
             disabled={isPrevDisabled}
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -213,7 +213,7 @@ function DashboardComponent() {
                 onClick={() => setCurrentPage(pageNumber)}
                 className={`size-8 rounded-full transition-colors ${
                   currentPage === pageNumber
-                    ? 'bg-blue-600 font-semibold text-white shadow'
+                    ? 'bg-[#0329E9] font-semibold text-white shadow'
                     : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
                 }`}
               >
@@ -228,7 +228,7 @@ function DashboardComponent() {
             className={`rounded-md p-2 shadow-sm transition-colors ${
               isNextDisabled
                 ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#0329E9] text-white hover:bg-blue-700'
             }`}
             disabled={isNextDisabled}
             onClick={() =>
@@ -243,7 +243,7 @@ function DashboardComponent() {
             className={`rounded-md p-2 shadow-sm transition-colors ${
               isLastDisabled
                 ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#0329E9] text-white hover:bg-blue-700'
             }`}
             disabled={isLastDisabled}
             onClick={() => setCurrentPage(totalPages)}

@@ -112,7 +112,7 @@ const Header = ({
           )}
           {/* Notification/Chat Icon */}
           <div
-            className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
+            className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#0329E9]"
             onClick={() => setNotificationOpened(!notificationOpened)}
             title="Notifications"
           >
@@ -159,7 +159,7 @@ const Header = ({
             className={`${dropdownOpened ? 'flex' : 'hidden'} absolute right-5 top-[4.5rem] z-[99] h-28 w-40 flex-col rounded-lg bg-white shadow-[0_8px_16px_0_rgba(0,0,0,0.25)] xl:w-80`}
           >
             <Link
-              to="/dashboard"
+              to="/profile"
               className="relative flex h-14 w-full flex-row items-center gap-2 rounded-lg px-2 duration-200 ease-in-out hover:bg-tertiary-300"
             >
               <ProfileIcon className="relative size-6 fill-tertiary" />

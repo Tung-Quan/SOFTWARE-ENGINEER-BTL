@@ -89,7 +89,7 @@ function SubmissionItem({ entry, courseId, assignmentName }: { entry: Submission
         <Link
           to={"/course/$id/$name/$stuname" as any}
           params={{ id: courseId, name: assignmentName, stuname } as any}
-          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+          className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
         >
           Xem bài nộp
         </Link>

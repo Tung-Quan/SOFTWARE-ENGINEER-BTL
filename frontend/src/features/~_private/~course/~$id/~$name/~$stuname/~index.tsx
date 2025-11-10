@@ -110,7 +110,7 @@ function RouteComponent() {
               onClick={() => setActiveTab('baiLam')}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 activeTab === 'baiLam'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#0329E9] text-white shadow-sm'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -121,7 +121,7 @@ function RouteComponent() {
               onClick={() => setActiveTab('nhanXet')}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 activeTab === 'nhanXet'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#0329E9] text-white shadow-sm'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -132,14 +132,14 @@ function RouteComponent() {
             <a
               href={data.fileUrl}
               download
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-[#0329E9] transition hover:bg-blue-50"
             >
               <ArrowDownTrayIcon className="size-5" />
               Tải bài làm
             </a>
 
             {/* Nút 4: Cập nhật (Mới) */}
-            <button className="rounded-lg px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50">
+            <button className="rounded-lg px-4 py-2 text-sm font-medium text-[#0329E9] transition hover:bg-blue-50">
               Cập nhật
             </button>
 
@@ -187,7 +187,7 @@ function RouteComponent() {
               <div className="mt-4 flex justify-end">
                 <button
                   type="button"
-                  className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+                  className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
                   Lưu nhận xét
                 </button>

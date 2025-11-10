@@ -80,7 +80,7 @@ export const ReferenceSection: React.FC<ReferenceSectionProps> = ({
               <div className="rounded border border-blue-200 bg-blue-50 p-3">
                 <p className="mb-1 text-xs font-medium text-blue-700">Preview link:</p>
                 <a
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                  className="flex items-center gap-2 text-sm text-[#0329E9] hover:underline"
                   href={link.url}
                   rel="noopener noreferrer"
                   target="_blank"
@@ -100,8 +100,8 @@ export const ReferenceSection: React.FC<ReferenceSectionProps> = ({
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <LinkIcon className="size-5 text-blue-600" />
-                <span className="font-medium text-blue-600">{link.title}</span>
+                <LinkIcon className="size-5 text-[#0329E9]" />
+                <span className="font-medium text-[#0329E9]">{link.title}</span>
               </a>
             ) : (
               <p className="text-gray-500">Chưa có đường dẫn tham khảo nào.</p>

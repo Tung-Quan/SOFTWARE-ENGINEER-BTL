@@ -83,7 +83,7 @@ function BookCard({ book }: { book: BookType }) {
 
       {/* Book Info */}
       <div className="flex flex-1 flex-col bg-white p-4">
-        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-800 group-hover:text-blue-600">
+        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-800 group-hover:text-[#0329E9]">
           {book.title}
         </h3>
         <p className="mb-1 text-sm text-gray-600">
@@ -120,7 +120,7 @@ function BookCard({ book }: { book: BookType }) {
         <button
           aria-label="Xem chi tiết sách"
           title="Xem chi tiết sách"
-          className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-[#0329E9] py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
         >
           Chi tiết
           <ChevronRight className="size-4" />
@@ -255,7 +255,7 @@ function RouteComponent() {
         {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-16">
-            <div className="size-16 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
+            <div className="size-16 animate-spin rounded-full border-4 border-gray-200 border-t-[#0329E9]"></div>
             <p className="mt-4 text-gray-600">Đang tìm kiếm...</p>
           </div>
         )}
@@ -281,7 +281,7 @@ function RouteComponent() {
             <p className="text-gray-600">{error}</p>
             <button
               onClick={fetchBooks}
-              className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              className="mt-4 rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
             >
               Thử lại
             </button>
@@ -319,7 +319,7 @@ function RouteComponent() {
                 className={`rounded-md p-2 shadow-sm transition-colors ${
                   currentPage === 1
                     ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
                 }`}
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(1)}
@@ -332,7 +332,7 @@ function RouteComponent() {
                 className={`rounded-md p-2 shadow-sm transition-colors ${
                   currentPage === 1
                     ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
                 }`}
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -348,7 +348,7 @@ function RouteComponent() {
                     onClick={() => setCurrentPage(pageNumber)}
                     className={`size-8 rounded-full transition-colors ${
                       currentPage === pageNumber
-                        ? 'bg-blue-600 font-semibold text-white shadow'
+                        ? 'bg-[#0329E9] font-semibold text-white shadow'
                         : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
                     }`}
                   >
@@ -363,7 +363,7 @@ function RouteComponent() {
                 className={`rounded-md p-2 shadow-sm transition-colors ${
                   currentPage === totalPages
                     ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
                 }`}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
@@ -376,7 +376,7 @@ function RouteComponent() {
                 className={`rounded-md p-2 shadow-sm transition-colors ${
                   currentPage === totalPages
                     ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
                 }`}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(totalPages)}

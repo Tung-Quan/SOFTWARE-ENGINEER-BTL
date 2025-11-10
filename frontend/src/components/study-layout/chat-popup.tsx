@@ -266,7 +266,7 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
                   <div
                     className={`max-w-[75%] rounded-lg px-4 py-2 ${
                       message.sender === 'user'
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-[#0329E9] text-white'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
@@ -298,7 +298,7 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
               />
               <button
                 type="submit"
-                className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                className="rounded-lg bg-[#0329E9] px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
                 disabled={!inputValue.trim()}
                 aria-label="Gửi tin nhắn"
               >
