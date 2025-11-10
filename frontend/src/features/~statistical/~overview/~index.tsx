@@ -1,4 +1,4 @@
-import { ClockIcon } from '@heroicons/react/24/outline'
+import { ClockIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
 import StudyLayout from '@/components/study-layout'
@@ -73,6 +73,14 @@ function RouteComponent() {
   return (
     <StudyLayout>
       <div className="min-h-full bg-gray-50 p-4 md:p-8">
+        {/* 1. Header "Quay lại" */}
+        <Link
+          to="/statistical"
+          className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
+        >
+          <ArrowLeftIcon className="size-5" />
+          <span className="font-medium">Quay lại</span>
+        </Link>
         <div className="mx-auto max-w-5xl">
           <div className="space-y-4">
             {mockCourseData.map((course) => (

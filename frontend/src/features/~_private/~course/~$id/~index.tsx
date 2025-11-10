@@ -2,7 +2,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
-import { mockCourses, dataCourses } from '@/components/data/~mockCourses';
+import { mockCourses, dataCourses } from '@/components/data/~mock-courses';
 import { Play as PlayIcon } from '@/components/icons';
 import { Paper as PaperIcon } from '@/components/icons';
 import ArrowLeft from '@/components/icons/arrow-left';

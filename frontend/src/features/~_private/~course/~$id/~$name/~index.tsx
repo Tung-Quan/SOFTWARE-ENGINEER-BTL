@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import type { SVGProps } from 'react';
 
-import { mockSubmissionEntries } from '@/components/data/~mockCourses'; // Import mock data
+import { mockSubmissionEntries } from '@/components/data/~mock-courses'; // Import mock data
 import ArrowLeft from '@/components/icons/arrow-left';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';

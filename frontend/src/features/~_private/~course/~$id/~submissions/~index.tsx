@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { type SVGProps, useState } from 'react'; // << [THAY ĐỔI] Import thêm useState
 
-import { mockSubmissionEntries } from '@/components/data/~mockCourses';
+import { mockSubmissionEntries } from '@/components/data/~mock-courses';
 import ArrowLeft from '@/components/icons/arrow-left';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';

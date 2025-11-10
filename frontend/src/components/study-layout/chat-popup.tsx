@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { mockConversations, Conversation } from '@/components/data/~mockChatData';
+import { mockConversations, Conversation } from '@/components/data/~mock-chat-data';
 
 // --- Định nghĩa SVG Icons ---
 

@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import boxSvg from '@/assets/box.svg';
-import { mockCourses, type Course } from '@/components/data/~mockCourses';
+import { mockCourses, type Course } from '@/components/data/~mock-courses';
 import ChevronLeft from '@/components/icons/arrow-left';
 import ChevronRight from '@/components/icons/arrow-right';
 import ChevronDown from '@/components/icons/chevron';
