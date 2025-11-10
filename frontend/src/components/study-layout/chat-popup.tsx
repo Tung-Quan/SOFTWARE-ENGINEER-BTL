@@ -87,10 +87,10 @@ type Message = {
 
 type ChatPopupProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void; // Make onClose optional for backward compatibility
 };
 
-const ChatPopup = ({ isOpen }: ChatPopupProps) => {
+const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
   const [view, setView] = useState<'list' | 'chat'>('list');
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
@@ -174,6 +174,16 @@ const ChatPopup = ({ isOpen }: ChatPopupProps) => {
                 <SearchIcon />
               </div>
             </div>
+            {/* Close button inline with search */}
+            <button
+              onClick={onClose}
+              aria-label="Đóng chat"
+              className="inline-flex size-8 items-center justify-center rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
@@ -183,17 +193,26 @@ const ChatPopup = ({ isOpen }: ChatPopupProps) => {
         <div className="flex flex-1 flex-col overflow-y-auto">
           {/* Thanh tìm kiếm */}
           <div className="border-b border-gray-200 p-4">
-            <div className="relative">
+            <div className="relative flex items-center gap-2">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Tìm kiếm..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 pl-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                 <SearchIcon />
               </div>
+              <button
+                onClick={onClose}
+                aria-label="Đóng chat"
+                className="inline-flex size-8 items-center justify-center rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
             </div>
           </div>
 

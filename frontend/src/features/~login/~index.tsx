@@ -164,7 +164,7 @@ function RouteComponent() {
           </button>
         </form>
 
-        <div className="my-2">Hoặc</div>
+        <div className="">Hoặc</div>
         <CustomGoogleButton
           onSuccess={async (credentialResponse) => {
             if (!credentialResponse.credential) {

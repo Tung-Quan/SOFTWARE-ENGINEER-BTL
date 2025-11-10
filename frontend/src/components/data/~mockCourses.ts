@@ -186,13 +186,16 @@ export const dataCourses = [{
           submittedAt: '20:00 10/10/2024'
         },
         dueDate: '20:00 10/10/2024',
-        canEdit: false
+        canEdit: false,
+        maxFiles: 1,
+        allowedTypes: ['pdf', 'doc', 'docx']
       }
     },
     {
       type: 'submission',
       title: 'Submission 2',
       data: {
+
         status: 'graded',
         submittedFile: {
           name: 'group07_report 02.pdf',
@@ -202,7 +205,9 @@ export const dataCourses = [{
         grade: 2.5,
         maxGrade: 10,
         feedback: 'Lorem ipsum',
-        canEdit: false
+        canEdit: false,
+        maxFiles: 2,
+        allowedTypes: ['pdf', 'docx']
       }
     },
     {
@@ -211,7 +216,9 @@ export const dataCourses = [{
       data: {
         status: 'not-submitted',
         dueDate: '20:00 15/11/2024',
-        canEdit: true
+        canEdit: true,
+        maxFiles: 3,
+        allowedTypes: ['pdf', 'docx', 'zip']
       }
     },
     {
@@ -227,3 +234,59 @@ export const dataCourses = [{
     }
   ]
 }];
+// Mock: số lượng bài đã nộp theo khóa học và submission
+// key: courseId -> key: submission key (tên hoặc id) -> số bài đã nộp
+export const mockSubmissionSubmittedCounts: Record<string, Record<string, number>> = {
+  '4': {
+    // 'Submission 1' trong dataCourses cho course id 4
+    submission1: 1,
+  },
+};
+
+
+export const mockSubmissionEntries: Record<string, Record<string, Array<{ name: string; email: string; submittedAt: string; score?: number }>>> = {
+  '4': {
+    submission1: [
+      {
+        name: 'Nguyễn Trần Văn AAA',
+        email: 'nguyentranvanaaa123456789@gmail.com',
+        submittedAt: '19:00 10/10/2024',
+        score: 7.5,
+      },
+      {
+        name: 'Nguyễn Trần Văn AAA',
+        email: 'nguyentranvanaaa123456789@gmail.com',
+        submittedAt: '19:00 11/10/2024',
+        score: 5,
+      },
+      {
+        name: 'Nguyễn Trần Văn AAA',
+        email: 'nguyentranvanaaa123456789@gmail.com',
+        submittedAt: '19:00 12/10/2024',
+        score: 2.5,
+      },
+    ],
+    submission2: [
+      {
+        name: 'Nguyễn Trần Văn BBB',
+        email: 'nguyentranvanbbb@example.com',
+        submittedAt: '18:30 10/10/2024',
+        score: 5,
+      },
+      {
+        name: 'Lê Thị C',
+        email: 'le.ti.c@example.com',
+        submittedAt: '19:15 10/10/2024',
+        score: 6,
+      },
+    ],
+    // Submission 3 - pending / not graded
+    submission3: [
+      {
+        name: 'Phạm Văn D',
+        email: 'phamvand@example.com',
+        submittedAt: '19:00 15/11/2024',
+      },
+    ],
+  },
+};

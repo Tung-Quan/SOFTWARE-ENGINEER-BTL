@@ -21,6 +21,10 @@ import { Route as LibraryQueryIndexRouteImport } from './features/~library/~$que
 import { Route as PrivateDashboardIndexRouteImport } from './features/~_private/~dashboard/~index'
 import { Route as PrivateCourseIndexRouteImport } from './features/~_private/~course/~index'
 import { Route as PrivateCourseIdIndexRouteImport } from './features/~_private/~course/~$id/~index'
+import { Route as PrivateCourseIdSubmissionsIndexRouteImport } from './features/~_private/~course/~$id/~submissions/~index'
+import { Route as PrivateCourseIdMembersIndexRouteImport } from './features/~_private/~course/~$id/~members/~index'
+import { Route as PrivateCourseIdNameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~index'
+import { Route as PrivateCourseIdNameStunameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~$stuname/~index'
 
 const PrivateRoute = PrivateRouteImport.update({
   id: '/_private',
@@ -82,6 +86,30 @@ const PrivateCourseIdIndexRoute = PrivateCourseIdIndexRouteImport.update({
   path: '/course/$id/',
   getParentRoute: () => PrivateRoute,
 } as any)
+const PrivateCourseIdSubmissionsIndexRoute =
+  PrivateCourseIdSubmissionsIndexRouteImport.update({
+    id: '/course/$id/submissions/',
+    path: '/course/$id/submissions/',
+    getParentRoute: () => PrivateRoute,
+  } as any)
+const PrivateCourseIdMembersIndexRoute =
+  PrivateCourseIdMembersIndexRouteImport.update({
+    id: '/course/$id/members/',
+    path: '/course/$id/members/',
+    getParentRoute: () => PrivateRoute,
+  } as any)
+const PrivateCourseIdNameIndexRoute =
+  PrivateCourseIdNameIndexRouteImport.update({
+    id: '/course/$id/$name/',
+    path: '/course/$id/$name/',
+    getParentRoute: () => PrivateRoute,
+  } as any)
+const PrivateCourseIdNameStunameIndexRoute =
+  PrivateCourseIdNameStunameIndexRouteImport.update({
+    id: '/course/$id/$name/$stuname/',
+    path: '/course/$id/$name/$stuname/',
+    getParentRoute: () => PrivateRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +123,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
+  '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
+  '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
+  '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
+  '/course/$id/$name/$stuname': typeof PrivateCourseIdNameStunameIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -108,6 +140,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
+  '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
+  '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
+  '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
+  '/course/$id/$name/$stuname': typeof PrivateCourseIdNameStunameIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,6 +159,10 @@ export interface FileRoutesById {
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
   '/library/$query/': typeof LibraryQueryIndexRoute
   '/_private/course/$id/': typeof PrivateCourseIdIndexRoute
+  '/_private/course/$id/$name/': typeof PrivateCourseIdNameIndexRoute
+  '/_private/course/$id/members/': typeof PrivateCourseIdMembersIndexRoute
+  '/_private/course/$id/submissions/': typeof PrivateCourseIdSubmissionsIndexRoute
+  '/_private/course/$id/$name/$stuname/': typeof PrivateCourseIdNameStunameIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -138,6 +178,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/library/$query'
     | '/course/$id'
+    | '/course/$id/$name'
+    | '/course/$id/members'
+    | '/course/$id/submissions'
+    | '/course/$id/$name/$stuname'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -151,6 +195,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/library/$query'
     | '/course/$id'
+    | '/course/$id/$name'
+    | '/course/$id/members'
+    | '/course/$id/submissions'
+    | '/course/$id/$name/$stuname'
   id:
     | '__root__'
     | '/'
@@ -165,6 +213,10 @@ export interface FileRouteTypes {
     | '/_private/dashboard/'
     | '/library/$query/'
     | '/_private/course/$id/'
+    | '/_private/course/$id/$name/'
+    | '/_private/course/$id/members/'
+    | '/_private/course/$id/submissions/'
+    | '/_private/course/$id/$name/$stuname/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -265,6 +317,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateCourseIdIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/course/$id/submissions/': {
+      id: '/_private/course/$id/submissions/'
+      path: '/course/$id/submissions'
+      fullPath: '/course/$id/submissions'
+      preLoaderRoute: typeof PrivateCourseIdSubmissionsIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/course/$id/members/': {
+      id: '/_private/course/$id/members/'
+      path: '/course/$id/members'
+      fullPath: '/course/$id/members'
+      preLoaderRoute: typeof PrivateCourseIdMembersIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/course/$id/$name/': {
+      id: '/_private/course/$id/$name/'
+      path: '/course/$id/$name'
+      fullPath: '/course/$id/$name'
+      preLoaderRoute: typeof PrivateCourseIdNameIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/course/$id/$name/$stuname/': {
+      id: '/_private/course/$id/$name/$stuname/'
+      path: '/course/$id/$name/$stuname'
+      fullPath: '/course/$id/$name/$stuname'
+      preLoaderRoute: typeof PrivateCourseIdNameStunameIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
   }
 }
 
@@ -272,12 +352,20 @@ interface PrivateRouteChildren {
   PrivateCourseIndexRoute: typeof PrivateCourseIndexRoute
   PrivateDashboardIndexRoute: typeof PrivateDashboardIndexRoute
   PrivateCourseIdIndexRoute: typeof PrivateCourseIdIndexRoute
+  PrivateCourseIdNameIndexRoute: typeof PrivateCourseIdNameIndexRoute
+  PrivateCourseIdMembersIndexRoute: typeof PrivateCourseIdMembersIndexRoute
+  PrivateCourseIdSubmissionsIndexRoute: typeof PrivateCourseIdSubmissionsIndexRoute
+  PrivateCourseIdNameStunameIndexRoute: typeof PrivateCourseIdNameStunameIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateCourseIndexRoute: PrivateCourseIndexRoute,
   PrivateDashboardIndexRoute: PrivateDashboardIndexRoute,
   PrivateCourseIdIndexRoute: PrivateCourseIdIndexRoute,
+  PrivateCourseIdNameIndexRoute: PrivateCourseIdNameIndexRoute,
+  PrivateCourseIdMembersIndexRoute: PrivateCourseIdMembersIndexRoute,
+  PrivateCourseIdSubmissionsIndexRoute: PrivateCourseIdSubmissionsIndexRoute,
+  PrivateCourseIdNameStunameIndexRoute: PrivateCourseIdNameStunameIndexRoute,
 }
 
 const PrivateRouteWithChildren =

@@ -137,7 +137,7 @@ function RouteComponent() {
           {/* Phần tìm kiếm */}
           <main className="flex grow flex-col items-center px-4">
             <div className="mt-8 w-full max-w-4xl">
-              <h1 className="mb-8 text-center text-4xl font-bold text-gray-800 md:text-5xl">
+              <h1 className="mb-8 text-center text-4xl font-bold text-black md:text-5xl">
                 HCMUT LIBRARY
               </h1>
               
