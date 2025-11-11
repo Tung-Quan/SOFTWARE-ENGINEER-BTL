@@ -101,7 +101,7 @@ const Header = ({
             <button
               title="Chat"
               onClick={() => setChatOpened(true)}
-              className="fixed right-0 top-20 z-[100] p-2 focus:outline-none"
+              className="fixed right-0 top-20 z-[97] p-2 focus:outline-none"
               aria-label="Open chat"
             >
               <svg width="52" height="40" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">

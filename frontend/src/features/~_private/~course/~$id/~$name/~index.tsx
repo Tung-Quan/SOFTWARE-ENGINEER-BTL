@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import type { SVGProps } from 'react';
+import { type SVGProps, useMemo } from 'react'; 
 
-import { mockSubmissionEntries } from '@/components/data/~mock-courses'; // Import mock data
+import { mockSessions } from '@/components/data/~mock-session';
+import { getSubmission } from '@/components/data/~mock-submissions';
 import ArrowLeft from '@/components/icons/arrow-left';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
 
 
-// Small SVG icon components used by this page
+// === ICONS ===
 export function ClockIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -24,22 +25,40 @@ export function UserCircleIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-
-// Định nghĩa Route
+// === Định nghĩa Route ===
 export const Route = createFileRoute('/_private/course/$id/$name/')({
   component: RouteComponent,
 });
 
-// === Các Component con ===
+function formatISODate(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const day = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `${time} ${day}`; // Format: "19:00 10/10/2024"
+  } catch {
+    return 'Invalid Date';
+  }
+}
 
-/**
- * Hiển thị màu sắc dựa trên điểm số
- */
+function createFakeEmail(name: string): string {
+  const noDiacritics = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d");
+  const emailPrefix = noDiacritics.replace(/\s+/g, '.');
+  return `${emailPrefix}@gmail.com`;
+}
+
+
+// === Các Component con (Giữ nguyên) ===
+
 const getScoreColor = (score?: number) => {
   if (score === undefined) return 'text-gray-500';
-  if (score >= 7) return 'text-green-600'; // 7.5 điểm (xanh)
-  if (score >= 5) return 'text-[#F9BA08]'; // 5 điểm (vàng)
-  return 'text-[#EA4335]'; // 2.5 điểm (đỏ)
+  if (score >= 7) return 'text-green-600'; 
+  if (score >= 5) return 'text-[#F9BA08]'; 
+  return 'text-[#EA4335]'; 
 };
 
 type SubmissionEntry = {
@@ -49,15 +68,11 @@ type SubmissionEntry = {
   score?: number;
 };
 
-/**
- * Component cho một hàng bài nộp của sinh viên
- */
 function SubmissionItem({ entry, courseId, assignmentName }: { entry: SubmissionEntry; courseId: string; assignmentName: string }) {
   const { name, email, submittedAt, score } = entry;
   const scoreColor = getScoreColor(score);
   
-  // Tạo slug từ email để dùng làm stuname trong URL
-  const stuname = email.split('@')[0]; // Lấy phần trước @ của email làm slug đơn giản
+  const stuname = email.split('@')[0]; 
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-gray-700 bg-white p-5 shadow-custom-yellow">
@@ -80,11 +95,13 @@ function SubmissionItem({ entry, courseId, assignmentName }: { entry: Submission
 
       {/* Điểm & Nút bấm */}
       <div className="flex shrink-0 items-center gap-6">
-        {score !== undefined && (
+        {score !== undefined ? (
           <span className={`text-xl font-bold ${scoreColor}`}>
-            {/* Dùng toLocaleString để hiển thị dấu phẩy 7,5 */}
             {score.toLocaleString('vi-VN')} điểm
           </span>
+        ) : (
+          // Thêm hiển thị "Chưa chấm" nếu không có điểm
+          <span className="text-sm font-medium text-gray-500">Chưa chấm</span>
         )}
         <Link
           to={"/course/$id/$name/$stuname" as any}
@@ -103,13 +120,37 @@ function SubmissionItem({ entry, courseId, assignmentName }: { entry: Submission
 function RouteComponent() {
   const { id, name } = Route.useParams();
 
-  // Lấy data bài nộp dựa trên id (courseId) và name (submissionId)
-  const submissions = mockSubmissionEntries[id]?.[name] ?? [];
+  // === [THAY ĐỔI] Logic lấy data từ mockSessions và mockSubmissions ===
+  const submissions: SubmissionEntry[] = useMemo(() => {
+    // 1. Tìm session khớp với courseId (id) VÀ session title (name)
+    const matchingSession = mockSessions.find(
+      (s) => s.courseId === id && s.title === name
+    );
+
+    // 2. Nếu không tìm thấy, trả về mảng rỗng
+    if (!matchingSession) {
+      return [];
+    }
+
+    // 3. Nếu tìm thấy, map members của session đó và lấy score từ mock-submissions
+    return matchingSession.members.map(member => {
+      // Lấy submission data ổn định từ mock-submissions
+      const submissionData = getSubmission(matchingSession.id, member.id);
+      
+      return {
+        name: member.name,
+        email: createFakeEmail(member.name), // Tạo email giả
+        submittedAt: formatISODate(matchingSession.start), // Dùng ngày bắt đầu session
+        score: submissionData?.score, // Lấy điểm từ mock-submissions (undefined = chưa chấm)
+      };
+    });
+  }, [id, name]); // Tính toán lại khi id hoặc name thay đổi
+
 
   return (
     <StudyLayout>
       <div className="container mx-auto max-w-5xl rounded-2xl border border-[#3D4863] p-2 py-8">
-        {/* Back button */}
+        {/* Back button (Giữ nguyên) */}
         <Link
           to={'/course/$id' as any}
           className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
@@ -120,16 +161,13 @@ function RouteComponent() {
         <h1 className="mb-6 text-3xl font-bold text-gray-800">
           {name}
         </h1>
+        
+        {/* Thanh filter/search (Giữ nguyên, không kết nối state) */}
         <div className="flex w-full items-center gap-4 bg-white pb-4">
-
-          {/* ===== Thanh Tìm Kiếm 1 (Rỗng) ===== */}
           <div className="relative flex-1">
-            {/* Icon tìm kiếm */}
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="size-5 text-gray-400" aria-hidden="true" />
             </div>
-
-            {/* Ô input */}
             <input
               type="text"
               name="search1"
@@ -139,14 +177,10 @@ function RouteComponent() {
             />
           </div>
 
-          {/* ===== Thanh Tìm Kiếm 2 (Có placeholder) ===== */}
           <div className="relative flex-1">
-            {/* Icon tìm kiếm */}
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="size-5 text-gray-400" aria-hidden="true" />
             </div>
-
-            {/* Ô input */}
             <input
               type="text"
               name="search2"
@@ -156,7 +190,6 @@ function RouteComponent() {
             />
           </div>
 
-          {/* ===== Bộ lọc Dropdown (Cũ nhất) ===== */}
           <div>
             <select
               aria-label="Sắp xếp bài nộp theo"
@@ -169,8 +202,9 @@ function RouteComponent() {
               <option>Mới nhất</option>
             </select>
           </div>
-
         </div>
+        
+        {/* Danh sách (Giữ nguyên) */}
         <div className="space-y-6">
           {submissions.length > 0 ? (
             submissions.map((entry, index) => (

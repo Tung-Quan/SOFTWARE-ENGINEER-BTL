@@ -1,21 +1,39 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useState, type SVGProps } from 'react'; // [THAY ĐỔI] Import thêm useState
+import { createFileRoute, Link, useParams } from '@tanstack/react-router';
+import React, { useState, type SVGProps, useMemo } from 'react'; 
 
+import { mockSessions } from '@/components/data/~mock-session';
+import { getSubmission, updateSubmission } from '@/components/data/~mock-submissions';
 import StudyLayout from '@/components/study-layout';
 
-// --- Dữ liệu Mock cho trang này ---
-const mockSubmissionData = {
-  student: {
-    name: 'Nguyễn Trần Văn AAA',
-    email: 'nguyentranvanaaa123456789@gmail.com',
-    submittedAt: '19:00 10/10/2024',
-  },
-  score: 2.5,
-  // Đây là phần mấu chốt: đường dẫn đến file PDF hoặc ảnh của bài nộp
-  fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-  comment: '', // Dữ liệu mock cho nhận xét
-};
+
+/**
+ * Format một chuỗi ISO date thành "HH:mm DD/MM/YYYY"
+ */
+function formatISODate(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const day = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `${time} ${day}`;
+  } catch {
+    return 'Invalid Date';
+  }
+}
+
+/**
+ * Tạo email giả từ tên
+ */
+function createFakeEmail(name: string): string {
+  const noDiacritics = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d");
+  const emailPrefix = noDiacritics.replace(/\s+/g, '.');
+  return `${emailPrefix}@gmail.com`;
+}
+
 
 // --- Icons (Giữ nguyên) ---
 export function ClockIcon(props: SVGProps<SVGSVGElement>) {
@@ -25,7 +43,6 @@ export function ClockIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-// [THAY ĐỔI] Icon UserCircle lớn hơn và màu đậm hơn để khớp với hình
 export function UserCircleIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 47 47" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -39,7 +56,7 @@ const getScoreColor = (score?: number) => {
   if (score === undefined) return 'text-gray-500';
   if (score >= 7) return 'text-green-600';
   if (score >= 5) return 'text-[#F9BA08]';
-  return 'text-[#EA4335]'; // 2.5 điểm (đỏ)
+  return 'text-[#EA4335]'; 
 };
 
 // --- Định nghĩa Route (Giữ nguyên) ---
@@ -49,16 +66,102 @@ export const Route = createFileRoute('/_private/course/$id/$name/$stuname/' as a
 
 // --- Component Chính Của Trang ---
 function RouteComponent() {
-  const { id, name } = Route.useParams() as { id: string; name: string };
+  const { id, name, stuname } = useParams({ from: Route.id });
 
-  // [THAY ĐỔI] Thêm state để quản lý tab đang active
+  const matchingEntry = useMemo(() => {
+    // 1. Tìm session khớp
+    const session = mockSessions.find(
+      (s) => s.courseId === id && s.title === name
+    );
+    if (!session) return null;
+
+    // 2. Tìm member khớp
+    const member = session.members.find((m) => {
+      const email = createFakeEmail(m.name);
+      const emailSlug = email.split('@')[0];
+      return emailSlug === stuname;
+    });
+    if (!member) return null;
+
+    // 3. Lấy submission data từ mock-submissions
+    const submissionData = getSubmission(session.id, member.id);
+
+    // 4. Tạo dữ liệu cho entry này
+    return {
+      sessionId: session.id,
+      memberId: member.id,
+      name: member.name,
+      email: createFakeEmail(member.name),
+      submittedAt: formatISODate(session.start),
+      score: submissionData?.score, // Lấy từ mock-submissions
+      comment: submissionData?.comment ?? '', // Lấy từ mock-submissions
+      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', // Vẫn dùng file mẫu
+    };
+  }, [id, name, stuname]); // Tính toán lại khi URL thay đổi
+
+
+  // [THAY ĐỔI] Khởi tạo state từ dữ liệu động
   const [activeTab, setActiveTab] = useState<'baiLam' | 'nhanXet'>('baiLam');
-  // [THAY ĐỔI] Thêm state cho nội dung nhận xét
-  const [comment, setComment] = useState(mockSubmissionData.comment);
-  // [THAY ĐỔI] Thêm state cho điểm số
-  const [score, setScore] = useState(mockSubmissionData.score);
+  const [comment, setComment] = useState(matchingEntry?.comment || '');
+  const [score, setScore] = useState(matchingEntry?.score);
+  
+  // Track if there are unsaved changes
+  const [hasChanges, setHasChanges] = useState(false);
 
-  const data = mockSubmissionData;
+  // Update state when matchingEntry changes
+  React.useEffect(() => {
+    if (matchingEntry) {
+      setComment(matchingEntry.comment || '');
+      setScore(matchingEntry.score);
+      setHasChanges(false);
+    }
+  }, [matchingEntry]);
+
+  // Mark as changed when score or comment changes
+  React.useEffect(() => {
+    if (matchingEntry) {
+      const scoreChanged = score !== matchingEntry.score;
+      const commentChanged = comment !== matchingEntry.comment;
+      setHasChanges(scoreChanged || commentChanged);
+    }
+  }, [score, comment, matchingEntry]);
+
+  // Handler to save score and comment
+  const handleSave = () => {
+    if (!matchingEntry) return;
+    
+    updateSubmission(matchingEntry.sessionId, matchingEntry.memberId, {
+      score,
+      comment,
+    });
+    
+    setHasChanges(false);
+    alert('Đã lưu thành công!');
+  };
+
+  // [THAY ĐỔI] Xử lý trường hợp không tìm thấy
+  if (!matchingEntry) {
+    return (
+      <StudyLayout>
+        <div className="container mx-auto max-w-7xl p-4 py-8 md:p-8">
+          <Link
+            to="/course/$id/$name"
+            params={{ id, name } as any}
+            className="mb-6 flex items-center gap-2 text-sm font-medium text-[#3D4863] transition hover:text-blue-700"
+          >
+            <ArrowLeftIcon className="size-5" />
+            <span>Quay lại</span>
+          </Link>
+          <div className="rounded-lg bg-white p-8 text-center text-gray-700 shadow-md">
+            <h1 className="text-xl font-bold">Không tìm thấy bài nộp</h1>
+            <p>Không tìm thấy dữ liệu cho sinh viên "{stuname}".</p>
+          </div>
+        </div>
+      </StudyLayout>
+    );
+  }
+
+  // Nếu tìm thấy, render component
   const scoreColor = getScoreColor(score);
 
   return (
@@ -74,18 +177,16 @@ function RouteComponent() {
           <span>Quay lại</span>
         </Link>
 
-        {/* 2. Header thông tin bài nộp [ĐÃ SỬA LẠI] */}
+        {/* 2. Header thông tin bài nộp [Dùng matchingEntry] */}
         <header className="flex items-center gap-4">
-          {/* Avatar lớn hơn */}
           <UserCircleIcon className="size-20 shrink-0" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{data.student.name}</h1>
-            <p className="text-sm text-gray-500">{data.student.email}</p>
+            <h1 className="text-2xl font-bold text-gray-900">{matchingEntry.name}</h1>
+            <p className="text-sm text-gray-500">{matchingEntry.email}</p>
             <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
               <ClockIcon className="size-4" />
-              <span>{data.student.submittedAt}</span>
+              <span>{matchingEntry.submittedAt}</span>
             </div>
-            {/* Điểm được đưa xuống dưới thông tin */}
             <div className="mt-2 flex items-center gap-2">
               <span className="text-sm font-medium text-gray-700">Điểm: </span>
               <input
@@ -102,10 +203,9 @@ function RouteComponent() {
           </div>
         </header>
 
-        {/* 3. Thanh điều hướng Tab [ĐÃ SỬA LẠI] */}
+        {/* 3. Thanh điều hướng Tab (Giữ nguyên) */}
         <div className="mt-8 border-b border-gray-200">
           <nav className="-mb-px flex flex-wrap items-center gap-x-2 gap-y-1">
-            {/* Tab 1: Bài làm (Stateful) */}
             <button
               onClick={() => setActiveTab('baiLam')}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
@@ -116,7 +216,6 @@ function RouteComponent() {
             >
               Bài làm
             </button>
-            {/* Tab 2: Nhận xét (Stateful) */}
             <button
               onClick={() => setActiveTab('nhanXet')}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
@@ -128,9 +227,8 @@ function RouteComponent() {
               Nhận xét
             </button>
 
-            {/* Nút 3: Tải bài làm (Mới) */}
             <a
-              href={data.fileUrl}
+              href={matchingEntry.fileUrl} // [Dùng matchingEntry]
               download
               className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-[#0329E9] transition hover:bg-blue-50"
             >
@@ -138,35 +236,41 @@ function RouteComponent() {
               Tải bài làm
             </a>
 
-            {/* Nút 4: Cập nhật (Mới) */}
-            <button className="rounded-lg px-4 py-2 text-sm font-medium text-[#0329E9] transition hover:bg-blue-50">
+            <button 
+              onClick={handleSave}
+              disabled={!hasChanges}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                hasChanges
+                  ? 'text-[#0329E9] hover:bg-blue-50'
+                  : 'cursor-not-allowed text-gray-400'
+              }`}
+            >
               Cập nhật
             </button>
 
-            {/* Nút 5: Trạng thái lưu (Mới) */}
-            <span className="cursor-not-allowed rounded-lg px-4 py-2 text-sm font-medium text-gray-400">
-              Có thay đổi/chưa lưu
+            <span className={`rounded-lg px-4 py-2 text-sm font-medium ${
+              hasChanges ? 'text-orange-600' : 'text-gray-400'
+            }`}>
+              {hasChanges ? 'Có thay đổi chưa lưu' : 'Đã lưu'}
             </span>
           </nav>
         </div>
 
-        {/* 4. Vùng nội dung (Render có điều kiện) [ĐÃ SỬA LẠI] */}
+        {/* 4. Vùng nội dung (Render có điều kiện) [Dùng matchingEntry] */}
         <div className="mt-6">
-          {/* --- Hiển thị NỘI DUNG BÀI LÀM (PDF/Ảnh) --- */}
           {activeTab === 'baiLam' && (
             <div className="rounded-lg bg-white p-4 shadow-xl md:p-6">
               <div className="aspect-[3/4] max-h-[1000px] w-full overflow-hidden rounded-md border border-gray-200">
                 <iframe
-                  src={data.fileUrl}
+                  src={matchingEntry.fileUrl} // [Dùng matchingEntry]
                   className="size-full"
-                  title={`Bài nộp của ${data.student.name}`}
+                  title={`Bài nộp của ${matchingEntry.name}`}
                   frameBorder="0"
                 />
               </div>
             </div>
           )}
 
-          {/* --- Hiển thị NỘI DUNG NHẬN XÉT --- */}
           {activeTab === 'nhanXet' && (
             <div className="rounded-lg border border-gray-300 bg-white p-4 md:p-6">
               <h2 className="text-base font-semibold text-gray-900">
@@ -183,11 +287,16 @@ function RouteComponent() {
                   onChange={(e) => setComment(e.target.value)}
                 />
               </div>
-              {/* Bạn có thể thêm nút "Lưu nhận xét" ở đây */}
               <div className="mt-4 flex justify-end">
                 <button
                   type="button"
-                  className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+                  onClick={handleSave}
+                  disabled={!hasChanges}
+                  className={`rounded-lg px-5 py-2.5 text-sm font-medium text-white transition ${
+                    hasChanges
+                      ? 'bg-[#0329E9] hover:bg-blue-700'
+                      : 'cursor-not-allowed bg-gray-400'
+                  }`}
                 >
                   Lưu nhận xét
                 </button>

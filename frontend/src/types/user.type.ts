@@ -10,6 +10,7 @@ export type User = {
   phone: string | null;
   isManager: boolean;
   isChairman: boolean;
+  isTutor: boolean;
   statisticalPermission: boolean;
   createdAt: string;
   updatedAt: string;

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { type SVGProps, useState } from 'react'; // << [THAY ĐỔI] Import thêm useState
+import { type SVGProps, useState, useMemo } from 'react'; // << [THAY ĐỔI] Import thêm useState, useMemo
 
-import { mockSubmissionEntries } from '@/components/data/~mock-courses';
+import { mockSessions } from '@/components/data/~mock-session'; 
 import ArrowLeft from '@/components/icons/arrow-left';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
@@ -24,12 +24,11 @@ export function UserCircleIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 // === Định nghĩa Route (Giữ nguyên) ===
-// Lưu ý: Route này vẫn nhận $name, nhưng chúng ta sẽ không dùng nó để lọc
 export const Route = createFileRoute('/_private/course/$id/submissions/')({
   component: RouteComponent,
 });
 
-// === Các Component con (Giữ nguyên) ===
+// === Component SubmissionItem (Giữ nguyên) ===
 
 const getScoreColor = (score?: number) => {
   if (score === undefined) return 'text-gray-500';
@@ -50,8 +49,7 @@ function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId:
   const { name, email, submittedAt, score, submissionName } = entry;
   const scoreColor = getScoreColor(score);
   
-  // Tạo slug từ email để dùng làm stuname trong URL
-  const stuname = email.split('@')[0]; // Lấy phần trước @ của email làm slug đơn giản
+  const stuname = email.split('@')[0]; 
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-gray-700 bg-white p-5 shadow-custom-yellow">
@@ -72,10 +70,12 @@ function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId:
 
       {/* Điểm & Nút bấm */}
       <div className="flex shrink-0 items-center gap-6">
-        {score !== undefined && (
+        {score !== undefined ? (
           <span className={`text-xl font-bold ${scoreColor}`}>
             {score.toLocaleString('vi-VN')} điểm
           </span>
+        ) : (
+          <span className="text-sm font-medium text-gray-500">Chưa chấm</span>
         )}
         <Link
           to={"/course/$id/$name/$stuname" as any}
@@ -90,14 +90,13 @@ function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId:
 }
 
 
-// === [THAY ĐỔI] Thêm hàm helper để parse ngày tháng ===
+// === [THAY ĐỔI] Thêm hàm helper để parse ngày tháng (Giữ nguyên) ===
 function parseSubmissionDate(dateString: string): Date {
   try {
     const parts = dateString.split(' '); // ['19:00', '10/10/2024']
     const timeParts = parts[0].split(':'); // ['19', '00']
     const dateParts = parts[1].split('/'); // ['10', '10', '2024'] (DD, MM, YYYY)
     
-    // new Date(year, monthIndex, day, hours, minutes)
     return new Date(
       +dateParts[2],       // year
       +dateParts[1] - 1,   // month (0-indexed)
@@ -106,32 +105,78 @@ function parseSubmissionDate(dateString: string): Date {
       +timeParts[1]        // minutes
     );
   } catch (e: string | any) {
-    // Trả về một ngày mặc định nếu parse lỗi
     console.error('Lỗi parse ngày tháng:', e);
     return new Date(0); 
   }
 }
 
+// === [THAY ĐỔI] Thêm các hàm helper mới ===
+function formatISODate(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const day = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `${time} ${day}`; // Format: "19:00 10/10/2024"
+  } catch (e) {
+    console.error('Lỗi format ngày:', e);
+    return 'Invalid Date';
+  }
+}
+
+// Dựa theo "hướng dẫn" từ mockSubmissionEntries (điểm 2.5, 5, 7.5)
+function generateRandomScore(): number | undefined {
+  const possibleScores = [2.0, 2.5, 3.0, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0];
+  // 30% cơ hội "chưa chấm" (undefined)
+  if (Math.random() < 0.3) {
+    return undefined;
+  }
+  return possibleScores[Math.floor(Math.random() * possibleScores.length)];
+}
+
+// Tạo email giả vì mockSessions không có
+function createFakeEmail(name: string): string {
+  const noDiacritics = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d");
+  const emailPrefix = noDiacritics.replace(/\s+/g, '.');
+  return `${emailPrefix}@gmail.com`;
+}
 
 // === [THAY ĐỔI] Component chính của Route ===
 
 function RouteComponent() {
-  const { id } = Route.useParams() as { id: string }; // << Chỉ cần 'id' để lấy khóa học
+  const { id } = Route.useParams() as { id: string }; // 'id' này là courseId
 
-  // === [THAY ĐỔI] Thêm state cho tìm kiếm và sắp xếp ===
   const [searchEmail, setSearchEmail] = useState('');
-  const [sortOrder, setSortOrder] = useState('Cũ nhất'); // 'Cũ nhất' | 'Mới nhất'
+  const [sortOrder, setSortOrder] = useState('Cũ nhất'); 
 
-  // === [THAY ĐỔI] Logic lấy TẤT CẢ bài nộp ===
-  // 1. Lấy tất cả các nhóm bài nộp (submission1, submission2, ...) của khóa học 'id'
-  const courseSubmissionGroups = mockSubmissionEntries[id] ?? {};
-  
-  // 2. Gộp tất cả các mảng bài nộp lại thành 1 mảng duy nhất, thêm submissionName vào mỗi entry
-  const allSubmissions = Object.entries(courseSubmissionGroups).flatMap(([submissionName, entries]) =>
-    entries.map(entry => ({ ...entry, submissionName }))
-  );
+  // === [THAY ĐỔI] Logic lấy TẤT CẢ bài nộp từ mockSessions ===
+  const allSubmissions: SubmissionEntry[] = useMemo(() => {
+    // 1. Lọc các session thuộc khóa học này
+    const courseSessions = mockSessions.filter(
+      (s) => s.courseId === id,
+    );
 
-  // === [THAY ĐỔI] Logic lọc và sắp xếp ===
+    // 2. Gộp tất cả members từ các session đó thành 1 mảng
+    // Mỗi (member + session) là một "bài nộp"
+    return courseSessions.flatMap((session) =>
+      session.members.map(member => {
+        // 3. Tạo dữ liệu 'SubmissionEntry'
+        const score = generateRandomScore(); // Tạo điểm ngẫu nhiên
+        return {
+          name: member.name,
+          email: createFakeEmail(member.name), // Tạo email giả
+          submittedAt: formatISODate(session.start), // Dùng ngày bắt đầu session
+          score: score,
+          submissionName: session.title, // Dùng tiêu đề session làm "submissionName"
+        };
+      })
+    );
+  }, [id]); // Tính toán lại khi 'id' (courseId) thay đổi
+
+  // === [THAY ĐỔI] Logic lọc và sắp xếp (giữ nguyên, chỉ đổi tên biến) ===
   const displayedSubmissions = allSubmissions
     .filter(entry => 
       // 3. Lọc theo email (không phân biệt hoa thường)
@@ -160,13 +205,13 @@ function RouteComponent() {
           <span className="font-medium">Quay lại</span>
         </Link>
         
-        {/* === [THAY ĐỔI] Tiêu đề trang === */}
+        {/* Tiêu đề trang (giữ nguyên) */}
         <h1 className="mb-6 text-3xl font-bold text-gray-800">
           Tất cả bài nộp
         </h1>
         
+        {/* Thanh filter và search (giữ nguyên) */}
         <div className="flex w-full items-center gap-4 bg-white pb-4">
-          {/* Thanh Tìm Kiếm 1 (Không đổi, chưa có chức năng) */}
           <div className="relative flex-1">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="size-5 text-gray-400" aria-hidden="true" />
@@ -180,7 +225,6 @@ function RouteComponent() {
             />
           </div>
 
-          {/* === [THAY ĐỔI] Thanh Tìm Kiếm 2 (Đã kết nối state) === */}
           <div className="relative flex-1">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="size-5 text-gray-400" aria-hidden="true" />
@@ -191,20 +235,19 @@ function RouteComponent() {
               id="search2"
               className="block w-full rounded-lg border-gray-300 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               placeholder="Nhập email học sinh để tìm kiếm ..."
-              value={searchEmail} // << Kết nối value
-              onChange={(e) => setSearchEmail(e.target.value)} // << Kết nối onChange
+              value={searchEmail} 
+              onChange={(e) => setSearchEmail(e.target.value)} 
             />
           </div>
 
-          {/* === [THAY ĐỔI] Bộ lọc Dropdown (Đã kết nối state) === */}
           <div>
             <select
               aria-label="Sắp xếp bài nộp theo"
               id="sort"
               name="sort"
               className="block w-full min-w-[120px] rounded-lg border-gray-300 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-              value={sortOrder} // << Kết nối value
-              onChange={(e) => setSortOrder(e.target.value)} // << Kết nối onChange
+              value={sortOrder} 
+              onChange={(e) => setSortOrder(e.target.value)} 
             >
               <option>Cũ nhất</option>
               <option>Mới nhất</option>
@@ -212,11 +255,10 @@ function RouteComponent() {
           </div>
         </div>
         
-        {/* === [THAY ĐỔI] Hiển thị danh sách đã lọc và sắp xếp === */}
+        {/* Hiển thị danh sách (giữ nguyên) */}
         <div className="space-y-6">
           {displayedSubmissions.length > 0 ? (
             displayedSubmissions.map((entry) => (
-              // << [THAY ĐỔI] Key tốt hơn là dùng index, đặc biệt khi sắp xếp
               (<SubmissionItem key={`${entry.email}-${entry.submittedAt}`} entry={entry} courseId={id} />)
             ))
           ) : (
