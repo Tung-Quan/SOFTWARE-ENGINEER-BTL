@@ -75,7 +75,7 @@ function RouteComponent() {
         <div className="flex items-center justify-center bg-gray-100 p-4 md:p-10">
           <div className=" overflow-hidden rounded-lg bg-white p-4 shadow-xl">
             <Link
-              to="/course/$id/$name"
+              to="/schedule/history"
               params={{ id, name } as any}
               className="mb-6 mt-3 flex items-center gap-2 text-sm font-medium text-[#3D4863] transition hover:text-blue-700"
             >

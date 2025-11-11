@@ -18,6 +18,7 @@ export type PastTutorRegistration = {
   languages: DropdownOption[]; // Danh sách ngôn ngữ
   sessionTypes: DropdownOption[]; // 'online' | 'offline'
   locations: DropdownOption[]; // Danh sách địa điểm
+  meetLink?: string; // Optional meet link for online sessions
   specialRequest: string;
   status: 'Pending' | 'Approved' | 'Declined';
   createdAt: string; // ISO date string

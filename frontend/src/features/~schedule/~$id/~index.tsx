@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 
 import { mockCourses } from '@/components/data/~mock-courses'
 import { getAllNames } from '@/components/data/~mock-names'
+import { mockLocations } from '@/components/data/~mock-register'
 import { getSessionById, updateSession, Session } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
@@ -45,6 +46,8 @@ function RouteComponent() {
   const [courseId, setCourseId] = useState('')
   const [startLocal, setStartLocal] = useState('') // datetime-local value
   const [endLocal, setEndLocal] = useState('')
+  const [link, setLink] = useState('')
+  const [locationVal, setLocationVal] = useState('')
 
   // Helpers to convert ISO <-> input[type=datetime-local] value
   const toInputLocal = (iso?: string) => {
@@ -85,6 +88,8 @@ function RouteComponent() {
     setSessionType((session?.method ?? 'online') as 'online' | 'offline')
     setStartLocal(toInputLocal(session?.start))
     setEndLocal(toInputLocal(session?.end))
+  setLink(session?.link ?? '')
+  setLocationVal(session?.location ?? '')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, session])
@@ -126,6 +131,9 @@ function RouteComponent() {
       courseId: courseId,
       start: toISOFromLocal(startLocal),
       end: toISOFromLocal(endLocal),
+      // Include link/location depending on selected method
+      link: sessionType === 'online' ? link || undefined : undefined,
+      location: sessionType === 'offline' ? locationVal || undefined : undefined,
     }
 
     updateSession(session.id, patch)
@@ -155,18 +163,22 @@ function RouteComponent() {
 
               {/* Section: Thông tin cơ bản */}
               {/* <BasicInfoSection session={session} sessionType={sessionType} onSessionTypeChange={setSessionType} /> */}
-              <BasicInfoSection 
-                title={title}
-                courseId={courseId}
-                sessionType={sessionType}
-                startLocal={startLocal}
-                endLocal={endLocal}
-                onTitleChange={setTitle}
-                onCourseIdChange={setCourseId}
-                onSessionTypeChange={setSessionType}
-                onStartChange={setStartLocal}
-                onEndChange={setEndLocal}
-              />
+                          <BasicInfoSection 
+                            title={title}
+                            courseId={courseId}
+                            sessionType={sessionType}
+                            startLocal={startLocal}
+                            endLocal={endLocal}
+                            link={link}
+                            locationVal={locationVal}
+                            onTitleChange={setTitle}
+                            onCourseIdChange={setCourseId}
+                            onSessionTypeChange={setSessionType}
+                            onStartChange={setStartLocal}
+                            onEndChange={setEndLocal}
+                            onLinkChange={setLink}
+                            onLocationChange={setLocationVal}
+                          />
               {/* Section: Điểm danh */}
               <AttendanceSection
                 members={membersList}
@@ -201,6 +213,10 @@ interface BasicInfoProps {
   onSessionTypeChange: (v: 'online' | 'offline') => void
   onStartChange: (v: string) => void
   onEndChange: (v: string) => void
+  link: string
+  locationVal: string
+  onLinkChange: (v: string) => void
+  onLocationChange: (v: string) => void
 }
 
 function BasicInfoSection({ 
@@ -209,11 +225,15 @@ function BasicInfoSection({
   sessionType, 
   startLocal, 
   endLocal,
+  link,
+  locationVal,
   onTitleChange,
   onCourseIdChange,
   onSessionTypeChange,
   onStartChange,
-  onEndChange
+  onEndChange,
+  onLinkChange,
+  onLocationChange,
 }: BasicInfoProps) {
   return (
     <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
@@ -249,7 +269,7 @@ function BasicInfoSection({
           ))}
         </FormSelect>
 
-        {/* Radio buttons */}
+  {/* Radio buttons */}
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">Loại hình (*):</label>
           <div className="flex items-center gap-6">
@@ -281,21 +301,21 @@ function BasicInfoSection({
           </div>
         </div>
 
-        {/* Time Range */}
+  {/* Time Range */}
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">Thời gian học (*):</label>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
               <div className="w-full">
-              <input 
-                id="start" 
-                name="start" 
-                aria-label="start" 
-                type="datetime-local" 
-                value={startLocal}
-                onChange={(e) => onStartChange(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
-              />
-            </div>
+                <input 
+                  id="start" 
+                  name="start" 
+                  aria-label="start" 
+                  type="datetime-local" 
+                  value={startLocal}
+                  onChange={(e) => onStartChange(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
+                />
+              </div>
             <span className="hidden font-bold text-gray-500 sm:block">−</span>
               <div className="w-full">
               <input 
@@ -305,12 +325,36 @@ function BasicInfoSection({
                 type="datetime-local" 
                 value={endLocal}
                 onChange={(e) => onEndChange(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
+                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
               />
             </div>
           </div>
         </div>
 
+        {/* Conditional: link or location depending on sessionType */}
+        {sessionType === 'online' ? (
+          <div>
+            <FormInput
+              label="Link buổi học (Meet):"
+              id="link"
+              value={link}
+              onChange={(e) => onLinkChange(e.target.value)}
+            />
+          </div>
+        ) : (
+          <div>
+            <FormSelect
+              label="Địa điểm:"
+              id="location"
+              value={locationVal}
+              onChange={(e) => onLocationChange(e.target.value)}
+            >
+              {mockLocations.map((loc) => (
+                <option key={loc.id} value={loc.name}>{loc.name}</option>
+              ))}
+            </FormSelect>
+          </div>
+        )}
         {/* Note / Upload */}
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">Note:</label>
@@ -454,7 +498,7 @@ function FormInput({ label, id, ...props }: FormInputProps) {
       <label htmlFor={id} className="mb-2 block text-sm font-medium text-gray-700">
         {label}
       </label>
-      <input type="text" id={id} {...props} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
+      <input type="text" id={id} {...props} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
     </div>
   )
 }
@@ -486,7 +530,7 @@ function FormSelect({ label, id, children, ...props }: FormSelectProps) {
         {label}
       </label>
       <div className="relative">
-        <select id={id} {...props} className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500">
+        <select id={id} {...props} className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500">
           {children}
         </select>
         <ChevronDownIcon className="pointer-events-none absolute right-3 top-2.5 size-5 text-gray-400" />

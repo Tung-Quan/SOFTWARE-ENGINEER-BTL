@@ -87,6 +87,7 @@ export function TutorRegister() {
   const [addedLanguages, setAddedLanguages] = useState<DropdownOption[]>([]);
   const [addedSessionTypes, setAddedSessionTypes] = useState<DropdownOption[]>([]);
   const [addedLocations, setAddedLocations] = useState<DropdownOption[]>([]);
+  const [meetLink, setMeetLink] = useState<string>("");
   // const [submitted, setSubmitted] = useState(false);
 
   // Helpers for adding/removing items (avoid duplicates)
@@ -218,6 +219,19 @@ export function TutorRegister() {
               </FormSection>
             )}
 
+            {/* Link meet cho các loại hình online (Chỉ hiện khi đã thêm "Học online") */}
+            {addedSessionTypes.some(t => t.id === 'online') && (
+              <FormSection title="Link buổi học online">
+                <input
+                  type="text"
+                  value={meetLink}
+                  onChange={(e) => setMeetLink(e.target.value)}
+                  placeholder="https://meet.example.com/abc-123"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+                />
+              </FormSection>
+            )}
+
             {/* Yêu cầu đặc biệt (Giữ nguyên) */}
             <FormSection title="Yêu cầu đặc biệt">
               <FormTextArea
@@ -263,6 +277,7 @@ export function TutorRegister() {
                   languages: addedLanguages.length ? addedLanguages : [],
                   sessionTypes: addedSessionTypes.length ? addedSessionTypes : [],
                   locations: addedLocations.length ? addedLocations : [],
+                  meetLink: meetLink || undefined,
                   specialRequest,
                   status: 'Pending',
                   createdAt: new Date().toISOString(),
