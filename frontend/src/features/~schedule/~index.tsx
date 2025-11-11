@@ -51,26 +51,27 @@ function dayIndexFromISO(iso: string) {
   return (jsDay + 6) % 7
 }
 
-// Filter and map sessions to calendar items, only showing those within visible hours (07:00-22:00)
-const calendarItems = getMockSessions()
-  .filter((s) => {
-    const startHour = new Date(s.start).getHours()
-    const endHour = new Date(s.end).getHours()
-    // Only show sessions that start between 07:00-21:59 or end between 07:01-22:00
-    return (startHour >= 7 && startHour < 22) || (endHour > 7 && endHour <= 22)
-  })
-  .map((s) => ({
-    id: s.id,
-    dayIndex: dayIndexFromISO(s.start),
-    startTime: toHHMM(s.start),
-    endTime: toHHMM(s.end),
-    title: s.title,
-    desc: s.desc ?? '',
-  }))
-
 // --- COMPONENT CHÍNH CỦA TRANG ---
 
 function RouteComponent() {
+  // Filter and map sessions to calendar items, only showing those within visible hours (07:00-22:00)
+  // Computed inside component so it re-runs on every render and picks up changes from mockSessions
+  const calendarItems = getMockSessions()
+    .filter((s) => {
+      const startHour = new Date(s.start).getHours()
+      const endHour = new Date(s.end).getHours()
+      // Only show sessions that start between 07:00-21:59 or end between 07:01-22:00
+      return (startHour >= 7 && startHour < 22) || (endHour > 7 && endHour <= 22)
+    })
+    .map((s) => ({
+      id: s.id,
+      dayIndex: dayIndexFromISO(s.start),
+      startTime: toHHMM(s.start),
+      endTime: toHHMM(s.end),
+      title: s.title,
+      desc: s.desc ?? '',
+    }))
+
   return (
     <StudyLayout>
       <div className="flex flex-1 flex-col">
@@ -104,7 +105,7 @@ function RouteComponent() {
             <ScheduleHeader />
 
             {/* 3.2. Grid Lịch */}
-            <CalendarGrid />
+            <CalendarGrid items={calendarItems} />
           </div>
 
           {/* 4. Nút "Yêu cầu buổi học" và liên kết Lịch sử */}
@@ -229,7 +230,18 @@ function ScheduleHeader() {
 /**
  * Grid Lịch chính (Giờ, Ngày, Các ô, và Item)
  */
-function CalendarGrid() {
+interface CalendarGridProps {
+  items: Array<{
+    id: string;
+    dayIndex: number;
+    startTime: string;
+    endTime: string;
+    title: string;
+    desc: string;
+  }>;
+}
+
+function CalendarGrid({ items }: CalendarGridProps) {
   // Grid được chia thành 15 hàng (1 giờ mỗi hàng), từ 07:00 đến 22:00 (15 giờ)
   const totalRows = 22 - 7; // = 15 rows (1 row per hour)
 
@@ -294,7 +306,7 @@ function CalendarGrid() {
         ))}
 
         {/* Các mục lịch (đè lên trên grid) */}
-        {calendarItems.map(item => (
+        {items.map((item) => (
           <CalendarItem key={item.id} item={item} />
         ))}
       </div>

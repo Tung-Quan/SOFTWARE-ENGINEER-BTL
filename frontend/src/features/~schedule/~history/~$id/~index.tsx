@@ -42,7 +42,7 @@ function RouteComponent() {
   const handleDeclineOpen = () => setDeclinePopup(true)
   const handleDeclineClose = () => setDeclinePopup(false)
   const handleDeclineSubmit = (reason: string) => {
-    if (current) updateSession(current.id, { status: 'cancelled' })
+    if (current) updateSession(current.id, { status: 'cancelled', declineReason: reason })
     setDeclinePopup(false)
     toast.success('Đã từ chối: ' + reason)
     navigate({ to: '/schedule/history' })
@@ -73,7 +73,15 @@ function RouteComponent() {
     return (
       <StudyLayout>
         <div className="flex items-center justify-center bg-gray-100 p-4 md:p-10">
-          <div className=" overflow-hidden rounded-lg bg-white shadow-xl">
+          <div className=" overflow-hidden rounded-lg bg-white p-4 shadow-xl">
+            <Link
+              to="/course/$id/$name"
+              params={{ id, name } as any}
+              className="mb-6 mt-3 flex items-center gap-2 text-sm font-medium text-[#3D4863] transition hover:text-blue-700"
+            >
+              <ArrowLeftIcon className="size-5" />
+              <span>Quay lại</span>
+            </Link>
 
             {/* Phần Header thông tin User */}
             <div className="p-6 md:p-8">

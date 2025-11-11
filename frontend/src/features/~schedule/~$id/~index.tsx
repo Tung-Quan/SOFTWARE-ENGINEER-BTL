@@ -39,7 +39,7 @@ function RouteComponent() {
   const membersList = session?.members?.map((m) => ({ id: String(m.id), name: m.name })) ?? mockMembers
 
   // State cho các trường trong form
-  const [sessionType, setSessionType] = useState('online')
+  const [sessionType, setSessionType] = useState<'online' | 'offline'>('online')
   const [attendance, setAttendance] = useState<AttendanceState>({})
   const [title, setTitle] = useState('')
   const [courseId, setCourseId] = useState('')
@@ -82,7 +82,7 @@ function RouteComponent() {
     // initialize form fields from session
     setTitle(session?.title ?? '')
     setCourseId(session?.courseId ?? '')
-    setSessionType(session?.method ?? 'online')
+    setSessionType((session?.method ?? 'online') as 'online' | 'offline')
     setStartLocal(toInputLocal(session?.start))
     setEndLocal(toInputLocal(session?.end))
 
@@ -155,7 +155,18 @@ function RouteComponent() {
 
               {/* Section: Thông tin cơ bản */}
               {/* <BasicInfoSection session={session} sessionType={sessionType} onSessionTypeChange={setSessionType} /> */}
-              <BasicInfoSection session={session} />
+              <BasicInfoSection 
+                title={title}
+                courseId={courseId}
+                sessionType={sessionType}
+                startLocal={startLocal}
+                endLocal={endLocal}
+                onTitleChange={setTitle}
+                onCourseIdChange={setCourseId}
+                onSessionTypeChange={setSessionType}
+                onStartChange={setStartLocal}
+                onEndChange={setEndLocal}
+              />
               {/* Section: Điểm danh */}
               <AttendanceSection
                 members={membersList}
@@ -180,10 +191,30 @@ function RouteComponent() {
  * Section 1: Thông tin cơ bản
  */
 interface BasicInfoProps {
-  session?: Session
+  title: string
+  courseId: string
+  sessionType: 'online' | 'offline'
+  startLocal: string
+  endLocal: string
+  onTitleChange: (v: string) => void
+  onCourseIdChange: (v: string) => void
+  onSessionTypeChange: (v: 'online' | 'offline') => void
+  onStartChange: (v: string) => void
+  onEndChange: (v: string) => void
 }
 
-function BasicInfoSection({ session }: BasicInfoProps) {
+function BasicInfoSection({ 
+  title, 
+  courseId, 
+  sessionType, 
+  startLocal, 
+  endLocal,
+  onTitleChange,
+  onCourseIdChange,
+  onSessionTypeChange,
+  onStartChange,
+  onEndChange
+}: BasicInfoProps) {
   return (
     <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
       {/* Sóng trang trí */}
@@ -198,9 +229,19 @@ function BasicInfoSection({ session }: BasicInfoProps) {
 
         {/* Các trường input */}
         {/* Controlled inputs are passed down via DOM IDs and form state in parent; here we render uncontrolled placeholders to keep markup simple. */}
-        <FormInput label="Chủ đề buổi học (*):" id="topic" defaultValue={session?.title ?? ''} />
+        <FormInput 
+          label="Chủ đề buổi học (*):" 
+          id="topic" 
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+        />
 
-        <FormSelect label="Khóa học (*):" id="course" defaultValue={session?.courseId ?? ''}>
+        <FormSelect 
+          label="Khóa học (*):" 
+          id="course" 
+          value={courseId}
+          onChange={(e) => onCourseIdChange(e.target.value)}
+        >
           {mockCourses.map((c) => (
             <option key={c.id} value={c.id}>
               {c.id} - {c.title}
@@ -217,7 +258,8 @@ function BasicInfoSection({ session }: BasicInfoProps) {
                 type="radio"
                 name="sessionType"
                 value="online"
-                defaultChecked={String(session?.method) === 'online'}
+                checked={sessionType === 'online'}
+                onChange={() => onSessionTypeChange('online')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                 aria-label="session-type-online"
               />
@@ -228,7 +270,8 @@ function BasicInfoSection({ session }: BasicInfoProps) {
                 type="radio"
                 name="sessionType"
                 value="offline"
-                defaultChecked={String(session?.method) === 'offline'}
+                checked={sessionType === 'offline'}
+                onChange={() => onSessionTypeChange('offline')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                 aria-label="session-type-offline"
               />
@@ -243,27 +286,27 @@ function BasicInfoSection({ session }: BasicInfoProps) {
           <label className="mb-2 block text-sm font-medium text-gray-700">Thời gian học (*):</label>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
               <div className="w-full">
-              <input id="start" name="start" aria-label="start" type="datetime-local" defaultValue={session ? (() => {
-                const d = new Date(session.start)
-                const yyyy = d.getFullYear()
-                const mm = String(d.getMonth() + 1).padStart(2, '0')
-                const dd = String(d.getDate()).padStart(2, '0')
-                const hh = String(d.getHours()).padStart(2, '0')
-                const min = String(d.getMinutes()).padStart(2, '0')
-                return `${yyyy}-${mm}-${dd}T${hh}:${min}`
-              })() : ''} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
+              <input 
+                id="start" 
+                name="start" 
+                aria-label="start" 
+                type="datetime-local" 
+                value={startLocal}
+                onChange={(e) => onStartChange(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
+              />
             </div>
             <span className="hidden font-bold text-gray-500 sm:block">−</span>
               <div className="w-full">
-              <input id="end" name="end" aria-label="end" type="datetime-local" defaultValue={session ? (() => {
-                const d = new Date(session.end)
-                const yyyy = d.getFullYear()
-                const mm = String(d.getMonth() + 1).padStart(2, '0')
-                const dd = String(d.getDate()).padStart(2, '0')
-                const hh = String(d.getHours()).padStart(2, '0')
-                const min = String(d.getMinutes()).padStart(2, '0')
-                return `${yyyy}-${mm}-${dd}T${hh}:${min}`
-              })() : ''} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
+              <input 
+                id="end" 
+                name="end" 
+                aria-label="end" 
+                type="datetime-local" 
+                value={endLocal}
+                onChange={(e) => onEndChange(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
+              />
             </div>
           </div>
         </div>

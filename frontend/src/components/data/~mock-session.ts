@@ -16,6 +16,7 @@ export type Session = {
   end: string; // ISO datetime
   members: SessionMember[];
   studentNames?: string[];
+  declineReason?: string;
   status: 'scheduled' | 'completed' | 'cancelled';
   createdAt: string;
 };
@@ -33,6 +34,17 @@ function randomStatus(): Session['status'] {
   return 'cancelled'
 }
 
+// When a session is cancelled, provide a short 1-2 line reason for the decline.
+function randomDeclineReason(): string {
+  const reasons = [
+    'Giảng viên bận đột xuất. Buổi học bị huỷ.',
+    'Phòng học được sử dụng cho sự kiện khác. Buổi học tạm hoãn.',
+    'Số lượng học viên không đủ, buổi học được dời.',
+    'Vấn đề kỹ thuật với hệ thống trực tuyến, buổi học hoãn lại.'
+  ]
+  return reasons[Math.floor(Math.random() * reasons.length)]
+}
+
 // Build some sample sessions using courses and names
 export const mockSessions: Session[] = [
   {
@@ -46,7 +58,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-17T09:00:00')),
     end: toISO(new Date('2025-12-17T10:00:00')),
     members: getRandomMembers(8),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -10)),
   },
   {
@@ -60,7 +75,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-17T13:00:00')),
     end: toISO(new Date('2025-12-17T15:00:00')),
     members: getRandomMembers(6),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -8)),
   },
   {
@@ -74,7 +92,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-18T10:00:00')),
     end: toISO(new Date('2025-12-18T11:30:00')),
     members: getRandomMembers(10),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -7)),
   },
   {
@@ -88,7 +109,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-20T14:00:00')),
     end: toISO(new Date('2025-12-20T15:00:00')),
     members: getRandomMembers(8),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -5)),
   },
   {
@@ -102,7 +126,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-22T08:00:00')),
     end: toISO(new Date('2025-12-22T10:00:00')),
     members: getRandomMembers(12),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -3)),
   },
   // Completed session example
@@ -117,7 +144,10 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-11-20T09:00:00')),
     end: toISO(new Date('2025-11-20T10:00:00')),
     members: getRandomMembers(7),
-    status: randomStatus(),
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
     createdAt: toISO(addDays(now, -40)),
   },
 ];
