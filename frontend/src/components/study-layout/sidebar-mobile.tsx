@@ -65,9 +65,9 @@ const SidebarMobile = ({ opened, close }: SidebarMobileProps) => {
         onClick={close}
       />
       <div
-        className={`${opened ? 'left-0' : '-left-full'} fixed top-0 z-[99] flex h-screen w-80 flex-col justify-between gap-5 overflow-hidden overflow-y-scroll border-r border-solid border-tertiary-300 bg-white p-5 duration-200 ease-in-out md:w-[22.5rem] xl:hidden`}
+        className={`${opened ? 'left-0' : '-left-full'} fixed top-0 z-[99] flex h-screen w-80 flex-col justify-between gap-5 overflow-hidden border-r border-solid border-tertiary-300 bg-white p-5 duration-200 ease-in-out md:w-[22.5rem] xl:hidden`}
       >
-        <div className="flex w-full flex-col gap-5 overflow-hidden overflow-y-scroll">
+        <div className="flex size-full flex-col gap-5 overflow-hidden overflow-y-auto">
           <div className="relative flex h-20 w-full flex-row items-center justify-between md:h-20 3xl:h-24">
             <img
               aria-label="BachKhoa Logo"

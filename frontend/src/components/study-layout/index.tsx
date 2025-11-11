@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 
 import { useUserStore } from '@/stores';
 
@@ -16,11 +16,21 @@ type StudyLayoutProps = {
 const StudyLayout = ({ children }: StudyLayoutProps) => {
   const { user, setUser } = useUserStore();
   const [sidebarMobileOpened, setSidebarMobileOpened] = useState(false);
-  const [sidebarDesktopOpened, setSidebarDesktopOpened] = useState(true);
+  
+  // Initialize sidebar state from localStorage, default to true
+  const [sidebarDesktopOpened, setSidebarDesktopOpened] = useState(() => {
+    const saved = localStorage.getItem('sidebarDesktopOpened');
+    return saved !== null ? saved === 'true' : true;
+  });
+
+  // Persist sidebar state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('sidebarDesktopOpened', String(sidebarDesktopOpened));
+  }, [sidebarDesktopOpened]);
 
   return (
     <>
-      <div className="relative flex h-fit min-h-screen w-screen min-w-[360px] flex-row bg-white">
+      <div className="relative flex min-h-screen w-screen min-w-[360px] flex-row bg-white">
         <SidebarMobile
           isManager={user?.isManager}
           opened={sidebarMobileOpened}
@@ -30,7 +40,7 @@ const StudyLayout = ({ children }: StudyLayoutProps) => {
           isManager={user?.isManager}
           opened={sidebarDesktopOpened}
         />
-        <div className="relative flex h-fit w-full min-w-0 flex-col bg-white">
+        <div className="relative flex min-h-screen w-full min-w-0 flex-col bg-white">
           <Header
             user={user}
             setUser={setUser}
