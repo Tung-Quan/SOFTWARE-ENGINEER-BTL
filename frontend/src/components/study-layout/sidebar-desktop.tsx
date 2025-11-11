@@ -189,9 +189,6 @@ const SidebarDesktop = ({ opened }: SidebarDesktopProps) => {
             route="/register-session"
             current={router.location.pathname}
           >
-            {/* Lưu ý: Đây là icon cái cặp (giống "Khóa học") vì bạn gửi SVG đó. 
-        Nếu bạn có SVG mũ tốt nghiệp, hãy tạo component cho nó và thay vào đây.
-      */}
             <IconDangKyMonHoc
               className={`${router.location.pathname.startsWith('/register-session') ? 'fill-white' : 'fill-tertiary group-hover:fill-white'} size-6 duration-200 ease-in-out `}
             />

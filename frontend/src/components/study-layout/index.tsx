@@ -1,5 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 
+import ScrollToTop from '@/components/scroll-to-top';
 import { useUserStore } from '@/stores';
 
 // import CountdownBar from '../countdown-bar';
@@ -31,6 +32,7 @@ const StudyLayout = ({ children }: StudyLayoutProps) => {
   return (
     <>
       <div className="relative flex min-h-screen w-screen min-w-[360px] flex-row bg-white">
+        <ScrollToTop />
         <SidebarMobile
           isManager={user?.isManager}
           opened={sidebarMobileOpened}
