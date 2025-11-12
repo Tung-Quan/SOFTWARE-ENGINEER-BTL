@@ -32,18 +32,41 @@ function CourseDetailsComponent() {
   const contentContainerRef = useRef<HTMLDivElement>(null);
 
   const SubmissionIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path d="M3.33333 10.8333H8.33333V5.83333H11.6667L5.83333 0L0 5.83333H3.33333V10.8333ZM0 12.5H11.6667V14.1667H0V12.5Z" fill="currentColor" fillOpacity="0.87" />
+    <svg
+      width="12"
+      height="15"
+      viewBox="0 0 12 15"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M3.33333 10.8333H8.33333V5.83333H11.6667L5.83333 0L0 5.83333H3.33333V10.8333ZM0 12.5H11.6667V14.1667H0V12.5Z"
+        fill="currentColor"
+        fillOpacity="0.87"
+      />
     </svg>
   );
 
   const NoteIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path d="M16.667 1.6665H3.33366C2.41699 1.6665 1.67533 2.4165 1.67533 3.33317L1.66699 18.3332L5.00033 14.9998H16.667C17.5837 14.9998 18.3337 14.2498 18.3337 13.3332V3.33317C18.3337 2.4165 17.5837 1.6665 16.667 1.6665ZM6.66699 11.6665H5.00033V9.99984H6.66699V11.6665ZM6.66699 9.1665H5.00033V7.49984H6.66699V9.1665ZM6.66699 6.6665H5.00033V4.99984H6.66699V6.6665ZM12.5003 11.6665H8.33366V9.99984H12.5003V11.6665ZM15.0003 9.1665H8.33366V7.49984H15.0003V9.1665ZM15.0003 6.6665H8.33366V4.99984H15.0003V6.6665Z" fill="currentColor" />
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M16.667 1.6665H3.33366C2.41699 1.6665 1.67533 2.4165 1.67533 3.33317L1.66699 18.3332L5.00033 14.9998H16.667C17.5837 14.9998 18.3337 14.2498 18.3337 13.3332V3.33317C18.3337 2.4165 17.5837 1.6665 16.667 1.6665ZM6.66699 11.6665H5.00033V9.99984H6.66699V11.6665ZM6.66699 9.1665H5.00033V7.49984H6.66699V9.1665ZM6.66699 6.6665H5.00033V4.99984H6.66699V6.6665ZM12.5003 11.6665H8.33366V9.99984H12.5003V11.6665ZM15.0003 9.1665H8.33366V7.49984H15.0003V9.1665ZM15.0003 6.6665H8.33366V4.99984H15.0003V6.6665Z"
+        fill="currentColor"
+      />
     </svg>
   );
 
-  const CreateMaterialIcon: React.FC<{ className?: string }> = ({ className }) => (
+  const CreateMaterialIcon: React.FC<{ className?: string }> = ({
+    className,
+  }) => (
     <svg
       width="15"
       height="15"
@@ -52,17 +75,36 @@ function CourseDetailsComponent() {
       xmlns="http://www.w3.org/2000/svg"
       className={`${className ?? ''} transition-colors duration-150`}
     >
-      <path d="M13.3333 0H1.66667C0.741667 0 0 0.75 0 1.66667V13.3333C0 14.25 0.741667 15 1.66667 15H13.3333C14.25 15 15 14.25 15 13.3333V1.66667C15 0.75 14.25 0 13.3333 0ZM11.6667 8.33333H8.33333V11.6667H6.66667V8.33333H3.33333V6.66667H6.66667V3.33333H8.33333V6.66667H11.6667V8.33333Z" fill="currentColor" />
+      <path
+        d="M13.3333 0H1.66667C0.741667 0 0 0.75 0 1.66667V13.3333C0 14.25 0.741667 15 1.66667 15H13.3333C14.25 15 15 14.25 15 13.3333V1.66667C15 0.75 14.25 0 13.3333 0ZM11.6667 8.33333H8.33333V11.6667H6.66667V8.33333H3.33333V6.66667H6.66667V3.33333H8.33333V6.66667H11.6667V8.33333Z"
+        fill="currentColor"
+      />
     </svg>
   );
 
-  const ReferenceBookIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <path d="M15.0007 1.6665H5.00065C4.08398 1.6665 3.33398 2.4165 3.33398 3.33317V16.6665C3.33398 17.5832 4.08398 18.3332 5.00065 18.3332H15.0007C15.9173 18.3332 16.6673 17.5832 16.6673 16.6665V3.33317C16.6673 2.4165 15.9173 1.6665 15.0007 1.6665ZM5.00065 3.33317H9.16732V9.99984L7.08398 8.74984L5.00065 9.99984V3.33317Z" fill="#3D4863" fillOpacity="0.87" />
+  const ReferenceBookIcon: React.FC<{ className?: string }> = ({
+    className,
+  }) => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M15.0007 1.6665H5.00065C4.08398 1.6665 3.33398 2.4165 3.33398 3.33317V16.6665C3.33398 17.5832 4.08398 18.3332 5.00065 18.3332H15.0007C15.9173 18.3332 16.6673 17.5832 16.6673 16.6665V3.33317C16.6673 2.4165 15.9173 1.6665 15.0007 1.6665ZM5.00065 3.33317H9.16732V9.99984L7.08398 8.74984L5.00065 9.99984V3.33317Z"
+        fill="#3D4863"
+        fillOpacity="0.87"
+      />
     </svg>
   );
 
-  const typeToIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  const typeToIconMap: Record<
+    string,
+    React.ComponentType<{ className?: string }>
+  > = {
     introduction: BookIcon,
     material: PaperIcon,
     movie: PlayIcon,
@@ -89,7 +131,11 @@ function CourseDetailsComponent() {
   const userLocalStore = State.user ?? null;
   // Set initial active tab when courseDetail loads
   useEffect(() => {
-    if (courseDetail?.content && courseDetail.content.length > 0 && !activeTab) {
+    if (
+      courseDetail?.content &&
+      courseDetail.content.length > 0 &&
+      !activeTab
+    ) {
       setActiveTab(`${courseDetail.content[0].type}-0`);
     }
   }, [courseDetail, activeTab]);
@@ -151,10 +197,16 @@ function CourseDetailsComponent() {
 
   // Map PDFs placed in `src/data/` to URLs (Vite)
   // If your PDF files are in `frontend/src/data/`, this will resolve them to URLs at build time.
-  const pdfModules = import.meta.glob('../../../data/*', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+  const pdfModules = import.meta.glob('../../../data/*', {
+    query: '?url',
+    import: 'default',
+    eager: true,
+  }) as Record<string, string>;
   const getAssetUrl = (filename?: string) => {
     if (!filename) return '';
-    const found = Object.entries(pdfModules).find(([k]) => k.endsWith(filename));
+    const found = Object.entries(pdfModules).find(([k]) =>
+      k.endsWith(filename),
+    );
     const val: any = found ? found[1] : `@/src/data/${filename}`;
 
     // Normalize possible module shapes to a string URL.
@@ -163,9 +215,11 @@ function CourseDetailsComponent() {
     // Vite may return modules or Response-like objects in some configs — handle common cases.
     if (typeof val === 'object') {
       // Common ESM default export
-      if ('default' in val && typeof val.default === 'string') return val.default;
+      if ('default' in val && typeof val.default === 'string')
+        return val.default;
       // If it's a Response object, use its url
-      if (typeof (val as Response).url === 'string') return (val as Response).url;
+      if (typeof (val as Response).url === 'string')
+        return (val as Response).url;
       // If it has a 'url' property
       if ('url' in val && typeof val.url === 'string') return val.url;
       // Fallback to string coercion
@@ -187,15 +241,23 @@ function CourseDetailsComponent() {
         // content items can be a discriminated union with different 'data' shapes.
         // Cast to any[] locally to avoid TypeScript assignment narrowing issues
         const updatedContent: any[] = [...(courseDetail.content || [])];
-        updatedContent[index] = { ...(updatedContent[index] as any), [field]: value };
+        updatedContent[index] = {
+          ...(updatedContent[index] as any),
+          [field]: value,
+        };
         setCourseDetail({ ...courseDetail, content: updatedContent });
       }
     };
 
     // Handler to delete item
     const handleDeleteItem = () => {
-      if (courseDetail && window.confirm('Bạn có chắc muốn xóa danh mục này?')) {
-        const updatedContent = courseDetail.content?.filter((_, i) => i !== index);
+      if (
+        courseDetail &&
+        window.confirm('Bạn có chắc muốn xóa danh mục này?')
+      ) {
+        const updatedContent = courseDetail.content?.filter(
+          (_, i) => i !== index,
+        );
         setCourseDetail({ ...courseDetail, content: updatedContent });
       }
     };
@@ -212,7 +274,10 @@ function CourseDetailsComponent() {
         // Special handling for submission status changes
         if (prev?.type === 'submission' && dataField === 'status') {
           // When changing to submitted/graded, ensure submittedFile exists
-          if ((value === 'submitted' || value === 'graded') && !newData.submittedFile) {
+          if (
+            (value === 'submitted' || value === 'graded') &&
+            !newData.submittedFile
+          ) {
             newData.submittedFile = { name: '', submittedAt: '' };
           }
           // When changing to graded, ensure grade/feedback exist
@@ -254,44 +319,84 @@ function CourseDetailsComponent() {
                       type="text"
                       className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-xl font-bold focus:border-blue-500 focus:outline-none"
                       value={item.title}
-                      onChange={(e) => handleUpdateItem('title', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateItem('title', e.target.value)
+                      }
                     />
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <Icon className="size-5 text-gray-600" />
                       </div>
-                      <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                      <Listbox
+                        value={item.type}
+                        onChange={(v) => handleUpdateItem('type', v)}
+                      >
                         <div className="relative w-64">
                           <Listbox.Button className="relative w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                             <span className="flex items-center">
                               {/* current icon */}
                               {(() => {
                                 // const ct = categoryTypes.find((c) => c.id === item.type);
-                                const IconComp = typeToIconMap[item.type] || BookIcon;
-                                return IconComp ? <IconComp className="size-5 shrink-0 text-gray-500" aria-hidden="true" /> : null;
+                                const IconComp =
+                                  typeToIconMap[item.type] || BookIcon;
+                                return IconComp ? (
+                                  <IconComp
+                                    className="size-5 shrink-0 text-gray-500"
+                                    aria-hidden="true"
+                                  />
+                                ) : null;
                               })()}
-                              <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                              <span className="ml-2 block truncate">
+                                {categoryTypes.find((c) => c.id === item.type)
+                                  ?.label || 'Chọn loại danh mục'}
+                              </span>
                             </span>
                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                              <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                              <svg
+                                className="size-5 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M19 9l-7 7-7-7"
+                                />
                               </svg>
                             </span>
                           </Listbox.Button>
 
-                          <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                          <Transition
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
                             <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                               {categoryTypes.map((type) => {
-                                const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                                const OptionIcon =
+                                  typeToIconMap[type.id] || BookIcon;
                                 return (
                                   <Listbox.Option
                                     key={type.id}
                                     value={type.id}
-                                    className={({ active }) => `relative cursor-pointer select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                    className={({ active }) =>
+                                      `relative cursor-pointer select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
+                                    }
+                                  >
                                     {({ selected }) => (
-                                      <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                        <OptionIcon className="size-5 shrink-0 text-gray-500" aria-hidden="true" />
-                                        <span className="ml-2 block truncate">{type.label}</span>
+                                      <span
+                                        className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                      >
+                                        <OptionIcon
+                                          className="size-5 shrink-0 text-gray-500"
+                                          aria-hidden="true"
+                                        />
+                                        <span className="ml-2 block truncate">
+                                          {type.label}
+                                        </span>
                                       </span>
                                     )}
                                   </Listbox.Option>
@@ -302,8 +407,18 @@ function CourseDetailsComponent() {
                         </div>
                       </Listbox>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        <svg
+                          className="size-4 text-gray-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                       </div>
                     </div>
@@ -313,8 +428,18 @@ function CourseDetailsComponent() {
                     className="text-red-600 hover:text-red-800"
                     title="Xóa danh mục"
                   >
-                    <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#EA4335" />
+                    <svg
+                      className="size-5"
+                      width="14"
+                      height="18"
+                      viewBox="0 0 14 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                        fill="#EA4335"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -330,11 +455,11 @@ function CourseDetailsComponent() {
               <>
                 <div className="mb-4 flex items-center gap-3">
                   <Icon className="size-6 text-gray-700" />
-                  <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {item.title}
+                  </h2>
                 </div>
-                <p className="text-gray-600">
-                  {item.data.text}
-                </p>
+                <p className="text-gray-600">{item.data.text}</p>
               </>
             )}
           </>
@@ -360,33 +485,74 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                    <Listbox
+                      value={item.type}
+                      onChange={(v) => handleUpdateItem('type', v)}
+                    >
                       <div className="relative w-64">
                         <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                           <span className="flex items-center">
                             {(() => {
-                              const IconComp = typeToIconMap[item.type] || BookIcon;
-                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                              const IconComp =
+                                typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? (
+                                <IconComp
+                                  className="size-5 text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              ) : null;
                             })()}
-                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                            <span className="ml-2 block truncate">
+                              {categoryTypes.find((c) => c.id === item.type)
+                                ?.label || 'Chọn loại danh mục'}
+                            </span>
                           </span>
                           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <svg
+                              className="size-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </span>
                         </Listbox.Button>
 
-                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
                           <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                             {categoryTypes.map((type) => {
-                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              const OptionIcon =
+                                typeToIconMap[type.id] || BookIcon;
                               return (
-                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                <Listbox.Option
+                                  key={type.id}
+                                  value={type.id}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
+                                  }
+                                >
                                   {({ selected }) => (
-                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
-                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    <span
+                                      className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                    >
+                                      <OptionIcon
+                                        className="size-5 text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="ml-2 block truncate">
+                                        {type.label}
+                                      </span>
                                     </span>
                                   )}
                                 </Listbox.Option>
@@ -397,8 +563,18 @@ function CourseDetailsComponent() {
                       </div>
                     </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      <svg
+                        className="size-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -408,8 +584,18 @@ function CourseDetailsComponent() {
                   className="text-red-600 hover:text-red-800"
                   title="Xóa danh mục"
                 >
-                  <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#EA4335" />
+                  <svg
+                    className="size-5"
+                    width="14"
+                    height="18"
+                    viewBox="0 0 14 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                      fill="#EA4335"
+                    />
                   </svg>
                 </button>
               </div>
@@ -417,7 +603,9 @@ function CourseDetailsComponent() {
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Icon className="size-6 text-[#0329E9]" />
-                  <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {item.title}
+                  </h2>
                 </div>
               </div>
             )}
@@ -432,10 +620,14 @@ function CourseDetailsComponent() {
                       type="text"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.document?.title || ''}
-                      onChange={(e) => handleUpdateData('document', {
-                        ...(item.data.document || { id: `doc-${Date.now()}` }),
-                        title: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('document', {
+                          ...(item.data.document || {
+                            id: `doc-${Date.now()}`,
+                          }),
+                          title: e.target.value,
+                        })
+                      }
                       placeholder="Nhập tiêu đề tài liệu"
                     />
                   </div>
@@ -448,10 +640,14 @@ function CourseDetailsComponent() {
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       rows={3}
                       value={item.data.document?.description || ''}
-                      onChange={(e) => handleUpdateData('document', {
-                        ...(item.data.document || { id: `doc-${Date.now()}` }),
-                        description: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('document', {
+                          ...(item.data.document || {
+                            id: `doc-${Date.now()}`,
+                          }),
+                          description: e.target.value,
+                        })
+                      }
                       placeholder="Nhập mô tả chi tiết về tài liệu"
                     />
                   </div>
@@ -465,10 +661,14 @@ function CourseDetailsComponent() {
                       type="date"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.document?.dueDate || ''}
-                      onChange={(e) => handleUpdateData('document', {
-                        ...(item.data.document || { id: `doc-${Date.now()}` }),
-                        dueDate: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('document', {
+                          ...(item.data.document || {
+                            id: `doc-${Date.now()}`,
+                          }),
+                          dueDate: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -480,10 +680,14 @@ function CourseDetailsComponent() {
                       type="text"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.document?.source || ''}
-                      onChange={(e) => handleUpdateData('document', {
-                        ...(item.data.document || { id: `doc-${Date.now()}` }),
-                        source: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('document', {
+                          ...(item.data.document || {
+                            id: `doc-${Date.now()}`,
+                          }),
+                          source: e.target.value,
+                        })
+                      }
                       placeholder="Ví dụ: document.pdf"
                     />
                   </div>
@@ -491,7 +695,8 @@ function CourseDetailsComponent() {
                   {item.data.document?.source && (
                     <div className="rounded border border-blue-200 bg-blue-50 p-3">
                       <p className="text-xs text-blue-700">
-                        <strong>Preview:</strong> File sẽ được tải từ: {getAssetUrl(item.data.document.source)}
+                        <strong>Preview:</strong> File sẽ được tải từ:{' '}
+                        {getAssetUrl(item.data.document.source)}
                       </p>
                     </div>
                   )}
@@ -508,7 +713,9 @@ function CourseDetailsComponent() {
                           <p className="mb-2 text-sm text-gray-600">
                             {item.data.document.description}
                           </p>
-                          <p className="text-xs text-gray-500">File: {item.data.document.source}</p>
+                          <p className="text-xs text-gray-500">
+                            File: {item.data.document.source}
+                          </p>
                         </div>
                         <div className="shrink-0">
                           <a
@@ -516,8 +723,19 @@ function CourseDetailsComponent() {
                             download
                             className="inline-flex items-center gap-2 rounded-lg bg-[#0329E9] px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                           >
-                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="shrink-0">
-                              <path d="M15.8337 7.5H12.5003V2.5H7.50033V7.5H4.16699L10.0003 13.3333L15.8337 7.5ZM4.16699 15V16.6667H15.8337V15H4.16699Z" fill="white" />
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              aria-hidden="true"
+                              className="shrink-0"
+                            >
+                              <path
+                                d="M15.8337 7.5H12.5003V2.5H7.50033V7.5H4.16699L10.0003 13.3333L15.8337 7.5ZM4.16699 15V16.6667H15.8337V15H4.16699Z"
+                                fill="white"
+                              />
                             </svg>
                             <span>Tải tài liệu</span>
                           </a>
@@ -562,33 +780,74 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                    <Listbox
+                      value={item.type}
+                      onChange={(v) => handleUpdateItem('type', v)}
+                    >
                       <div className="relative w-64">
                         <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                           <span className="flex items-center">
                             {(() => {
-                              const IconComp = typeToIconMap[item.type] || BookIcon;
-                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                              const IconComp =
+                                typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? (
+                                <IconComp
+                                  className="size-5 text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              ) : null;
                             })()}
-                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                            <span className="ml-2 block truncate">
+                              {categoryTypes.find((c) => c.id === item.type)
+                                ?.label || 'Chọn loại danh mục'}
+                            </span>
                           </span>
                           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <svg
+                              className="size-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </span>
                         </Listbox.Button>
 
-                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
                           <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                             {categoryTypes.map((type) => {
-                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              const OptionIcon =
+                                typeToIconMap[type.id] || BookIcon;
                               return (
-                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                <Listbox.Option
+                                  key={type.id}
+                                  value={type.id}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
+                                  }
+                                >
                                   {({ selected }) => (
-                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
-                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    <span
+                                      className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                    >
+                                      <OptionIcon
+                                        className="size-5 text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="ml-2 block truncate">
+                                        {type.label}
+                                      </span>
                                     </span>
                                   )}
                                 </Listbox.Option>
@@ -599,8 +858,18 @@ function CourseDetailsComponent() {
                       </div>
                     </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      <svg
+                        className="size-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -610,15 +879,27 @@ function CourseDetailsComponent() {
                   className="text-red-600 hover:text-red-800"
                   title="Xóa danh mục"
                 >
-                  <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#EA4335" />
+                  <svg
+                    className="size-5"
+                    width="14"
+                    height="18"
+                    viewBox="0 0 14 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                      fill="#EA4335"
+                    />
                   </svg>
                 </button>
               </div>
             ) : (
               <div className="mb-4 flex items-center gap-3">
                 <Icon className="size-6 text-gray-700" />
-                <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {item.title}
+                </h2>
               </div>
             )}
             {changing ? (
@@ -631,10 +912,12 @@ function CourseDetailsComponent() {
                     type="text"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     value={item.data.video?.title || ''}
-                    onChange={(e) => handleUpdateData('video', {
-                      ...(item.data.video || { id: `vid-${Date.now()}` }),
-                      title: e.target.value
-                    })}
+                    onChange={(e) =>
+                      handleUpdateData('video', {
+                        ...(item.data.video || { id: `vid-${Date.now()}` }),
+                        title: e.target.value,
+                      })
+                    }
                     placeholder="Nhập tiêu đề video"
                   />
                 </div>
@@ -647,10 +930,12 @@ function CourseDetailsComponent() {
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     rows={3}
                     value={item.data.video?.description || ''}
-                    onChange={(e) => handleUpdateData('video', {
-                      ...(item.data.video || { id: `vid-${Date.now()}` }),
-                      description: e.target.value
-                    })}
+                    onChange={(e) =>
+                      handleUpdateData('video', {
+                        ...(item.data.video || { id: `vid-${Date.now()}` }),
+                        description: e.target.value,
+                      })
+                    }
                     placeholder="Nhập mô tả chi tiết về video"
                   />
                 </div>
@@ -663,19 +948,28 @@ function CourseDetailsComponent() {
                     type="url"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                     value={item.data.video?.url || ''}
-                    onChange={(e) => handleUpdateData('video', {
-                      ...(item.data.video || { id: `vid-${Date.now()}` }),
-                      url: e.target.value
-                    })}
+                    onChange={(e) =>
+                      handleUpdateData('video', {
+                        ...(item.data.video || { id: `vid-${Date.now()}` }),
+                        url: e.target.value,
+                      })
+                    }
                     placeholder="https://www.youtube.com/watch?v=..."
                   />
                 </div>
 
                 {item.data.video?.url && (
                   <div className="rounded border border-blue-200 bg-blue-50 p-3">
-                    <p className="mb-2 text-xs font-medium text-blue-700">Preview:</p>
+                    <p className="mb-2 text-xs font-medium text-blue-700">
+                      Preview:
+                    </p>
                     <div className="aspect-video w-full overflow-hidden rounded-md border border-blue-300">
-                      <iframe src={toEmbed(item.data.video.url)} title="Preview" className="size-full" allowFullScreen />
+                      <iframe
+                        src={toEmbed(item.data.video.url)}
+                        title="Preview"
+                        className="size-full"
+                        allowFullScreen
+                      />
                     </div>
                   </div>
                 )}
@@ -684,10 +978,19 @@ function CourseDetailsComponent() {
               <>
                 {item.data.video ? (
                   <div className="mb-6">
-                    <h3 className="mb-2 font-semibold text-gray-800">{item.data.video.title}</h3>
-                    <p className="mb-3 text-sm text-gray-600">{item.data.video.description}</p>
+                    <h3 className="mb-2 font-semibold text-gray-800">
+                      {item.data.video.title}
+                    </h3>
+                    <p className="mb-3 text-sm text-gray-600">
+                      {item.data.video.description}
+                    </p>
                     <div className="aspect-video w-full overflow-hidden rounded-md border">
-                      <iframe src={toEmbed(item.data.video.url)} title={item.data.video.title} className="size-full" allowFullScreen />
+                      <iframe
+                        src={toEmbed(item.data.video.url)}
+                        title={item.data.video.title}
+                        className="size-full"
+                        allowFullScreen
+                      />
                     </div>
                   </div>
                 ) : (
@@ -719,33 +1022,74 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                    <Listbox
+                      value={item.type}
+                      onChange={(v) => handleUpdateItem('type', v)}
+                    >
                       <div className="relative w-64">
                         <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                           <span className="flex items-center">
                             {(() => {
-                              const IconComp = typeToIconMap[item.type] || BookIcon;
-                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                              const IconComp =
+                                typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? (
+                                <IconComp
+                                  className="size-5 text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              ) : null;
                             })()}
-                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                            <span className="ml-2 block truncate">
+                              {categoryTypes.find((c) => c.id === item.type)
+                                ?.label || 'Chọn loại danh mục'}
+                            </span>
                           </span>
                           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <svg
+                              className="size-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </span>
                         </Listbox.Button>
 
-                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
                           <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                             {categoryTypes.map((type) => {
-                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              const OptionIcon =
+                                typeToIconMap[type.id] || BookIcon;
                               return (
-                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                <Listbox.Option
+                                  key={type.id}
+                                  value={type.id}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
+                                  }
+                                >
                                   {({ selected }) => (
-                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
-                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    <span
+                                      className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                    >
+                                      <OptionIcon
+                                        className="size-5 text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="ml-2 block truncate">
+                                        {type.label}
+                                      </span>
                                     </span>
                                   )}
                                 </Listbox.Option>
@@ -756,8 +1100,18 @@ function CourseDetailsComponent() {
                       </div>
                     </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      <svg
+                        className="size-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -767,15 +1121,27 @@ function CourseDetailsComponent() {
                   className="text-red-600 hover:text-red-800"
                   title="Xóa danh mục"
                 >
-                  <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#EA4335" />
+                  <svg
+                    className="size-5"
+                    width="14"
+                    height="18"
+                    viewBox="0 0 14 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                      fill="#EA4335"
+                    />
                   </svg>
                 </button>
               </div>
             ) : (
               <div className="mb-4 flex items-center gap-3">
                 <Icon className="size-6 text-gray-700" />
-                <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {item.title}
+                </h2>
               </div>
             )}
             <div className="space-y-4">
@@ -789,10 +1155,14 @@ function CourseDetailsComponent() {
                       type="text"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.assignment?.title || ''}
-                      onChange={(e) => handleUpdateData('assignment', {
-                        ...(item.data.assignment || { id: `assign-${Date.now()}` }),
-                        title: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('assignment', {
+                          ...(item.data.assignment || {
+                            id: `assign-${Date.now()}`,
+                          }),
+                          title: e.target.value,
+                        })
+                      }
                       placeholder="Nhập tiêu đề bài tập"
                     />
                   </div>
@@ -805,10 +1175,14 @@ function CourseDetailsComponent() {
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       rows={5}
                       value={item.data.assignment?.description || ''}
-                      onChange={(e) => handleUpdateData('assignment', {
-                        ...(item.data.assignment || { id: `assign-${Date.now()}` }),
-                        description: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('assignment', {
+                          ...(item.data.assignment || {
+                            id: `assign-${Date.now()}`,
+                          }),
+                          description: e.target.value,
+                        })
+                      }
                       placeholder="Nhập mô tả chi tiết về bài tập"
                     />
                   </div>
@@ -822,10 +1196,14 @@ function CourseDetailsComponent() {
                       type="date"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.assignment?.dueDate || ''}
-                      onChange={(e) => handleUpdateData('assignment', {
-                        ...(item.data.assignment || { id: `assign-${Date.now()}` }),
-                        dueDate: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('assignment', {
+                          ...(item.data.assignment || {
+                            id: `assign-${Date.now()}`,
+                          }),
+                          dueDate: e.target.value,
+                        })
+                      }
                     />
                   </div>
 
@@ -837,10 +1215,14 @@ function CourseDetailsComponent() {
                       type="text"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.assignment?.source || ''}
-                      onChange={(e) => handleUpdateData('assignment', {
-                        ...(item.data.assignment || { id: `assign-${Date.now()}` }),
-                        source: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('assignment', {
+                          ...(item.data.assignment || {
+                            id: `assign-${Date.now()}`,
+                          }),
+                          source: e.target.value,
+                        })
+                      }
                       placeholder="Ví dụ: assignment1.pdf"
                     />
                   </div>
@@ -887,33 +1269,74 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                    <Listbox
+                      value={item.type}
+                      onChange={(v) => handleUpdateItem('type', v)}
+                    >
                       <div className="relative w-64">
                         <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                           <span className="flex items-center">
                             {(() => {
-                              const IconComp = typeToIconMap[item.type] || BookIcon;
-                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                              const IconComp =
+                                typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? (
+                                <IconComp
+                                  className="size-5 text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              ) : null;
                             })()}
-                            <span className="ml-2 block truncate">{categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}</span>
+                            <span className="ml-2 block truncate">
+                              {categoryTypes.find((c) => c.id === item.type)
+                                ?.label || 'Chọn loại danh mục'}
+                            </span>
                           </span>
                           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <svg
+                              className="size-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </span>
                         </Listbox.Button>
 
-                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
                           <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                             {categoryTypes.map((type) => {
-                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              const OptionIcon =
+                                typeToIconMap[type.id] || BookIcon;
                               return (
-                                <Listbox.Option key={type.id} value={type.id} className={({ active }) => `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`}>
+                                <Listbox.Option
+                                  key={type.id}
+                                  value={type.id}
+                                  className={({ active }) =>
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'}`
+                                  }
+                                >
                                   {({ selected }) => (
-                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
-                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    <span
+                                      className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                    >
+                                      <OptionIcon
+                                        className="size-5 text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="ml-2 block truncate">
+                                        {type.label}
+                                      </span>
                                     </span>
                                   )}
                                 </Listbox.Option>
@@ -924,8 +1347,18 @@ function CourseDetailsComponent() {
                       </div>
                     </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      <svg
+                        className="size-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -935,15 +1368,27 @@ function CourseDetailsComponent() {
                   className="text-red-600 hover:text-red-800"
                   title="Xóa danh mục"
                 >
-                  <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#EA4335" />
+                  <svg
+                    className="size-5"
+                    width="14"
+                    height="18"
+                    viewBox="0 0 14 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
+                      fill="#EA4335"
+                    />
                   </svg>
                 </button>
               </div>
             ) : (
               <div className="mb-4 flex items-center gap-3">
                 <Icon className="size-6 text-gray-700" />
-                <h2 className="text-2xl font-bold text-gray-800">{item.title}</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {item.title}
+                </h2>
               </div>
             )}
             <div className="space-y-3">
@@ -957,10 +1402,12 @@ function CourseDetailsComponent() {
                       type="text"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.link?.title || ''}
-                      onChange={(e) => handleUpdateData('link', {
-                        ...(item.data.link || { id: `link-${Date.now()}` }),
-                        title: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('link', {
+                          ...(item.data.link || { id: `link-${Date.now()}` }),
+                          title: e.target.value,
+                        })
+                      }
                       placeholder="Nhập tiêu đề tài liệu tham khảo"
                     />
                   </div>
@@ -973,17 +1420,21 @@ function CourseDetailsComponent() {
                       type="url"
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                       value={item.data.link?.url || ''}
-                      onChange={(e) => handleUpdateData('link', {
-                        ...(item.data.link || { id: `link-${Date.now()}` }),
-                        url: e.target.value
-                      })}
+                      onChange={(e) =>
+                        handleUpdateData('link', {
+                          ...(item.data.link || { id: `link-${Date.now()}` }),
+                          url: e.target.value,
+                        })
+                      }
                       placeholder="https://example.com"
                     />
                   </div>
 
                   {item.data.link?.url && (
                     <div className="rounded border border-blue-200 bg-blue-50 p-3">
-                      <p className="mb-1 text-xs font-medium text-blue-700">Preview link:</p>
+                      <p className="mb-1 text-xs font-medium text-blue-700">
+                        Preview link:
+                      </p>
                       <a
                         href={item.data.link.url}
                         target="_blank"
@@ -1040,42 +1491,78 @@ function CourseDetailsComponent() {
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <Icon className="size-5 text-gray-600" />
                     </div>
-                    <Listbox value={item.type} onChange={(v) => handleUpdateItem('type', v)}>
+                    <Listbox
+                      value={item.type}
+                      onChange={(v) => handleUpdateItem('type', v)}
+                    >
                       <div className="relative w-64">
                         <Listbox.Button className="relative w-full cursor-default appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left text-sm font-medium focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                           <span className="flex items-center">
                             {(() => {
-                              const IconComp = typeToIconMap[item.type] || BookIcon;
-                              return IconComp ? <IconComp className="size-5 text-gray-500" aria-hidden="true" /> : null;
+                              const IconComp =
+                                typeToIconMap[item.type] || BookIcon;
+                              return IconComp ? (
+                                <IconComp
+                                  className="size-5 text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              ) : null;
                             })()}
                             <span className="ml-2 block truncate">
-                              {categoryTypes.find((c) => c.id === item.type)?.label || 'Chọn loại danh mục'}
+                              {categoryTypes.find((c) => c.id === item.type)
+                                ?.label || 'Chọn loại danh mục'}
                             </span>
                           </span>
                           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                            <svg className="size-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            <svg
+                              className="size-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </span>
                         </Listbox.Button>
 
-                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
                           <Listbox.Options className="absolute z-10 mt-1 max-h-44 w-full overflow-auto rounded-md bg-white py-0.5 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                             {categoryTypes.map((type) => {
-                              const OptionIcon = typeToIconMap[type.id] || BookIcon;
+                              const OptionIcon =
+                                typeToIconMap[type.id] || BookIcon;
                               return (
                                 <Listbox.Option
                                   key={type.id}
                                   value={type.id}
                                   className={({ active }) =>
-                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                                      active
+                                        ? 'bg-blue-100 text-blue-900'
+                                        : 'text-gray-900'
                                     }`
                                   }
                                 >
                                   {({ selected }) => (
-                                    <span className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}>
-                                      <OptionIcon className="size-5 text-gray-500" aria-hidden="true" />
-                                      <span className="ml-2 block truncate">{type.label}</span>
+                                    <span
+                                      className={`flex items-center ${selected ? 'font-medium' : 'font-normal'}`}
+                                    >
+                                      <OptionIcon
+                                        className="size-5 text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                      <span className="ml-2 block truncate">
+                                        {type.label}
+                                      </span>
                                     </span>
                                   )}
                                 </Listbox.Option>
@@ -1086,8 +1573,18 @@ function CourseDetailsComponent() {
                       </div>
                     </Listbox>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <svg className="size-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      <svg
+                        className="size-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -1096,7 +1593,14 @@ function CourseDetailsComponent() {
                     className="ml-3 text-red-600 hover:text-red-800"
                     title="Xóa danh mục"
                   >
-                    <svg className="size-5" width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      className="size-5"
+                      width="14"
+                      height="18"
+                      viewBox="0 0 14 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <path
                         d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z"
                         fill="#EA4335"
@@ -1108,17 +1612,23 @@ function CourseDetailsComponent() {
                 <>
                   <div className="flex items-center gap-3">
                     <Icon className="size-6 text-gray-700" />
-                    <h2 className="mb-4 text-2xl font-bold text-gray-800">{item.title}</h2>
+                    <h2 className="mb-4 text-2xl font-bold text-gray-800">
+                      {item.title}
+                    </h2>
                   </div>
                   {item.data.status === 'graded' && (
                     <div className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-2">
-                      <span className="font-medium text-green-700">Điểm: {item.data.grade}</span>
+                      <span className="font-medium text-green-700">
+                        Điểm: {item.data.grade}
+                      </span>
                     </div>
                   )}
 
                   {item.data.status === 'submitted' && (
                     <div className="flex items-center gap-3 rounded-lg bg-yellow-50 px-4 py-2">
-                      <span className="font-medium text-yellow-700">Chưa chấm điểm</span>
+                      <span className="font-medium text-yellow-700">
+                        Chưa chấm điểm
+                      </span>
                     </div>
                   )}
                 </>
@@ -1140,7 +1650,9 @@ function CourseDetailsComponent() {
                           type="datetime-local" // Dùng datetime-local để có cả ngày và giờ
                           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
                           value={item.data.dueDate || ''} // Giả sử bạn lưu vào item.data.dueDate
-                          onChange={(e) => handleUpdateData('dueDate', e.target.value)}
+                          onChange={(e) =>
+                            handleUpdateData('dueDate', e.target.value)
+                          }
                         />
                       </label>
                     </div>
@@ -1160,7 +1672,10 @@ function CourseDetailsComponent() {
                           const v = e.target.value;
                           // store raw string and derived array of types
                           handleUpdateData('allowedExtensions', v);
-                          const arr = v.split(',').map((s) => s.trim()).filter(Boolean);
+                          const arr = v
+                            .split(',')
+                            .map((s) => s.trim())
+                            .filter(Boolean);
                           handleUpdateData('allowedTypes', arr);
                         }}
                       />
@@ -1184,13 +1699,18 @@ function CourseDetailsComponent() {
                           value={item.data.maxFileSize ?? ''} // numeric
                           onChange={(e) => {
                             const v = e.target.value;
-                            handleUpdateData('maxFileSize', v === '' ? null : Number(v));
+                            handleUpdateData(
+                              'maxFileSize',
+                              v === '' ? null : Number(v),
+                            );
                           }}
                         />
                         <select
                           className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
                           value={item.data.maxFileSizeUnit || 'MB'} // Tạo trường mới
-                          onChange={(e) => handleUpdateData('maxFileSizeUnit', e.target.value)}
+                          onChange={(e) =>
+                            handleUpdateData('maxFileSizeUnit', e.target.value)
+                          }
                           aria-label="Đơn vị kích thước file"
                         >
                           <option>MB</option>
@@ -1211,18 +1731,30 @@ function CourseDetailsComponent() {
                         min={0}
                         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
                         placeholder="1"
-                        value={item.data.maxFiles ?? item.data.maxFileCount ?? ''} // canonical: maxFiles
-                        onChange={(e) => handleUpdateData('maxFiles', e.target.value === '' ? null : Number(e.target.value))}
+                        value={
+                          item.data.maxFiles ?? item.data.maxFileCount ?? ''
+                        } // canonical: maxFiles
+                        onChange={(e) =>
+                          handleUpdateData(
+                            'maxFiles',
+                            e.target.value === ''
+                              ? null
+                              : Number(e.target.value),
+                          )
+                        }
                       />
                     </div>
 
                     {/* Định dạng file cho phép (hiển thị/preview) */}
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-700">Định dạng cho phép</label>
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Định dạng cho phép
+                      </label>
                       <div className="text-sm text-gray-600">
-                        {(item.data.allowedTypes && item.data.allowedTypes.length > 0)
+                        {item.data.allowedTypes &&
+                        item.data.allowedTypes.length > 0
                           ? item.data.allowedTypes.join(', ')
-                          : (item.data.allowedExtensions || 'Không có')}
+                          : item.data.allowedExtensions || 'Không có'}
                       </div>
                     </div>
                   </div>
@@ -1234,7 +1766,15 @@ function CourseDetailsComponent() {
                     Xóa bài nộp
                   </button>
                   <Link
-                    to={("/course/" + id + "/" + ((item.title || '').replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase())) as any}
+                    to={
+                      ('/course/' +
+                        id +
+                        '/' +
+                        (item.title || '')
+                          .replace(/\s+/g, '')
+                          .replace(/[^a-zA-Z0-9]/g, '')
+                          .toLowerCase()) as any
+                    }
                     className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
                   >
                     Xem bài nộp
@@ -1243,30 +1783,42 @@ function CourseDetailsComponent() {
               </div>
             ) : (
               <>
-                {item.data.status === 'submitted' && item.data.submittedFile && (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
-                      <div className="flex size-10 items-center justify-center rounded bg-red-50">
-                        <img src='./components/pdfIcon.png' alt='PDF file icon' className='size-6 text-red-600' />
+                {item.data.status === 'submitted' &&
+                  item.data.submittedFile && (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
+                        <div className="flex size-10 items-center justify-center rounded bg-red-50">
+                          <img
+                            src="./components/pdfIcon.png"
+                            alt="PDF file icon"
+                            className="size-6 text-red-600"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-800">
+                            {item.data.submittedFile.name}
+                          </p>
+                          <p className="text-sm text-red-600">
+                            Submitted at {item.data.submittedFile.submittedAt}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-800">{item.data.submittedFile.name}</p>
-                        <p className="text-sm text-red-600">Submitted at {item.data.submittedFile.submittedAt}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <CalendarIcon className="size-4" />
+                          <span>
+                            Hạn chót:{' '}
+                            <span className="font-semibold text-red-600">
+                              {item.data.dueDate}
+                            </span>
+                          </span>
+                        </div>
+                        <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                          Chỉnh sửa bài nộp
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <CalendarIcon className="size-4" />
-                        <span>
-                          Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
-                        </span>
-                      </div>
-                      <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-                        Chỉnh sửa bài nộp
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
 
                 {item.data.status === 'graded' && item.data.submittedFile && (
                   <div className="space-y-4">
@@ -1274,11 +1826,19 @@ function CourseDetailsComponent() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
                           <div className="flex size-10 items-center justify-center rounded bg-red-50">
-                            <img src='./components/pdfIcon.png' alt='PDF file icon' className='size-6 text-red-600' />
+                            <img
+                              src="./components/pdfIcon.png"
+                              alt="PDF file icon"
+                              className="size-6 text-red-600"
+                            />
                           </div>
                           <div className="flex-1">
-                            <p className="font-medium text-gray-800">{item.data.submittedFile.name}</p>
-                            <p className="text-sm text-red-600">Submitted at {item.data.submittedFile.submittedAt}</p>
+                            <p className="font-medium text-gray-800">
+                              {item.data.submittedFile.name}
+                            </p>
+                            <p className="text-sm text-red-600">
+                              Submitted at {item.data.submittedFile.submittedAt}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -1286,8 +1846,12 @@ function CourseDetailsComponent() {
 
                     {item.data.feedback && (
                       <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                        <p className="mb-1 text-sm font-semibold text-gray-700">Nhận xét từ giảng viên:</p>
-                        <p className="text-sm text-gray-600">{item.data.feedback}</p>
+                        <p className="mb-1 text-sm font-semibold text-gray-700">
+                          Nhận xét từ giảng viên:
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {item.data.feedback}
+                        </p>
                       </div>
                     )}
 
@@ -1295,7 +1859,10 @@ function CourseDetailsComponent() {
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <CalendarIcon className="size-4" />
                         <span>
-                          Hạn chót: <span className="font-semibold text-red-600">{item.data.dueDate}</span>
+                          Hạn chót:{' '}
+                          <span className="font-semibold text-red-600">
+                            {item.data.dueDate}
+                          </span>
                         </span>
                       </div>
                       <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
@@ -1387,33 +1954,41 @@ function CourseDetailsComponent() {
                 <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                   Tổng quan
                 </button>
-                {
-                  changing && (
-                    <>
-                      <Link to={'/course/$id/submissions' as any}
-                        className="font-baloo rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
-                        Bài nộp
-                      </Link>
-                      <Link to={'/course/$id/members' as any}
-                        className="font-baloo rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
-                        Thành viên
-                      </Link>
-                    </>
-                  )
-
-                }
+                {changing && (
+                  <>
+                    <Link
+                      to={'/course/$id/submissions' as any}
+                      className="font-baloo rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                    >
+                      Bài nộp
+                    </Link>
+                    <Link
+                      to={'/course/$id/members' as any}
+                      className="font-baloo rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                    >
+                      Thành viên
+                    </Link>
+                  </>
+                )}
                 {!changing && (
-                  <button className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
+                  <button
+                    onClick={() => {
+                      navigate({ to: `/course/${id}/rating` });
+                    }}
+                    className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                  >
                     Đánh giá
                   </button>
                 )}
               </div>
             </div>
 
-
             {userLocalStore && userLocalStore.isManager && (
               <div className="absolute bottom-4 right-4">
-                <label htmlFor="editing-toggle" className="flex cursor-pointer items-center gap-2 text-white">
+                <label
+                  htmlFor="editing-toggle"
+                  className="flex cursor-pointer items-center gap-2 text-white"
+                >
                   <input
                     id="editing-toggle"
                     type="checkbox"
@@ -1451,12 +2026,21 @@ function CourseDetailsComponent() {
                         onClick={() => scrollToSection(sectionKey)}
                         className={`relative ${isFirst ? 'mt-2' : 'mt-8'} flex w-full items-center gap-3 pl-3 text-left transition-colors`}
                       >
-                        <div className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${isActive ? 'border-[#0329E9]' : 'border-gray-300'
-                          }`}>
-                          <div className={`size-2 rounded-full transition ${isActive ? 'bg-[#0329E9]' : 'bg-transparent'}`} />
+                        <div
+                          className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${
+                            isActive ? 'border-[#0329E9]' : 'border-gray-300'
+                          }`}
+                        >
+                          <div
+                            className={`size-2 rounded-full transition ${isActive ? 'bg-[#0329E9]' : 'bg-transparent'}`}
+                          />
                         </div>
-                        <Icon className={`size-5 transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-600'}`} />
-                        <span className={`font-medium transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-700'}`}>
+                        <Icon
+                          className={`size-5 transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-600'}`}
+                        />
+                        <span
+                          className={`font-medium transition-colors ${isActive ? 'text-[#0329E9]' : 'text-gray-700'}`}
+                        >
                           {item.title}
                         </span>
                       </button>
@@ -1468,106 +2052,108 @@ function CourseDetailsComponent() {
 
             {/* Main content area with scroll */}
             <div className="flex-1">
-              {
-                changing && (
-                  <div className="mb-4 mt-10 flex items-center justify-center rounded-lg border-2 border-dashed border-[#3D4863] bg-white p-6">
-                    <button
-                      className="font-baloo rounded-lg px-6 py-3 font-medium text-black shadow-sm transition hover:bg-blue-700 hover:text-white"
-                      onClick={() => {
-                        // Tạo danh mục mới ngay lập tức
-                        const defaultType = 'material';
+              {changing && (
+                <div className="mb-4 mt-10 flex items-center justify-center rounded-lg border-2 border-dashed border-[#3D4863] bg-white p-6">
+                  <button
+                    className="font-baloo rounded-lg px-6 py-3 font-medium text-black shadow-sm transition hover:bg-blue-700 hover:text-white"
+                    onClick={() => {
+                      // Tạo danh mục mới ngay lập tức
+                      const defaultType = 'material';
 
-                        // Tạo dữ liệu mặc định đầy đủ theo từng loại
-                        const getDefaultData = (type: string): any => {
-                          switch (type) {
-                            case 'introduction':
-                              return {
-                                type: 'introduction',
-                                title: 'Giới thiệu mới',
-                                data: {
-                                  text: 'Nội dung giới thiệu...',
-                                },
-                              };
-                            case 'material':
-                              return {
-                                type: 'material',
-                                title: 'Tài liệu mới',
-                                data: {
-                                  document: null,
-                                },
-                              };
-                            case 'movie':
-                              return {
-                                type: 'movie',
-                                title: 'Video mới',
-                                data: {
-                                  video: null,
-                                },
-                              };
-                            case 'note':
-                              return {
-                                type: 'note',
-                                title: 'Ghi chú mới',
-                                data: {
-                                  assignment: null,
-                                },
-                              };
-                            case 'reference':
-                              return {
-                                type: 'reference',
-                                title: 'Tham khảo mới',
-                                data: {
-                                  link: null,
-                                },
-                              };
-                            case 'submission':
-                              return {
-                                type: 'submission',
-                                title: 'Bài nộp mới',
-                                data: {
-                                  status: 'not-submitted',
-                                  dueDate: new Date().toISOString().split('T')[0],
-                                  canEdit: true,
-                                },
-                              };
-                            default:
-                              return {
-                                type: 'material',
-                                title: 'Danh mục mới',
-                                data: {
-                                  document: null,
-                                },
-                              };
-                          }
-                        };
-
-                        const newCategoryData = getDefaultData(defaultType);
-
-                        // Thêm vào courseDetail content ngay
-                        if (courseDetail) {
-                          setCourseDetail({
-                            ...courseDetail,
-                            content: [...(courseDetail.content || []), newCategoryData],
-                          });
+                      // Tạo dữ liệu mặc định đầy đủ theo từng loại
+                      const getDefaultData = (type: string): any => {
+                        switch (type) {
+                          case 'introduction':
+                            return {
+                              type: 'introduction',
+                              title: 'Giới thiệu mới',
+                              data: {
+                                text: 'Nội dung giới thiệu...',
+                              },
+                            };
+                          case 'material':
+                            return {
+                              type: 'material',
+                              title: 'Tài liệu mới',
+                              data: {
+                                document: null,
+                              },
+                            };
+                          case 'movie':
+                            return {
+                              type: 'movie',
+                              title: 'Video mới',
+                              data: {
+                                video: null,
+                              },
+                            };
+                          case 'note':
+                            return {
+                              type: 'note',
+                              title: 'Ghi chú mới',
+                              data: {
+                                assignment: null,
+                              },
+                            };
+                          case 'reference':
+                            return {
+                              type: 'reference',
+                              title: 'Tham khảo mới',
+                              data: {
+                                link: null,
+                              },
+                            };
+                          case 'submission':
+                            return {
+                              type: 'submission',
+                              title: 'Bài nộp mới',
+                              data: {
+                                status: 'not-submitted',
+                                dueDate: new Date().toISOString().split('T')[0],
+                                canEdit: true,
+                              },
+                            };
+                          default:
+                            return {
+                              type: 'material',
+                              title: 'Danh mục mới',
+                              data: {
+                                document: null,
+                              },
+                            };
                         }
+                      };
 
-                        // Scroll đến section mới
-                        const newIndex = (courseDetail?.content?.length || 0);
-                        const newSectionKey = `${newCategoryData.type}-${newIndex}`;
-                        setActiveTab(newSectionKey);
+                      const newCategoryData = getDefaultData(defaultType);
 
-                        setTimeout(() => {
-                          scrollToSection(newSectionKey);
-                        }, 100);
-                      }}
-                    >
-                      <div><CreateMaterialIcon className="mr-2 inline-block " /> Tạo danh mục</div>
-                    </button>
-                  </div>
-                )
-              }
+                      // Thêm vào courseDetail content ngay
+                      if (courseDetail) {
+                        setCourseDetail({
+                          ...courseDetail,
+                          content: [
+                            ...(courseDetail.content || []),
+                            newCategoryData,
+                          ],
+                        });
+                      }
 
+                      // Scroll đến section mới
+                      const newIndex = courseDetail?.content?.length || 0;
+                      const newSectionKey = `${newCategoryData.type}-${newIndex}`;
+                      setActiveTab(newSectionKey);
 
+                      setTimeout(() => {
+                        scrollToSection(newSectionKey);
+                      }, 100);
+                    }}
+                  >
+                    <div>
+                      <CreateMaterialIcon className="mr-2 inline-block " /> Tạo
+                      danh mục
+                    </div>
+                  </button>
+                </div>
+              )}
 
               <div
                 ref={contentContainerRef}
@@ -1634,7 +2220,12 @@ function CourseDetailsComponent() {
               <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                 Tổng quan
               </button>
-              <button className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
+              <button
+                onClick={() => {
+                  navigate({ to: `/course/${id}/rating` });
+                }}
+                className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+              >
                 Đánh giá
               </button>
             </div>
@@ -1643,7 +2234,10 @@ function CourseDetailsComponent() {
 
         {/* Course statistics */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <div className="mb-2 text-3xl font-bold text-[#0329E9]">
               {course.stats.documents}
             </div>
@@ -1651,7 +2245,10 @@ function CourseDetailsComponent() {
               Tài liệu học tập
             </div>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <div className="mb-2 text-3xl font-bold text-green-600">
               {course.stats.links}
             </div>
@@ -1659,7 +2256,10 @@ function CourseDetailsComponent() {
               Đường dẫn tham khảo
             </div>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <div className="mb-2 text-3xl font-bold text-orange-600">
               {course.stats.assignments}
             </div>
@@ -1671,27 +2271,33 @@ function CourseDetailsComponent() {
 
         {/* Course content sections */}
         <div className="space-y-6">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <h2 className="mb-4 text-2xl font-bold text-gray-800">
               Thông tin khóa học
             </h2>
             <div className="space-y-3 text-gray-600">
               <p>
-                <span className="font-semibold">Mã khóa học:</span>{" "}
+                <span className="font-semibold">Mã khóa học:</span>{' '}
                 {course.code}
               </p>
               <p>
-                <span className="font-semibold">Tên khóa học:</span>{" "}
+                <span className="font-semibold">Tên khóa học:</span>{' '}
                 {course.title}
               </p>
               <p>
-                <span className="font-semibold">Giảng viên:</span>{" "}
+                <span className="font-semibold">Giảng viên:</span>{' '}
                 {course.instructor}
               </p>
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <h2 className="mb-4 text-2xl font-bold text-gray-800">
               Mô tả khóa học
             </h2>
@@ -1702,14 +2308,18 @@ function CourseDetailsComponent() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm" style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}>
+          <div
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+          >
             <h2 className="mb-4 text-2xl font-bold text-gray-800">
               Tài liệu học tập
             </h2>
             <div className="text-gray-600">
               <p className="mb-2">
-                Có <span className="font-semibold">{course.stats.documents}</span> tài liệu
-                có sẵn trong khóa học này.
+                Có{' '}
+                <span className="font-semibold">{course.stats.documents}</span>{' '}
+                tài liệu có sẵn trong khóa học này.
               </p>
               <p className="text-sm text-gray-500">
                 Tài liệu sẽ được cập nhật trong các phiên bản tương lai.
@@ -1721,4 +2331,3 @@ function CourseDetailsComponent() {
     </StudyLayout>
   );
 }
-
