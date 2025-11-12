@@ -36,7 +36,7 @@ export function DeclinePopup({ onClose, onSubmit }: DeclinePopupProps) {
   return (
     // Lớp phủ (Overlay)
     <div
-  className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/75 p-4"
+  className="fixed inset-0 z-[50000] flex items-center justify-center bg-gray-900/75 p-4"
       onClick={onClose} // Click vào overlay để đóng
     >
       {/* Container của Popup (Card) */}
