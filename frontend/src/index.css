@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Pagination utility classes to centralize Tailwind ordering and avoid linter errors */
+.pagination-btn {
+  @apply p-1 rounded transition-colors bg-white text-[#0329E9] hover:bg-blue-600 hover:text-white;
+}
+.pagination-btn-disabled {
+  @apply p-1 rounded bg-white text-gray-300 opacity-30 cursor-not-allowed;
+}
+.page-number {
+  @apply size-8 inline-flex items-center justify-center text-sm font-medium rounded-full transition-colors bg-white text-[#0329E9] hover:bg-blue-600 hover:text-white hover:shadow;
+}
+.page-number-active {
+  @apply size-8 inline-flex items-center justify-center text-sm font-medium rounded-full transition-colors bg-blue-600 text-white shadow-lg;
+}
+
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */

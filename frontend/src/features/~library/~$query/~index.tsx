@@ -313,27 +313,19 @@ function RouteComponent() {
 
             {/* Pagination Controls */}
             <nav className="flex items-center justify-center gap-1 text-sm">
-              <button
-                aria-label="Trang đầu tiên"
-                title="Trang đầu tiên"
-                className={`rounded-md p-2 shadow-sm transition-colors ${
-                  currentPage === 1
-                    ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
-                }`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(1)}
-              >
-                <ChevronsLeft className="size-4" />
-              </button>
+                <button
+                  aria-label="Trang đầu tiên"
+                  title="Trang đầu tiên"
+                  className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(1)}
+                >
+                  <ChevronsLeft className="size-4" />
+                </button>
               <button
                 aria-label="Trang trước"
                 title="Trang trước"
-                className={`rounded-md p-2 shadow-sm transition-colors ${
-                  currentPage === 1
-                    ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
-                }`}
+                className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               >
@@ -346,11 +338,7 @@ function RouteComponent() {
                   <button
                     key={pageNumber}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`size-8 rounded-full transition-colors ${
-                      currentPage === pageNumber
-                        ? 'bg-[#0329E9] font-semibold text-white shadow'
-                        : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
-                    }`}
+                    className={currentPage === pageNumber ? 'page-number-active' : 'page-number'}
                   >
                     {pageNumber}
                   </button>
@@ -360,11 +348,7 @@ function RouteComponent() {
               <button
                 aria-label="Trang tiếp theo"
                 title="Trang tiếp theo"
-                className={`rounded-md p-2 shadow-sm transition-colors ${
-                  currentPage === totalPages
-                    ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
-                }`}
+                className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
               >
@@ -373,11 +357,7 @@ function RouteComponent() {
               <button
                 aria-label="Trang cuối"
                 title="Trang cuối"
-                className={`rounded-md p-2 shadow-sm transition-colors ${
-                  currentPage === totalPages
-                    ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                    : 'bg-[#0329E9] text-white hover:bg-blue-700'
-                }`}
+                className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(totalPages)}
               >

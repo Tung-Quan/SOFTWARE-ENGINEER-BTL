@@ -80,25 +80,25 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="rounded-md p-2 text-gray-400 disabled:opacity-50"
+          className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
         >
           <ChevronLeftIcon className="size-5" />
         </button>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="rounded-md p-2 text-gray-400 disabled:opacity-50"
+          className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
         >
           <ChevronRightIcon className="size-5" />
         </button>
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
         <div>
-          <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+          <nav className="isolate inline-flex space-x-2 rounded-md shadow-sm" aria-label="Pagination">
             <button
               onClick={() => onPageChange(1)}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-l-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
             >
               <span className="sr-only">First</span>
               <ChevronDoubleLeftIcon className="size-5" />
@@ -106,7 +106,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
             >
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="size-5" />
@@ -117,10 +117,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
               <button
                 key={page}
                 onClick={() => onPageChange(page)}
-                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${page === currentPage
-                  ? 'z-10 bg-blue-600 text-white focus:z-20'
-                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-                  }`}
+                className={page === currentPage ? 'page-number-active' : 'page-number'}
               >
                 {page}
               </button>
@@ -129,7 +126,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="relative inline-flex items-center p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
             >
               <span className="sr-only">Next</span>
               <ChevronRightIcon className="size-5" />
@@ -137,7 +134,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             <button
               onClick={() => onPageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="relative inline-flex items-center rounded-r-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
             >
               <span className="sr-only">Last</span>
               <ChevronDoubleRightIcon className="size-5" />

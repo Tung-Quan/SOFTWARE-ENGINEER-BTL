@@ -1,13 +1,17 @@
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from '@heroicons/react/24/solid';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import boxSvg from '@/assets/box.svg';
 import { mockCourses, type Course } from '@/components/data/~mock-courses';
-import ChevronLeft from '@/components/icons/arrow-left';
+// removed pagination-specific chevron SVG imports - using emoji in controls now
 import ChevronRight from '@/components/icons/arrow-right';
 import ChevronDown from '@/components/icons/chevron';
-import ChevronsLeft from '@/components/icons/double-chevron';
-import ChevronsRight from '@/components/icons/double-chevron';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
 
@@ -99,16 +103,20 @@ function DashboardComponent() {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [sortOrder, setSortOrder] = useState('newest');
 
-  const isFirstDisabled = currentPage === 1;
   const totalPages = Math.max(1, Math.ceil(mockCourses.length / itemsPerPage));
-  const isLastDisabled = currentPage === totalPages;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedCourses = mockCourses.slice(startIndex, endIndex);
+  
 
-  const isPrevDisabled = currentPage === 1;
-  const isNextDisabled = currentPage === totalPages;
+  // Pagination window logic: show up to `maxPageButtons` pages, centered on currentPage when possible
+  const maxPageButtons = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+  const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+  if (endPage - startPage + 1 < maxPageButtons) {
+    startPage = Math.max(1, endPage - maxPageButtons + 1);
+  }
 
   return (
     <StudyLayout>
@@ -177,78 +185,57 @@ function DashboardComponent() {
           </div>
         )}
 
-        <nav className="flex items-center justify-center gap-1 text-sm">
+  <nav className="flex items-center justify-center gap-4 border-t border-gray-100 bg-white p-4">
           <button
-            aria-label="Trang trước nhất"
-            title="Trang trước nhất"
-            className={`rounded-md p-2 shadow-sm transition-colors ${
-              isFirstDisabled
-                ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-[#0329E9] text-white hover:bg-blue-700'
-            }`}
-            disabled={isFirstDisabled}
+            aria-label="First page"
             onClick={() => setCurrentPage(1)}
+            className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
+            disabled={currentPage === 1}
           >
-            <ChevronsLeft className="size-4" />
+            <ChevronDoubleLeftIcon className="size-4" />
           </button>
+
           <button
-            aria-label="Trang trước"
-            title="Trang trước"
-            className={`rounded-md p-2 shadow-sm transition-colors ${
-              isPrevDisabled
-                ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-[#0329E9] text-white hover:bg-blue-700'
-            }`}
-            disabled={isPrevDisabled}
+            aria-label="Previous page"
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
+            disabled={currentPage === 1}
           >
-            <ChevronLeft className="size-4" />
+            <ChevronLeftIcon className="size-4" />
           </button>
 
-          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-            const pageNumber = i + 1;
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => setCurrentPage(pageNumber)}
-                className={`size-8 rounded-full transition-colors ${
-                  currentPage === pageNumber
-                    ? 'bg-[#0329E9] font-semibold text-white shadow'
-                    : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
-                }`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
+          <div className="flex items-center gap-4">
+              {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                const pageNumber = startPage + i;
+                const isActive = pageNumber === currentPage;
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                      className={isActive ? 'page-number-active' : 'page-number'}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+          </div>
 
           <button
-            aria-label="Trang tiếp"
-            title="Trang tiếp"
-            className={`rounded-md p-2 shadow-sm transition-colors ${
-              isNextDisabled
-                ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-[#0329E9] text-white hover:bg-blue-700'
-            }`}
-            disabled={isNextDisabled}
-            onClick={() =>
-              setCurrentPage(Math.min(totalPages, currentPage + 1))
-            }
+            aria-label="Next page"
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
+            disabled={currentPage === totalPages}
           >
-            <ChevronRight className="size-4" />
+            <ChevronRightIcon className="size-4" />
           </button>
+
           <button
-            aria-label="Trang cuối"
-            title="Trang cuối"
-            className={`rounded-md p-2 shadow-sm transition-colors ${
-              isLastDisabled
-                ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-                : 'bg-[#0329E9] text-white hover:bg-blue-700'
-            }`}
-            disabled={isLastDisabled}
+            aria-label="Last page"
             onClick={() => setCurrentPage(totalPages)}
+            className={currentPage === totalPages ? 'pagination-btn-disabled' : 'pagination-btn'}
+            disabled={currentPage === totalPages}
           >
-            <ChevronsRight className="size-4" />
+            <ChevronDoubleRightIcon className="size-4" />
           </button>
         </nav>
       </div>

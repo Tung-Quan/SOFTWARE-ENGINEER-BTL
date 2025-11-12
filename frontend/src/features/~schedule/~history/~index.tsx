@@ -1,5 +1,5 @@
 import { CalendarDaysIcon, ArrowLeftIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
-import { UserCircleIcon } from '@heroicons/react/24/solid'
+import { UserCircleIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/solid'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import React, { useMemo, useState } from 'react'
 
@@ -169,7 +169,7 @@ function RouteComponent() {
               disabled={page === 1}
               aria-label="Trang đầu"
               title="Trang đầu"
-            >«</button>
+            ><ChevronDoubleLeftIcon className="size-4" /></button>
 
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -177,7 +177,7 @@ function RouteComponent() {
               disabled={page === 1}
               aria-label="Trang trước"
               title="Trang trước"
-            >‹</button>
+            ><ChevronLeftIcon className="size-4" /></button>
 
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
@@ -200,7 +200,7 @@ function RouteComponent() {
               disabled={page === totalPages}
               aria-label="Trang sau"
               title="Trang sau"
-            >›</button>
+            ><ChevronRightIcon className="size-4" /></button>
 
             <button
               onClick={() => setPage(totalPages)}
@@ -208,7 +208,7 @@ function RouteComponent() {
               disabled={page === totalPages}
               aria-label="Trang cuối"
               title="Trang cuối"
-            >»</button>
+            ><ChevronDoubleRightIcon className="size-4" /></button>
           </div>
         </div>
       </div>

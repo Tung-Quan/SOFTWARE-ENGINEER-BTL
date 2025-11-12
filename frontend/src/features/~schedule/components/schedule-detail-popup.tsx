@@ -133,12 +133,12 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
   return (
     // Lớp phủ (Overlay)
     <div
-      className={`fixed inset-0 z-50 ${isPositioned ? '' : 'flex items-center justify-center'} p-4`}
+      className={`fixed inset-0 z-[500000] ${isPositioned ? '' : 'flex items-center justify-center'} p-4`}
       onClick={onClose} // Click vào overlay để đóng
     >
       {/* Container của Popup (Card) */}
       <div
-        className="relative w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-xl"
+        className="relative w-full max-w-sm overflow-hidden rounded-lg border border-gray-500 bg-white shadow-custom-yellow"
         style={isPositioned ? popupStyle : undefined}
         onClick={handleCardClick}
       >

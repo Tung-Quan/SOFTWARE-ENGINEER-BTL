@@ -56,11 +56,7 @@ export function StudentRegister() {
   const [sessionType, setSessionType] = useState('Học trực tiếp');
   const [location, setLocation] = useState(mockLocations[1]); // Mặc định Phường 2
   const [specialRequest, setSpecialRequest] = useState(
-    `In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:
-• Composition: An identifier must start with a letter (A-Z or a-z) or an underscore (_). Subsequent characters can include letters, digits (0-9), or underscores.
-• Case Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.
-• Length: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.
-• Keywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.`
+    ``
   );
 
   return (
@@ -79,7 +75,7 @@ export function StudentRegister() {
       {/* Form Content */}
       <main className="p-6">
         <form 
-          className="relative mx-auto -mt-20 max-w-4xl rounded-lg bg-white shadow-lg"
+          className="relative rounded-lg bg-white shadow-lg"
           onSubmit={(e) => e.preventDefault()}
         >
           {/* Container cho các trường */}
@@ -129,6 +125,9 @@ export function StudentRegister() {
                 value={specialRequest}
                 onChange={(e) => setSpecialRequest(e.target.value)}
                 rows={8}
+                placeholder={
+                  `In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\n• Composition: An identifier must start with a letter (A-Z or a-z) or an underscore (_). Subsequent characters can include letters, digits (0-9), or underscores.\n• Case Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n• Length: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n• Keywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.`
+                }
               />
             </FormSection>
           </div>

@@ -17,23 +17,58 @@ export const Route = createFileRoute('/schedule/')({
 
 // --- DỮ LIỆU GIẢ (MOCK DATA) ---
 
-// Các ngày trong tuần, lấy chính xác từ ảnh của bạn
-const CALENDAR_DAYS = [
-  'Thứ hai (12/12/2025)',
-  'Thứ ba (13/12/2025)',
-  'Thứ tư (14/12/2025)',
-  'Thứ năm (16/12/2025)', // Lưu ý: Ảnh của bạn nhảy từ 14 -> 16
-  'Thứ sáu (17/12/2025)',
-  'Thứ bảy (18/12/2025)',
-  'Chủ nhật (19/12/2025)',
-];
+// Build labels for the current week (Monday..Sunday).
+// Each label contains the weekday name and the date for the current week so
+// the header shows "weekday" on the first line and the actual date (dd/mm/yyyy)
+// on the second line — both rendered inside the same header cell.
+function getWeekLabels(reference = new Date()) {
+  // Find Monday of the week that contains `reference` (Mon = index 0)
+  const jsDay = reference.getDay(); // 0 = Sun, 1 = Mon, ...
+  // Calculate days to subtract to get Monday
+  const daysToMonday = (jsDay + 6) % 7; // 0 if Mon, 1 if Tue, ..., 6 if Sun
+  const monday = new Date(reference);
+  monday.setDate(reference.getDate() - daysToMonday);
 
-// Các mốc thời gian hiển thị (mỗi 1 giờ)
-const TIME_SLOTS_DISPLAY = [
-  '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
-  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
-  '21:00', '22:00'
-];
+  const weekdayNames = [
+    'Thứ hai',
+    'Thứ ba',
+    'Thứ tư',
+    'Thứ năm',
+    'Thứ sáu',
+    'Thứ bảy',
+    'Chủ nhật',
+  ];
+
+  const labels = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return {
+      weekday: weekdayNames[i],
+      date: `${dd}/${mm}/${yyyy}`,
+    };
+  });
+
+  return labels;
+}
+
+const CALENDAR_DAYS = getWeekLabels();
+
+// Các mốc thời gian hiển thị (mỗi 30 phút). We render labels for every half-hour
+// so each grid row represents 30 minutes.
+function generateHalfHourSlots(start = 7, end = 22) {
+  const slots: string[] = [];
+  for (let h = start; h <= end; h++) {
+    const hh = String(h).padStart(2, '0');
+    slots.push(`${hh}:00`);
+    if (h !== end) slots.push(`${hh}:30`);
+  }
+  return slots;
+}
+
+const TIME_SLOTS_DISPLAY = generateHalfHourSlots(7, 22);
 
 // Build calendar items from mock sessions
 // session.start / session.end are ISO datetimes — convert to day index (Mon=0..Sun=6) and HH:mm
@@ -242,8 +277,8 @@ interface CalendarGridProps {
 }
 
 function CalendarGrid({ items }: CalendarGridProps) {
-  // Grid được chia thành 15 hàng (1 giờ mỗi hàng), từ 07:00 đến 22:00 (15 giờ)
-  const totalRows = 22 - 7; // = 15 rows (1 row per hour)
+  // Grid được chia thành 30 hàng (30 phút mỗi hàng), từ 07:00 đến 22:00
+  const totalRows = (22 - 7) * 2; // = 30 rows (1 row = 30 minutes)
 
   return (
     <div className="relative overflow-x-auto">
@@ -261,27 +296,31 @@ function CalendarGrid({ items }: CalendarGridProps) {
         <div className="sticky left-0 z-10 col-start-1 row-start-1 border-b border-r border-gray-200 bg-white"></div>
 
         {/* Header các ngày trong tuần */}
-        {CALENDAR_DAYS.map((day) => (
+        {CALENDAR_DAYS.map((d, idx) => (
           <div
-            key={day}
+            key={d.date + idx}
             className="row-start-1 bg-[#3D4863] p-3 text-center font-semibold text-white"
           >
-            {day}
+            <div className="text-sm">{d.weekday}</div>
+            <div className="mt-1 text-xs">{d.date}</div>
           </div>
         ))}
 
         {/* Cột mốc thời gian (bên trái) */}
-        {TIME_SLOTS_DISPLAY.map((time) => {
-          const hour = parseInt(time.split(':')[0], 10);
-          const isOddHour = hour % 2 === 1;
-          const textColor = isOddHour ? '#F9BA08' : '#0329E9';
+        {TIME_SLOTS_DISPLAY.map((time, idx) => {
+          const [hourStr, minStr] = time.split(':');
+          const hour = parseInt(hourStr, 10);
+          console.log('hour', hour);
+          const minute = parseInt(minStr, 10);
+          // Highlight full hours (minute === 0) differently
+          const textColor = minute === 0  ? '#F9BA08' : '#0329E9';
 
           return (
             <div
               key={time}
-              className="sticky left-0 z-10 col-start-1 row-start-auto border-r-2 border-black bg-white text-right"
-              // Mỗi label giờ chiếm 1 hàng (vì 1 hàng = 1 giờ)
-              style={{ gridRow: `span 1 / span 1` }}
+              className="sticky left-0 z-10 col-start-1 border-r-2 border-black bg-white text-right"
+              // Each label occupies one half-hour row; header is row 1 so first slot is row 2
+              style={{ gridRow: `${idx + 2} / span 1` }}
             >
               <span
                 className="-mt-3.5 inline-block p-2 text-sm font-semibold"
@@ -337,22 +376,26 @@ function CalendarItem({ item }: CalendarItemProps) {
   const itemRef = useRef<HTMLDivElement>(null);
   const baseHour = 7; // Lịch bắt đầu lúc 07:00
 
-  // Tính toán vị trí hàng bắt đầu (1 row = 1 giờ)
+  // Tính toán vị trí hàng bắt đầu và row span ở độ phân giải 30 phút
+  // Grid dùng 1 row = 30 phút, header là row 1, nên slot 07:00 => row 2
   const getRowStart = (time: string) => {
-    const [h] = time.split(':').map(Number);
-    const hoursFromStart = h - baseHour;
-    // Vị trí hàng = hoursFromStart + 2 (hàng 1 là header, hàng 2 là 07:00)
-    // Nếu có phút (m > 0), cần tính phần lẻ nhưng vì 1 row = 1 giờ, 
-    // ta sẽ để item bắt đầu từ giờ đó và dùng CSS để offset nếu cần
-    return hoursFromStart + 2;
+    const [h, m] = time.split(':').map(Number);
+    const minutesFromStart = (h * 60 + m) - baseHour * 60; // minutes since 07:00
+    // Determine half-hour slot index (0-based). We floor so items snap to the
+    // nearest earlier half-hour slot (e.g., 07:10 -> 07:00 slot).
+    const slotIndex = Math.floor(Math.max(0, minutesFromStart) / 30);
+    // +2 because grid row 1 is header, row 2 is the first time slot (07:00)
+    return slotIndex + 2;
   };
 
-  // Tính toán số hàng mà item chiếm (row span) - 1 row = 1 giờ
+  // Compute how many half-hour slots the item occupies. Round up so the item
+  // has enough space to show its content.
   const getRowSpan = (startTime: string, endTime: string) => {
     const start = new Date(`2025-01-01T${startTime}:00`);
     const end = new Date(`2025-01-01T${endTime}:00`);
-    const hours = (end.getTime() - start.getTime()) / 3600000;
-    return Math.ceil(hours); // Làm tròn lên để đảm bảo đủ không gian
+    const minutes = Math.max(0, (end.getTime() - start.getTime()) / 60000);
+    const slots = Math.ceil(minutes / 30);
+    return Math.max(1, slots);
   };
 
   const handleClick = () => {
@@ -383,8 +426,22 @@ function CalendarItem({ item }: CalendarItemProps) {
         onClick={handleClick}
         title={item.title}
       >
-        {/* Show only title, single-line ellipsis */}
-        <div className="truncate text-sm font-bold text-blue-800">{item.title}</div>
+        {/* Center content; allow up to two lines then ellipsize if too long. */}
+        <div className="flex size-full flex-col items-center justify-center text-center">
+          <div
+            className="text-sm font-bold leading-snug text-blue-800"
+            style={{
+              display: '-webkit-box' as any,
+              WebkitLineClamp: 2 as any,
+              WebkitBoxOrient: 'vertical' as any,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {item.title}
+          </div>
+          <div className="mt-1 text-xs text-blue-700/80">{item.startTime} - {item.endTime}</div>
+        </div>
       </div>
 
       {/* Popup chi tiết */}

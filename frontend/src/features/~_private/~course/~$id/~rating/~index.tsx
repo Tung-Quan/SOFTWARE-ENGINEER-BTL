@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useMemo, useState, useEffect } from 'react';
 
 import { mockCourses } from '@/components/data/~mock-courses';
@@ -95,7 +95,7 @@ function RouteComponent() {
 
   const userStore = storage.getItem('userStore') as UserStore | null;
 
-  console.log('userStore', userStore);
+  // console.log('userStore', userStore);
 
   // Role checking variables
   const isStudent = userStore?.state?.isStudent ?? false;
@@ -134,6 +134,15 @@ function RouteComponent() {
     );
   };
 
+  // When the user confirms their ratings/comments, persist and navigate
+  const handleConfirm = () => {
+    // Ensure we persist the latest ratings (effect also keeps localStorage up-to-date)
+    localStorage.setItem(`course-ratings-${id}`, JSON.stringify(ratings));
+
+    // Navigate back to the overview page
+    window.location.assign(`/course/${id}`);
+  };
+
   if (isStudent)
     return (
       <StudyLayout>
@@ -168,20 +177,17 @@ function RouteComponent() {
 
               {/* Button "tổng quan" + "Đánh giá" */}
               <div className="mt-6 flex gap-4">
-                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                <Link
+                  to={`/course/${id}` as any}
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
                   Tổng quan
-                </button>
+                </Link>
 
-                {/* {!changing && ( */}
                 <button
-                  // onClick={() => {
-                  //   navigate({ to: `/course/${id}/rating` });
-                  // }}
-                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80"
                 >
                   Đánh giá
                 </button>
-                {/* )} */}
               </div>
             </div>
           </div>
@@ -220,10 +226,12 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Đánh giá của bạn về giảng viên"
           ></input>
         </div>
-        <button className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
+        <button
+          onClick={handleConfirm}
+          className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
           <p className="font-bold text-white">Xác nhận</p>
         </button>
       </StudyLayout>
@@ -262,9 +270,11 @@ function RouteComponent() {
 
               {/* Button "tổng quan" + "Đánh giá" */}
               <div className="mt-6 flex gap-4">
-                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                <Link
+                  to={`/course/${id}` as any}
+                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                   Tổng quan
-                </button>
+                </Link>
 
                 {/* {!changing && ( */}
                 <button
@@ -413,9 +423,11 @@ function RouteComponent() {
               </p>
 
               <div className="mt-6 flex gap-4">
-                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                <Link
+                  to={`/course/${id}` as any}
+                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                   Tổng quan
-                </button>
+                </Link>
                 <button className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
                   Đánh giá
                 </button>
@@ -472,6 +484,7 @@ function RouteComponent() {
             </div>
 
             <select
+              aria-label="Selection filter status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="rounded-lg border border-gray-300 px-6 py-3 focus:border-blue-500 focus:outline-none"
