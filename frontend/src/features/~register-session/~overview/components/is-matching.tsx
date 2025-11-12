@@ -9,21 +9,21 @@ import localImage from './image.png'
  * this component recreates a lightweight SVG approximation so it works without
  * adding new image files to the repo.
  */
-export function IsMatching({ message = 'Vui lòng đợi ...', src }: { message?: string; src?: string }) {
-	const imageSrc = src ?? localImage
-	return (
-		<div className="flex flex-col items-center justify-center py-6">
-			<div className="mx-auto w-60">
-				{/* Prefer an external image placed in public/images/is-matching.png
+export function IsMatching({ src }: { src?: string }) {
+  const imageSrc = src ?? localImage
+  return (
+    <div className="flex flex-col items-center justify-center py-6">
+      <div className="mx-auto w-60">
+        {/* Prefer an external image placed in public/images/is-matching.png
 						If the image is not present, the browser will show the alt text. */}
-	<img src={imageSrc} alt="Is matching" className="mx-auto" />
-			</div>
+        <img src={imageSrc} alt="Is matching" className="mx-auto" />
+      </div>
 
-			<div className="mt-4 text-center text-gray-600">
-				{/* <div className="text-base font-medium">{message}</div> */}
-			</div>
-		</div>
-	)
+      <div className="mt-4 text-center text-gray-600">
+        {/* <div className="text-base font-medium">{message}</div> */}
+      </div>
+    </div>
+  )
 }
 
 export default IsMatching
