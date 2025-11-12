@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import React from 'react';
 
 import { getSessionById } from '@/components/data/~mock-session';
+import useLockBodyScroll from '@/hooks/use-lock-body-scroll';
 
 /**
  * Props cho component ScheduleDetailPopup
@@ -125,6 +126,9 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
 
   const popupStyle = getPopupStyle();
   const isPositioned = !!position;
+
+  // Lock body scroll while this popup is mounted
+  useLockBodyScroll(true);
 
   return (
     // Lớp phủ (Overlay)

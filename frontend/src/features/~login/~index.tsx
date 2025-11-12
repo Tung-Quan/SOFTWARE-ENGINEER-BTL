@@ -87,6 +87,7 @@ function RouteComponent() {
         phone: null,
         isManager: foundUser.role === 'coordinator' || foundUser.role === 'tutor' || foundUser.role === 'chairman',
         isTutor: foundUser.role === 'tutor',
+        isCoordinator: foundUser.role === 'coordinator',
         statisticalPermission: foundUser.role === 'coordinator' || foundUser.role === 'chairman',
         isChairman: foundUser.role === 'chairman',
         createdAt: new Date().toISOString(),

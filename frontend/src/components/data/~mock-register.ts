@@ -33,7 +33,7 @@ export type PastTutorRegistration = {
   course: DropdownOption; // Từ mockCourses
   language: DropdownOption; // Từ mockLanguages
   sessionType: DropdownOption; // 'online' | 'offline'
-  location?: DropdownOption; // Từ mockLocations (optional for online)
+  location?: DropdownOption; // Từ mockLocations
   specialRequest: string;
   status: 'Pending' | 'Approved' | 'Declined';
   declineReason?: string; // Lý do (nếu bị 'Declined')

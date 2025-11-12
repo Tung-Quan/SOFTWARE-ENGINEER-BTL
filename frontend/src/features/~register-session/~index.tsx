@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import StudyLayout from '@/components/study-layout'
 
+import { CoordinatorRegister } from './components/coordinator-register';
 import { StudentRegister } from './components/student-register';
 import { TutorRegister } from './components/tutor-register';
 
@@ -16,17 +17,18 @@ function RouteComponent() {
   const userLocalStore = State.user ?? null;
   return (
     <StudyLayout>
-      { userLocalStore.isTutor && (
+      {userLocalStore.isTutor && (
         <TutorRegister />
-      ) }
+      )}
 
-      { !userLocalStore.isManager && (
+      {!userLocalStore.isManager && (
         <div className="rounded bg-white p-4 shadow">
           <StudentRegister />
         </div>
-      )
-
-      }
+      )}
+      {userLocalStore.isCoordinator && (
+        <CoordinatorRegister />
+      )}
     </StudyLayout>
   )
 }

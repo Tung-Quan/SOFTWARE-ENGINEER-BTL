@@ -1,5 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
+
+import useLockBodyScroll from '@/hooks/use-lock-body-scroll';
 // Bạn cần cài đặt heroicons: npm install @heroicons/react
 
 /**
@@ -17,6 +19,9 @@ export function DeclinePopup({ onClose, onSubmit }: DeclinePopupProps) {
   // State để lưu nội dung lý do
   const [reason, setReason] = useState('');
 
+  // Lock background scroll while this popup is mounted
+  useLockBodyScroll(true);
+
   // Ngăn việc click vào nội dung card làm đóng popup
   const handleCardClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -31,7 +36,7 @@ export function DeclinePopup({ onClose, onSubmit }: DeclinePopupProps) {
   return (
     // Lớp phủ (Overlay)
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 p-4"
+  className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/75 p-4"
       onClick={onClose} // Click vào overlay để đóng
     >
       {/* Container của Popup (Card) */}

@@ -185,7 +185,7 @@ const SidebarDesktop = ({ opened }: SidebarDesktopProps) => {
 
           <Item
             opened={opened}
-            name="Đăng ký buổi học"
+            name="Đăng ký lịch học"
             route="/register-session"
             current={router.location.pathname}
           >

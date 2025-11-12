@@ -23,6 +23,7 @@ import { Route as StatisticalOverviewIndexRouteImport } from './features/~statis
 import { Route as ScheduleRequestIndexRouteImport } from './features/~schedule/~request/~index'
 import { Route as ScheduleHistoryIndexRouteImport } from './features/~schedule/~history/~index'
 import { Route as ScheduleIdIndexRouteImport } from './features/~schedule/~$id/~index'
+import { Route as RegisterSessionOverviewIndexRouteImport } from './features/~register-session/~overview/~index'
 import { Route as LibraryQueryIndexRouteImport } from './features/~library/~$query/~index'
 import { Route as PrivateProfileIndexRouteImport } from './features/~_private/~profile/~index'
 import { Route as PrivateDashboardIndexRouteImport } from './features/~_private/~dashboard/~index'
@@ -106,6 +107,12 @@ const ScheduleIdIndexRoute = ScheduleIdIndexRouteImport.update({
   path: '/schedule/$id/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterSessionOverviewIndexRoute =
+  RegisterSessionOverviewIndexRouteImport.update({
+    id: '/register-session/overview/',
+    path: '/register-session/overview/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LibraryQueryIndexRoute = LibraryQueryIndexRouteImport.update({
   id: '/library/$query/',
   path: '/library/$query/',
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/profile': typeof PrivateProfileIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
+  '/register-session/overview': typeof RegisterSessionOverviewIndexRoute
   '/schedule/$id': typeof ScheduleIdIndexRoute
   '/schedule/history': typeof ScheduleHistoryIndexRoute
   '/schedule/request': typeof ScheduleRequestIndexRoute
@@ -205,6 +213,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/profile': typeof PrivateProfileIndexRoute
   '/library/$query': typeof LibraryQueryIndexRoute
+  '/register-session/overview': typeof RegisterSessionOverviewIndexRoute
   '/schedule/$id': typeof ScheduleIdIndexRoute
   '/schedule/history': typeof ScheduleHistoryIndexRoute
   '/schedule/request': typeof ScheduleRequestIndexRoute
@@ -233,6 +242,7 @@ export interface FileRoutesById {
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
   '/_private/profile/': typeof PrivateProfileIndexRoute
   '/library/$query/': typeof LibraryQueryIndexRoute
+  '/register-session/overview/': typeof RegisterSessionOverviewIndexRoute
   '/schedule/$id/': typeof ScheduleIdIndexRoute
   '/schedule/history/': typeof ScheduleHistoryIndexRoute
   '/schedule/request/': typeof ScheduleRequestIndexRoute
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/profile'
     | '/library/$query'
+    | '/register-session/overview'
     | '/schedule/$id'
     | '/schedule/history'
     | '/schedule/request'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/profile'
     | '/library/$query'
+    | '/register-session/overview'
     | '/schedule/$id'
     | '/schedule/history'
     | '/schedule/request'
@@ -314,6 +326,7 @@ export interface FileRouteTypes {
     | '/_private/dashboard/'
     | '/_private/profile/'
     | '/library/$query/'
+    | '/register-session/overview/'
     | '/schedule/$id/'
     | '/schedule/history/'
     | '/schedule/request/'
@@ -339,6 +352,7 @@ export interface RootRouteChildren {
   StatisticalIndexRoute: typeof StatisticalIndexRoute
   SystemMonitoringIndexRoute: typeof SystemMonitoringIndexRoute
   LibraryQueryIndexRoute: typeof LibraryQueryIndexRoute
+  RegisterSessionOverviewIndexRoute: typeof RegisterSessionOverviewIndexRoute
   ScheduleIdIndexRoute: typeof ScheduleIdIndexRoute
   ScheduleHistoryIndexRoute: typeof ScheduleHistoryIndexRoute
   ScheduleRequestIndexRoute: typeof ScheduleRequestIndexRoute
@@ -446,6 +460,13 @@ declare module '@tanstack/react-router' {
       path: '/schedule/$id'
       fullPath: '/schedule/$id'
       preLoaderRoute: typeof ScheduleIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register-session/overview/': {
+      id: '/register-session/overview/'
+      path: '/register-session/overview'
+      fullPath: '/register-session/overview'
+      preLoaderRoute: typeof RegisterSessionOverviewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library/$query/': {
@@ -564,6 +585,7 @@ const rootRouteChildren: RootRouteChildren = {
   StatisticalIndexRoute: StatisticalIndexRoute,
   SystemMonitoringIndexRoute: SystemMonitoringIndexRoute,
   LibraryQueryIndexRoute: LibraryQueryIndexRoute,
+  RegisterSessionOverviewIndexRoute: RegisterSessionOverviewIndexRoute,
   ScheduleIdIndexRoute: ScheduleIdIndexRoute,
   ScheduleHistoryIndexRoute: ScheduleHistoryIndexRoute,
   ScheduleRequestIndexRoute: ScheduleRequestIndexRoute,

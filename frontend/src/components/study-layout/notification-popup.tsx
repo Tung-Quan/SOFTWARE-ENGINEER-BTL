@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import useLockBodyScroll from '@/hooks/use-lock-body-scroll';
+
 // --- Định nghĩa SVG Icons ---
 
 const BellIcon = () => (
@@ -125,6 +127,9 @@ type NotificationPopupProps = {
 
 const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
   const [notifications, setNotifications] = useState<Notification[]>(() => getNotificationsStore());
+
+  // Lock body scroll while notification popup is open
+  useLockBodyScroll(!!isOpen);
 
   // Đếm số thông báo chưa đọc
   const unreadCount = notifications.filter((n) => !n.isRead).length;
