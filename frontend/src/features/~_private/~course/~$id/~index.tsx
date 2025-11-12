@@ -11,6 +11,7 @@ import CalendarIcon from '@/components/icons/calendar';
 import LinkIcon from '@/components/icons/link';
 import StudyLayout from '@/components/study-layout';
 
+import pdfIcon from './components/pdfIcon.png'
 import { CheckCircleIcon, FolderIcon } from './components/course-icons';
 
 export const Route = createFileRoute('/_private/course/$id/')({
@@ -1789,7 +1790,8 @@ function CourseDetailsComponent() {
                       <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
                         <div className="flex size-10 items-center justify-center rounded bg-red-50">
                           <img
-                            src="./components/pdfIcon.png"
+                            // src="./components/pdfIcon.png"
+                            src={pdfIcon}
                             alt="PDF file icon"
                             className="size-6 text-red-600"
                           />
@@ -1827,7 +1829,7 @@ function CourseDetailsComponent() {
                         <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
                           <div className="flex size-10 items-center justify-center rounded bg-red-50">
                             <img
-                              src="./components/pdfIcon.png"
+                              src={pdfIcon}
                               alt="PDF file icon"
                               className="size-6 text-red-600"
                             />
