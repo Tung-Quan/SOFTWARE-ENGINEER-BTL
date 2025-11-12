@@ -19,11 +19,11 @@ export default defineConfig({
     viteTsconfigPaths(),
   ],
   server: {
-    port: 3000,
+    port: 80,
     allowedHosts: [],
   },
   preview: {
-    port: 3000,
+    port: 80,
     allowedHosts: [],
   },
   resolve: {

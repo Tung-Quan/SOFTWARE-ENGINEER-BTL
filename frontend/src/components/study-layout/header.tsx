@@ -1,13 +1,16 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import {
   Next,
+  NotificationIcon,
   ProfileIcon,
   SidebarToggleIcon,
   SignOut,
 } from '@/components/icons';
+import ChatPopup from '@/components/study-layout/chat-popup';
+import NotificationPopup, { subscribeNotifications, getNotificationsStore } from '@/components/study-layout/notification-popup';
 // import vndFormat from '@/helpers/currency-format';
 import handleAxiosError from '@/helpers/handle-axios-error';
 import { useAuthStore } from '@/stores';
@@ -28,20 +31,45 @@ const Header = ({
   toggleSidebarDesktop,
   toggleSidebarMobile,
 }: HeaderProps) => {
-  const { setToken, setIsAuthenticated, isAuthenticated } = useAuthStore();
+  const { logout: authLogout, isAuthenticated } = useAuthStore();
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
+  const [notificationOpened, setNotificationOpened] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+  const [chatOpened, setChatOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // subscribe to notification store so badge count stays in sync
+  useEffect(() => {
+    try {
+      // initialize
+      const init = getNotificationsStore();
+      setUnreadCount(init.filter((i) => !i.isRead).length);
+      const unsub = subscribeNotifications((items: any[]) => {
+        setUnreadCount(items.filter((i) => !i.isRead).length);
+      });
+      return () => unsub();
+    } catch {
+      // ignore subscription errors
+      return () => { };
+    }
+  }, []);
 
   const logout = async () => {
     try {
       setLoading(true);
       // await AuthService.logout();
+
+      // Use store's logout to clear auth state
+      authLogout();
+
+      // Clear any legacy token storage
       storage.removeItem('token');
-      setIsAuthenticated(false);
-      setToken('');
+
+      // Clear user state
       setUser(null);
+
       navigate({ to: '/login' });
     } catch (error: unknown) {
       handleAxiosError(error, (message: string) => {
@@ -55,7 +83,7 @@ const Header = ({
   return (
     <div
       id="study-layout-header"
-      className="sticky top-0 z-[98] flex h-20 w-full flex-row items-center border-b border-solid border-tertiary-300 bg-white p-5 3xl:h-24 3xl:px-10"
+      className="sticky top-0 z-[98] flex h-20 w-full flex-row items-center border-b border-solid border-tertiary-300 bg-white p-5 shadow-for-header 3xl:h-24 3xl:px-10"
     >
       <SidebarToggleIcon
         onClick={toggleSidebarMobile}
@@ -66,8 +94,37 @@ const Header = ({
         className="relative hidden size-8 cursor-pointer fill-tertiary xl:flex"
       />
       <div className="flex flex-1" />
-      {isAuthenticated && user ? (
+      {isAuthenticated ? (
         <>
+          {/* Sticky chat activator (provided SVG) */}
+          {!chatOpened && (
+            <button
+              title="Chat"
+              onClick={() => setChatOpened(true)}
+              className="fixed right-0 top-20 z-[97] p-2 focus:outline-none"
+              aria-label="Open chat"
+            >
+              <svg width="52" height="40" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 0.5H79.5V39.5H20C9.23045 39.5 0.5 30.7696 0.5 20C0.5 9.23045 9.23045 0.5 20 0.5Z" fill="white" stroke="#3D4863" />
+                <path d="M37 14H35V23H22V25C22 25.55 22.45 26 23 26H34L38 30V15C38 14.45 37.55 14 37 14ZM33 20V11C33 10.45 32.55 10 32 10H19C18.45 10 18 10.45 18 11V25L22 21H32C32.55 21 33 20.55 33 20Z" fill="#595959" />
+              </svg>
+            </button>
+          )}
+          {/* Notification/Chat Icon */}
+          <div
+            className="relative mr-4 flex size-10 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#0329E9]"
+            onClick={() => setNotificationOpened(!notificationOpened)}
+            title="Notifications"
+          >
+            <NotificationIcon className="size-6" />
+            {/* Badge for unread notifications (optional) */}
+            {unreadCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                {unreadCount}
+              </span>
+            )}
+          </div>
+
           <div
             className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-solid border-tertiary p-1 xl:h-12 xl:w-80 xl:justify-between"
             onClick={() => setDropdownOpened(!dropdownOpened)}
@@ -102,7 +159,7 @@ const Header = ({
             className={`${dropdownOpened ? 'flex' : 'hidden'} absolute right-5 top-[4.5rem] z-[99] h-28 w-40 flex-col rounded-lg bg-white shadow-[0_8px_16px_0_rgba(0,0,0,0.25)] xl:w-80`}
           >
             <Link
-              to="/dashboard"
+              to="/profile"
               className="relative flex h-14 w-full flex-row items-center gap-2 rounded-lg px-2 duration-200 ease-in-out hover:bg-tertiary-300"
             >
               <ProfileIcon className="relative size-6 fill-tertiary" />
@@ -129,6 +186,11 @@ const Header = ({
           Đăng nhập
         </Link>
       )}
+
+      {/* Notification Popup */}
+      <NotificationPopup isOpen={notificationOpened} onClose={() => setNotificationOpened(false)} />
+      {/* Chat Popup (activated by sticky SVG button) */}
+      <ChatPopup isOpen={chatOpened} onClose={() => setChatOpened(false)} />
     </div>
   );
 };

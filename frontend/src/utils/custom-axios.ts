@@ -3,7 +3,7 @@ import axios from 'axios';
 import storage from '@/helpers/storage';
 
 const instance = axios.create({
-  baseURL: 'http://locahost:3000', // port BE, will be changed later when BE is ready
+  baseURL: 'http://locahost:3001', // port BE, will be changed later when BE is ready
   withCredentials: true,
 });
 

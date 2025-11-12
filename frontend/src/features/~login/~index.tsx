@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 
 import CustomGoogleButton from '@/components/button/google-button';
 import handleAxiosError from '@/helpers/handle-axios-error';
-import storage from '@/helpers/storage';
-import { useAuthStore } from '@/stores';
+import { useAuthStore, useUserStore } from '@/stores';
 
+import mockupUsers from '../../../public/mockupUsers.json';
 import overseaStudent from '../../assets/animations/Uy24MEqryK.json';
 import BachKhoaLogo from '../../assets/bachkhoa.png';
 
@@ -27,7 +27,10 @@ export const Route = createFileRoute('/login/')({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { setToken, setIsAuthenticated } = useAuthStore();
+  const setToken = useAuthStore((s) => s.setToken);
+  const setUser = useUserStore((s) => s.setUser);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   void loading;
   const loginWithGoogle = async (credentialResponse: string) => {
@@ -36,11 +39,64 @@ function RouteComponent() {
       // const { accessToken } = (
       //   await AuthService.loginWithGoogle(credentialResponse)
       // ).data;
-      console.log('credentialResponse', credentialResponse);
-      const accessToken = 'hehe123'; // temp data
-      storage.setItem('token', accessToken);
+  console.log('credentialResponse', credentialResponse);
+  const accessToken = 'hehe123'; // temp data
+  // Persist token via the auth store (zustand + persist)
+  setToken(accessToken);
+      navigate({ to: '/dashboard' });
+    } catch (error: unknown) {
+      handleAxiosError(error, (message: string) => {
+        toast.error(message);
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      
+      // Find user from mockup data
+      const foundUser = mockupUsers.find(
+        (u) => u.email === email && u.password === password
+      );
+      
+      if (!foundUser) {
+        toast.error('Email hoặc mật khẩu không đúng!');
+        return;
+      }
+      
+      // Generate a token based on user info
+      const accessToken = `token-${foundUser.role}-${Date.now()}`;
+      
+      // Set token in auth store (this also sets isAuthenticated = true)
       setToken(accessToken);
-      setIsAuthenticated(true);
+      
+      // Set user data in user store
+      setUser({
+        _id: foundUser.email,
+        googleId: '',
+        appleId: null,
+        email: foundUser.email,
+        firstName: foundUser.role.charAt(0).toUpperCase() + foundUser.role.slice(1),
+        lastName: 'User',
+        picture: null,
+        dateOfBirth: null,
+        phone: null,
+        isManager: foundUser.role === 'coordinator' || foundUser.role === 'tutor' || foundUser.role === 'chairman',
+        isTutor: foundUser.role === 'tutor',
+        isCoordinator: foundUser.role === 'coordinator',
+        statisticalPermission: foundUser.role === 'coordinator' || foundUser.role === 'chairman',
+        isChairman: foundUser.role === 'chairman',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        address: '',
+        highSchool: null,
+      });
+      
+      toast.success(`Đăng nhập thành công với vai trò ${foundUser.role}!`);
       navigate({ to: '/dashboard' });
     } catch (error: unknown) {
       handleAxiosError(error, (message: string) => {
@@ -55,6 +111,7 @@ function RouteComponent() {
     <div className="relative flex h-screen max-h-screen w-screen overflow-hidden bg-white">
       <img
         src={BachKhoaLogo}
+        alt="BachKhoa Logo"
         className=" absolute left-4 top-2 h-fit w-24 2xs:left-8 lg:left-12 lg:top-4 xl:left-[100px] 2xl:left-[120px]"
       />
       <div className=" m-auto flex size-full min-h-0 flex-col items-center justify-center gap-y-4 overflow-hidden 2xs:gap-y-5 md:gap-y-6 lg:gap-y-8 3xl:gap-y-12">
@@ -75,6 +132,43 @@ function RouteComponent() {
           <br />
           Nền tảng học tập, hỗ trợ học sinh mạnh mẽ
         </h3>
+        <form onSubmit={handleEmailLogin} className="flex flex-col items-center gap-y-3">
+          <label htmlFor="email" className="sr-only">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="w-72 rounded border px-3 py-2 text-sm shadow-sm"
+            required
+          />
+
+          <label htmlFor="password" className="sr-only">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-72 rounded border px-3 py-2 text-sm shadow-sm"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-72 rounded bg-black px-4 py-2 text-white hover:bg-primary-700 disabled:opacity-60"
+            disabled={loading}
+          >
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          </button>
+        </form>
+
+        <div className="">Hoặc</div>
         <CustomGoogleButton
           onSuccess={async (credentialResponse) => {
             if (!credentialResponse.credential) {

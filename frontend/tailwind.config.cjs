@@ -5,6 +5,10 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      boxShadow:{
+        'custom-yellow': '4px 4px 0px 0px #F9BA08',
+        'for-header': '0px 4px 16px 0px #00000040',
+      },
       screens: {
         '2xs': '360px',
         xs: '480px',
@@ -44,6 +48,8 @@ module.exports = {
       },
     },
   },
-  // plugins:
+  // plugins:{
+  //   require('@tailwindcss/forms'),
+  // },
   //  [require('tailwind-scrollbar-hide')],
 };
