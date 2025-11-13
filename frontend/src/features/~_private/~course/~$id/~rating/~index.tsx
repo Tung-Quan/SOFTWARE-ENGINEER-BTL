@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useMemo, useState, useEffect } from 'react';
 
 import { mockCourses } from '@/components/data/~mock-courses';
@@ -96,6 +96,7 @@ function RouteComponent() {
 
   const userStore = storage.getItem('userStore') as UserStore | null;
 
+  const navigate = useNavigate();
   // console.log('userStore', userStore);
 
   // Role checking variables
@@ -148,8 +149,8 @@ function RouteComponent() {
         <div className="w-full font-['Archivo']">
           {/* Back button */}
           <Link
-              // onClick={() => navigate({ to: '/dashboard' })}
-              to='/dashboard'
+            // onClick={() => navigate({ to: '/dashboard' })}
+            to="/dashboard"
             className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
           >
             <ArrowLeft className="size-5" />
@@ -179,13 +180,12 @@ function RouteComponent() {
               <div className="mt-6 flex gap-4">
                 <Link
                   to={`/course/${id}` as any}
-                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                >
                   Tổng quan
                 </Link>
 
-                <button
-                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80"
-                >
+                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                   Đánh giá
                 </button>
               </div>
@@ -231,7 +231,8 @@ function RouteComponent() {
         </div>
         <button
           onClick={handleConfirm}
-          className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
+          className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2"
+        >
           <p className="font-bold text-white">Xác nhận</p>
         </button>
       </StudyLayout>
@@ -272,7 +273,8 @@ function RouteComponent() {
               <div className="mt-6 flex gap-4">
                 <Link
                   to={`/course/${id}` as any}
-                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                >
                   Tổng quan
                 </Link>
 
@@ -425,7 +427,8 @@ function RouteComponent() {
               <div className="mt-6 flex gap-4">
                 <Link
                   to={`/course/${id}` as any}
-                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80"
+                >
                   Tổng quan
                 </Link>
                 <button className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
@@ -535,12 +538,15 @@ function RouteComponent() {
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span className="text-sm">
-                      19:00 {10 + index}/10/2024
-                    </span>
+                    <span className="text-sm">19:00 {10 + index}/10/2024</span>
                   </div>
                 </div>
-                <button className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700">
+                <button
+                  onClick={() => {
+                    navigate({ to: `/course/${id}/rating/1/$index` });
+                  }}
+                  className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700"
+                >
                   Xem đánh giá
                 </button>
               </div>
