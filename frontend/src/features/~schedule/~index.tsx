@@ -103,7 +103,12 @@ function RouteComponent() {
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 7);
 
-  // Handlers to move between weeks
+
+  const rawUserStore = localStorage.getItem('userStore');
+  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  const State = userStore?.state ?? null;
+  const userLocalStore = State?.user ?? null;
+  
   const goToPreviousWeek = () => setReferenceDate((d) => {
     const nd = new Date(d);
     nd.setDate(d.getDate() - 7);
@@ -174,7 +179,14 @@ function RouteComponent() {
 
           {/* 4. Nút "Yêu cầu buổi học" và liên kết Lịch sử */}
           <div className="mt-6 flex items-center justify-end gap-3">
-
+            { userLocalStore.isTutor && (
+              <Link
+                to="/schedule/request"
+                className="rounded-md bg-blue-800 px-5 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Tạo buổi học
+              </Link>
+            )}
 
             <Link
               to="/schedule/history"
@@ -246,9 +258,9 @@ function BannerWave() {
  */
 function ScheduleHeader({ onPrevWeek, onNextWeek }: { onPrevWeek: () => void; onNextWeek: () => void }) {
   // onPrevWeek / onNextWeek are provided by the parent to navigate calendar weeks
-  onPrevWeek = onPrevWeek ?? (() => {});
-  onNextWeek = onNextWeek ?? (() => {});
-  
+  onPrevWeek = onPrevWeek ?? (() => { });
+  onNextWeek = onNextWeek ?? (() => { });
+
   return (
     <div className="flex flex-col items-center justify-between border-gray-200 p-4 md:flex-row">
       <h2 className="text-xl font-semibold text-gray-800">Thời khóa biểu</h2>
@@ -347,7 +359,7 @@ function CalendarGrid({ items, weekLabels }: CalendarGridProps) {
           console.log('hour', hour);
           const minute = parseInt(minStr, 10);
           // Highlight full hours (minute === 0) differently
-          const textColor = minute === 0  ? '#F9BA08' : '#0329E9';
+          const textColor = minute === 0 ? '#F9BA08' : '#0329E9';
 
           return (
             <div

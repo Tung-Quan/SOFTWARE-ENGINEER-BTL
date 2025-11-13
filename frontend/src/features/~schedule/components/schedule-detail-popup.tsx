@@ -142,16 +142,21 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
         style={isPositioned ? popupStyle : undefined}
         onClick={handleCardClick}
       >
-        {userLocalStore.isManager && (
-          <Link
-            // onClick={onClose}
-            to={`/schedule/${id}` as string} 
-            className="absolute right-3 top-3 z-10 text-gray-400 hover:text-gray-600"
-            aria-label="Đóng popup"
-          >
+        <Link
+          // onClick={onClose}
+          to={`/schedule/${id}` as string}
+          className="absolute right-3 top-3 z-10 text-gray-400 hover:text-gray-600"
+          aria-label="Đóng popup"
+        >
+          {userLocalStore.isManager ? (
             <ModificationIcon className="size-6" />
-          </Link>
-        )}
+          ) : (
+
+            <span
+              className="text-sm font-medium text-blue-600 hover:underline"
+            >Chi tiết</span>
+          )}
+        </Link>
 
         {/* Phần 1: Thông tin chi tiết (trên) */}
         {/* add right padding so the absolute edit icon doesn't overlap the text */}

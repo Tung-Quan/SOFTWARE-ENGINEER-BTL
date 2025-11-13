@@ -40,7 +40,7 @@ function RouteComponent() {
   const membersList = session?.members?.map((m) => ({ id: String(m.id), name: m.name })) ?? mockMembers
 
   // State cho các trường trong form
-  const [sessionType, setSessionType] = useState<'hybrid' | 'online'>('hybrid')
+  const [sessionType, setSessionType] = useState<'offline' | 'online'>('offline')
   const [attendance, setAttendance] = useState<AttendanceState>({})
   const [title, setTitle] = useState('')
   const [courseId, setCourseId] = useState('')
@@ -48,6 +48,12 @@ function RouteComponent() {
   const [endLocal, setEndLocal] = useState('')
   const [link, setLink] = useState('')
   const [locationVal, setLocationVal] = useState('')
+  const [tutorNote, setTutorNote] = useState('')
+
+  const rawUserStore = localStorage.getItem('userStore');
+  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  const State = userStore?.state ?? null;
+  const userLocalStore = State?.user ?? null;
 
   // Helpers to convert ISO <-> input[type=datetime-local] value
   const toInputLocal = (iso?: string) => {
@@ -85,11 +91,12 @@ function RouteComponent() {
     // initialize form fields from session
     setTitle(session?.title ?? '')
     setCourseId(session?.courseId ?? '')
-    setSessionType((session?.method ?? 'hybrid') as 'hybrid' | 'online')
+    setSessionType((session?.method ?? 'offline') as 'offline' | 'online')
     setStartLocal(toInputLocal(session?.start))
     setEndLocal(toInputLocal(session?.end))
-  setLink(session?.link ?? '')
-  setLocationVal(session?.location ?? '')
+    setLink(session?.link ?? '')
+    setLocationVal(session?.location ?? '')
+    setTutorNote((session as Session | undefined)?.tutorNote ?? '')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, session])
@@ -132,7 +139,7 @@ function RouteComponent() {
       start: toISOFromLocal(startLocal),
       end: toISOFromLocal(endLocal),
       // Include link/location depending on selected method
-      link: sessionType === 'hybrid' ? link || undefined : undefined,
+      link: sessionType === 'offline' ? link || undefined : undefined,
       location: sessionType === 'online' ? locationVal || undefined : undefined,
     }
 
@@ -140,6 +147,123 @@ function RouteComponent() {
     toast.success('Lưu điểm danh thành công')
     // Navigate back to history page
     navigate({ to: '/schedule' })
+  }
+
+  // Save tutor note after session time
+  const handleSaveTutorNote = () => {
+    if (!session) {
+      toast.error('Không tìm thấy buổi học để lưu ghi chú')
+      return
+    }
+    updateSession(session.id, { tutorNote })
+    toast.success('Ghi chú đã được lưu')
+  }
+
+  if (!userLocalStore.isManager) {
+    return (
+      <StudyLayout>
+        <div className="min-h-screen bg-gray-50">
+          <Link
+            to="/schedule"
+            className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
+          >
+            <ArrowLeftIcon className="size-5" />
+            <span className="font-medium">Quay lại</span>
+          </Link>
+
+          <main className="p-4 md:p-8">
+            <h1 className="mb-8 text-3xl font-bold text-gray-900">Chi tiết buổi học (ID: {id})</h1>
+
+            <div className="flex flex-col gap-8">
+              {/* Read-only view for students */}
+              <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
+                <BannerWave />
+
+                <div className="relative space-y-6 p-6 md:p-8">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-gray-800">Thông tin buổi học</h2>
+                    <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
+                      Chỉ xem
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Chủ đề:</label>
+                      <p className="text-base text-gray-900">{session?.title || 'Chưa có thông tin'}</p>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Khóa học:</label>
+                      <p className="text-base text-gray-900">{session?.courseId || 'Chưa có thông tin'}</p>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Loại hình:</label>
+                      <p className="text-base text-gray-900">{session?.method === 'online' ? 'Online' : 'Offline'}</p>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Thời gian:</label>
+                      <p className="text-base text-gray-900">
+                        {session?.start ? new Date(session.start).toLocaleString('vi-VN') : 'Chưa xác định'} - {session?.end ? new Date(session.end).toLocaleString('vi-VN') : 'Chưa xác định'}
+                      </p>
+                    </div>
+
+                    {session?.method === 'online' && session?.link && (
+                      <div>
+                        <label className="mb-1 block text-sm font-medium text-gray-600">Link buổi học:</label>
+                        <a href={session.link} target="_blank" rel="noopener noreferrer" className="text-base text-blue-600 hover:underline">
+                          {session.link}
+                        </a>
+                      </div>
+                    )}
+
+                    {session?.method === 'hybrid' && session?.location && (
+                      <div>
+                        <label className="mb-1 block text-sm font-medium text-gray-600">Địa điểm:</label>
+                        <p className="text-base text-gray-900">{session.location}</p>
+                      </div>
+                    )}
+
+                    {session?.tutorNote && (
+                      <div>
+                        <label className="mb-1 block text-sm font-medium text-gray-600">Ghi chú của giảng viên:</label>
+                        <p className="whitespace-pre-wrap text-base text-gray-900">{session.tutorNote}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Members list - read only */}
+              <div className="rounded-lg bg-white p-6 shadow-md md:p-8">
+                <h2 className="mb-6 text-xl font-semibold text-gray-800">Danh sách thành viên</h2>
+                <div className="grid grid-cols-4 gap-x-2 gap-y-6 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12">
+                  {membersList.map((member) => {
+                    const memberData = session?.members?.find(m => String(m.id) === member.id)
+                    const isPresent = memberData?.present ?? true
+
+                    return (
+                      <div key={member.id} className="flex flex-col items-center text-center">
+                        <UserCircleIcon className="size-10 text-gray-400" />
+                        <span className="mt-1 text-xs text-gray-700">{member.name}</span>
+                        <span className={`mt-2 rounded-full px-2 py-1 text-xs font-medium ${isPresent
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                          }`}>
+                          {isPresent ? 'Có mặt' : 'Vắng mặt'}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </StudyLayout>
+    )
   }
 
   return (
@@ -163,22 +287,44 @@ function RouteComponent() {
 
               {/* Section: Thông tin cơ bản */}
               {/* <BasicInfoSection session={session} sessionType={sessionType} onSessionTypeChange={setSessionType} /> */}
-                          <BasicInfoSection 
-                            title={title}
-                            courseId={courseId}
-                            sessionType={sessionType}
-                            startLocal={startLocal}
-                            endLocal={endLocal}
-                            link={link}
-                            locationVal={locationVal}
-                            onTitleChange={setTitle}
-                            onCourseIdChange={setCourseId}
-                            onSessionTypeChange={setSessionType}
-                            onStartChange={setStartLocal}
-                            onEndChange={setEndLocal}
-                            onLinkChange={setLink}
-                            onLocationChange={setLocationVal}
-                          />
+              <BasicInfoSection
+                title={title}
+                courseId={courseId}
+                sessionType={sessionType}
+                startLocal={startLocal}
+                endLocal={endLocal}
+                link={link}
+                locationVal={locationVal}
+                onTitleChange={setTitle}
+                onCourseIdChange={setCourseId}
+                onSessionTypeChange={setSessionType}
+                onStartChange={setStartLocal}
+                onEndChange={setEndLocal}
+                onLinkChange={setLink}
+                onLocationChange={setLocationVal}
+              />
+              {/* Tutor note panel appears only after session end */}
+              {session && new Date(session.end).getTime() < Date.now() && (
+                <div className="rounded-lg bg-white p-6 shadow-md md:p-8">
+                  <h2 className="mb-4 text-xl font-semibold text-gray-800">Ghi chú cho tutor</h2>
+                  <textarea
+                    value={tutorNote}
+                    onChange={(e) => setTutorNote(e.target.value)}
+                    rows={4}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    placeholder="Viết ghi chú, tóm tắt buổi học, link tài liệu, thông tin cần lưu ý..."
+                  />
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleSaveTutorNote}
+                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+                    >
+                      Lưu ghi chú
+                    </button>
+                  </div>
+                </div>
+              )}
               {/* Section: Điểm danh */}
               <AttendanceSection
                 members={membersList}
@@ -205,12 +351,12 @@ function RouteComponent() {
 interface BasicInfoProps {
   title: string
   courseId: string
-  sessionType: 'hybrid' | 'online'
+  sessionType: 'offline' | 'online'
   startLocal: string
   endLocal: string
   onTitleChange: (v: string) => void
   onCourseIdChange: (v: string) => void
-  onSessionTypeChange: (v: 'hybrid' | 'online') => void
+  onSessionTypeChange: (v: 'offline' | 'online') => void
   onStartChange: (v: string) => void
   onEndChange: (v: string) => void
   link: string
@@ -219,11 +365,11 @@ interface BasicInfoProps {
   onLocationChange: (v: string) => void
 }
 
-function BasicInfoSection({ 
-  title, 
-  courseId, 
-  sessionType, 
-  startLocal, 
+function BasicInfoSection({
+  title,
+  courseId,
+  sessionType,
+  startLocal,
   endLocal,
   link,
   locationVal,
@@ -249,16 +395,16 @@ function BasicInfoSection({
 
         {/* Các trường input */}
         {/* Controlled inputs are passed down via DOM IDs and form state in parent; here we render uncontrolled placeholders to keep markup simple. */}
-        <FormInput 
-          label="Chủ đề buổi học (*):" 
-          id="topic" 
+        <FormInput
+          label="Chủ đề buổi học (*):"
+          id="topic"
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
         />
 
-        <FormSelect 
-          label="Khóa học (*):" 
-          id="course" 
+        <FormSelect
+          label="Khóa học (*):"
+          id="course"
           value={courseId}
           onChange={(e) => onCourseIdChange(e.target.value)}
         >
@@ -269,7 +415,7 @@ function BasicInfoSection({
           ))}
         </FormSelect>
 
-  {/* Radio buttons */}
+        {/* Radio buttons */}
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">Loại hình (*):</label>
           <div className="flex items-center gap-6">
@@ -277,13 +423,13 @@ function BasicInfoSection({
               <input
                 type="radio"
                 name="sessionType"
-                value="hybrid"
-                checked={sessionType === 'hybrid'}
-                onChange={() => onSessionTypeChange('hybrid')}
+                value="offline"
+                checked={sessionType === 'offline'}
+                onChange={() => onSessionTypeChange('offline')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                aria-label="session-type-hybrid"
+                aria-label="session-type-offline"
               />
-              <span className="ml-2 text-sm text-gray-800">hybrid</span>
+              <span className="ml-2 text-sm text-gray-800">offline</span>
             </label>
             <label className="flex cursor-pointer items-center">
               <input
@@ -297,42 +443,42 @@ function BasicInfoSection({
               />
               <span className="ml-2 text-sm text-gray-800">online</span>
             </label>
-            
+
           </div>
         </div>
 
-  {/* Time Range */}
+        {/* Time Range */}
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">Thời gian học (*):</label>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-              <div className="w-full">
-                <input 
-                  id="start" 
-                  name="start" 
-                  aria-label="start" 
-                  type="datetime-local" 
-                  value={startLocal}
-                  onChange={(e) => onStartChange(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
-                />
-              </div>
+            <div className="w-full">
+              <input
+                id="start"
+                name="start"
+                aria-label="start"
+                type="datetime-local"
+                value={startLocal}
+                onChange={(e) => onStartChange(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+              />
+            </div>
             <span className="hidden font-bold text-gray-500 sm:block">−</span>
-              <div className="w-full">
-              <input 
-                id="end" 
-                name="end" 
-                aria-label="end" 
-                type="datetime-local" 
+            <div className="w-full">
+              <input
+                id="end"
+                name="end"
+                aria-label="end"
+                type="datetime-local"
                 value={endLocal}
                 onChange={(e) => onEndChange(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500" 
+                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
         </div>
 
         {/* Conditional: link or location depending on sessionType */}
-        {sessionType === 'hybrid' ? (
+        {sessionType === 'online' ? (
           <div>
             <FormInput
               label="Link buổi học (Meet):"
@@ -355,16 +501,6 @@ function BasicInfoSection({
             </FormSelect>
           </div>
         )}
-        {/* Note / Upload */}
-        <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">Note:</label>
-          <button
-            type="button"
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-          >
-            Upload file
-          </button>
-        </div>
       </div>
     </div>
   )

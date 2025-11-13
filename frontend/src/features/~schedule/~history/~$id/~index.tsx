@@ -51,6 +51,18 @@ function RouteComponent() {
     if (current) updateSession(current.id, { status: 'completed' })
     setDeclinePopup(false)
     navigate({ to: '/schedule/history' })
+    if (current?.requestType !== 'absent') {
+      // nếu không phải là yêu cầu xin nghỉ thì tạo một buổi học mới ở /schedule/request
+      navigate({
+        to: '/schedule/request/new', search: (old) => ({
+          ...old,
+          courseId: current?.courseId,
+          title: current?.title,
+          desc: current?.desc,
+          requestType: current?.requestType,
+        })
+      })
+    }
   }
 
   // === Trạng thái Loading / Not Found ===

@@ -30,11 +30,31 @@ const AcademicIcon = () => (
   </svg>
 );
 
+// Icon Group Chat
+const GroupIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    className="size-6"
+  >
+    <path d="M7 8a3 3 0 100-6 3 3 0 000 6zM14.5 9a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM1.615 16.428a1.224 1.224 0 01-.569-1.175 6.002 6.002 0 0111.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 017 18a9.953 9.953 0 01-5.385-1.572zM14.5 16h-.106c.07-.297.088-.611.048-.933a7.47 7.47 0 00-1.588-3.755 4.502 4.502 0 015.874 2.636.818.818 0 01-.36.98A7.465 7.465 0 0114.5 16z" />
+  </svg>
+);
+
+export type GroupMember = {
+  id: number;
+  name: string;
+};
+
 export type Conversation = {
   id: string;
   title: string;
   description: string;
   icon: () => React.ReactElement;
+  isGroup?: boolean;
+  members?: GroupMember[];
+  createdBy?: string;
 };
 
 export const mockConversations: Conversation[] = [
@@ -81,3 +101,68 @@ export const mockConversations: Conversation[] = [
     icon: AcademicIcon,
   },
 ];
+
+// Helper functions for group chat management
+const groupChats: Conversation[] = [];
+
+export function createGroupChat(title: string, memberIds: number[], allStudents: GroupMember[]): Conversation {
+  const members = allStudents.filter(s => memberIds.includes(s.id));
+  const newGroup: Conversation = {
+    id: `group-${Date.now()}`,
+    title,
+    description: `${members.length} thành viên`,
+    icon: GroupIcon,
+    isGroup: true,
+    members,
+    createdBy: 'tutor',
+  };
+  groupChats.push(newGroup);
+  return newGroup;
+}
+
+export function getGroupChats(): Conversation[] {
+  return groupChats;
+}
+
+export function updateGroupName(groupId: string, newName: string): boolean {
+  const group = groupChats.find(g => g.id === groupId);
+  if (group) {
+    group.title = newName;
+    return true;
+  }
+  return false;
+}
+
+export function addMemberToGroup(groupId: string, member: GroupMember): boolean {
+  const group = groupChats.find(g => g.id === groupId);
+  if (group && group.members) {
+    if (!group.members.some(m => m.id === member.id)) {
+      group.members.push(member);
+      group.description = `${group.members.length} thành viên`;
+      return true;
+    }
+  }
+  return false;
+}
+
+export function removeMemberFromGroup(groupId: string, memberId: number): boolean {
+  const group = groupChats.find(g => g.id === groupId);
+  if (group && group.members) {
+    const index = group.members.findIndex(m => m.id === memberId);
+    if (index > -1) {
+      group.members.splice(index, 1);
+      group.description = `${group.members.length} thành viên`;
+      return true;
+    }
+  }
+  return false;
+}
+
+export function deleteGroupChat(groupId: string): boolean {
+  const index = groupChats.findIndex(g => g.id === groupId);
+  if (index > -1) {
+    groupChats.splice(index, 1);
+    return true;
+  }
+  return false;
+}

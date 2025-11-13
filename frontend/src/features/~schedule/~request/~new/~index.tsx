@@ -18,8 +18,7 @@ function RouteComponent() {
   const [courseId, setCourseId] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [start, setStart] = useState(() => toInputLocal())
-  const [end, setEnd] = useState(() => toInputLocal())
+  const [requestType, setRequestType] = useState<'makeup' | 'new' | 'absent'>('new')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,8 +35,7 @@ function RouteComponent() {
       courseId,
       title,
       desc: description,
-      start: new Date(start).toISOString(),
-      end: new Date(end).toISOString(),
+      requestType,
     })
 
     toast.success('Yêu cầu đã được gửi: ' + saved.id)
@@ -79,12 +77,43 @@ function RouteComponent() {
 
                 <FormTextarea label="Mô tả (*):" id="description" placeholder="Mô tả buổi học..." rows={6} value={description} onChange={(e) => setDescription(e.target.value)} />
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div>
-                    <input aria-label="Start time" type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
-                  </div>
-                  <div>
-                    <input aria-label="End time" type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500" />
+                {/* Radio buttons for request type */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Loại yêu cầu (*):</label>
+                  <div className="flex items-center gap-6">
+                    <label className="flex cursor-pointer items-center">
+                      <input
+                        type="radio"
+                        name="requestType"
+                        value="new"
+                        checked={requestType === 'new'}
+                        onChange={() => setRequestType('new')}
+                        className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-800">Buổi học mới</span>
+                    </label>
+                    <label className="flex cursor-pointer items-center">
+                      <input
+                        type="radio"
+                        name="requestType"
+                        value="makeup"
+                        checked={requestType === 'makeup'}
+                        onChange={() => setRequestType('makeup')}
+                        className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-800">Buổi bù</span>
+                    </label>
+                    <label className="flex cursor-pointer items-center">
+                      <input
+                        type="radio"
+                        name="requestType"
+                        value="absent"
+                        checked={requestType === 'absent'}
+                        onChange={() => setRequestType('absent')}
+                        className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-800">Xin nghỉ</span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -194,10 +223,4 @@ function FormTextarea({ label, id, ...props }: FormTextareaProps) {
   )
 }
 
-// Helpers
-function toInputLocal(iso?: string) {
-  const d = iso ? new Date(iso) : new Date()
-  const tzOffset = d.getTimezoneOffset()
-  const local = new Date(d.getTime() - tzOffset * 60_000)
-  return local.toISOString().slice(0, 16)
-}
+// Helpers - removed toInputLocal as it's no longer needed

@@ -1,81 +1,57 @@
+import { ClockIcon } from '@heroicons/react/24/outline'
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/solid'
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import boxSvg from '@/assets/box.svg';
-import { mockCourses, type Course } from '@/components/data/~mock-courses';
+import { mockCourses } from '@/components/data/~mock-courses';
 import ChevronLeft from '@/components/icons/arrow-left';
 import ChevronRight from '@/components/icons/arrow-right';
 import ChevronDown from '@/components/icons/chevron';
-import ChevronsLeft from '@/components/icons/double-chevron';
-import ChevronsRight from '@/components/icons/double-chevron';
+// replaced local double-chevron icons with Heroicons to fix rendering issues
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
+
 
 export const Route = createFileRoute('/statistical/' as any)({
   component: RouteComponent,
 })
 
-const rawUserStore = localStorage.getItem('userStore');
-const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-const State = userStore?.state ?? null;
-const userLocalStore = State.user ?? null;
+const sampleTimes = [
+  '19:00 10/10/2024',
+  '18:30 11/10/2024',
+  '20:00 12/10/2024',
+  '08:30 13/10/2024',
+]
 
+const mockCourseData = mockCourses.map((c, i) => ({
+  id: c.id,
+  title: c.title,
+  time: sampleTimes[i % sampleTimes.length],
+}))
 
-const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
+const CourseStatsCard: React.FC<{ course: typeof mockCourseData[0] }> = ({ course }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      className="flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-      style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
-      onClick={() =>
-        navigate({ to: '/statistical/$id', params: { id: course.id } })
-      }
-    >
-      <div
-        className="relative flex h-48 flex-col justify-between bg-black p-4 text-white"
-        style={{
-          backgroundImage: `url(${course.bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div>
-          <p className="text-xs font-medium text-gray-200">{course.code}</p>
-          <h3 className="text-xl font-bold leading-tight text-white">
-            {course.title}
-          </h3>
-          <p className="mt-1 text-sm text-gray-100">{course.instructor}</p>
+    <div className="flex items-center justify-between rounded-lg border border-gray-600 bg-white p-5 shadow-custom-yellow">
+      {/* Phần thông tin (Tên + Thời gian) */}
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800">{course.title}</h2>
+        <div className="mt-2 flex items-center text-sm text-gray-500">
+          <ClockIcon className="mr-1.5 size-4 shrink-0" />
+          <span>{course.time}</span>
         </div>
-        <button
-          aria-label="Mở khóa học"
-          title="Mở khóa học"
-          className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-full bg-white text-blue-700 shadow-md transition duration-300 hover:scale-110"
-        >
-          <ChevronRight className="size-5" />
-        </button>
       </div>
-      <div className="bg-white p-4">
-        <div className="flex justify-around text-center">
-          <div className="flex flex-col items-center">
-            <span className="text-2xl font-bold text-gray-800">
-              {course.stats.documents}
-            </span>
-            <span className="text-xs text-gray-500">Tài liệu</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-2xl font-bold text-gray-800">
-              {course.stats.links}
-            </span>
-            <span className="text-xs text-gray-500">Đường dẫn</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-2xl font-bold text-gray-800">
-              {course.stats.assignments}
-            </span>
-            <span className="text-xs text-gray-500">Bài tập</span>
-          </div>
-        </div>
+
+      {/* Phần nút bấm */}
+      <div>
+        <button
+          onClick={() => navigate({ to: '/statistical/reports'})}
+          className="whitespace-nowrap rounded-md bg-[#0329E9] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Xem thống kê
+        </button>
       </div>
     </div>
   );
@@ -128,7 +104,9 @@ function RouteComponent() {
           <h2 className="mb-4 text-xl font-semibold text-gray-700">
             Danh sách khóa học
           </h2>
-          <Link to={userLocalStore?.isChairman ? '/statistical/overview' : '/statistical/reports'} className="mb-2  rounded-xl bg-[#0329E9] px-10 py-2 text-white hover:bg-gray-50 hover:text-[#0329E9]">
+          {/* <Link to={userLocalStore?.isChairman ? '/statistical/overview' : '/statistical/reports'} className="mb-2  rounded-xl bg-[#0329E9] px-10 py-2 text-white hover:bg-gray-50 hover:text-[#0329E9]"> */}
+          <Link to={'/statistical/reports'} className="mb-2  rounded-xl bg-[#0329E9] px-10 py-2 text-white hover:bg-gray-50 hover:text-[#0329E9]">
+
             Phân tích
           </Link>
         </div>
@@ -176,80 +154,68 @@ function RouteComponent() {
             <p className="text-gray-500">Hiện không có khóa học nào</p>
           </div>
         ) : (
-          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {displayedCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
+          <div className="mb-8 space-y-4">
+            {displayedCourses.map((course) => {
+              const courseData = mockCourseData.find((c) => c.id === course.id)
+              return <CourseStatsCard key={course.id} course={courseData!} />
+            })}
           </div>
         )}
 
-        <nav className="flex items-center justify-center gap-1 text-sm">
+        <nav className="flex items-center justify-center gap-2 text-sm">
           <button
-            aria-label="Trang trước nhất"
-            title="Trang trước nhất"
-            className={`rounded-md p-2 shadow-sm transition-colors ${isFirstDisabled
-              ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-              : 'bg-[#0329E9] text-white hover:bg-blue-700'
-              }`}
-            disabled={isFirstDisabled}
             onClick={() => setCurrentPage(1)}
+            className="rounded-md border border-gray-300 px-3 py-1 text-sm"
+            disabled={isFirstDisabled}
+            aria-label="Trang đầu"
+            title="Trang đầu"
           >
-            <ChevronsLeft className="size-4" />
+            <ChevronDoubleLeftIcon className="size-4" />
           </button>
+
           <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            className="rounded-md border border-gray-300 px-3 py-1 text-sm"
+            disabled={isPrevDisabled}
             aria-label="Trang trước"
             title="Trang trước"
-            className={`rounded-md p-2 shadow-sm transition-colors ${isPrevDisabled
-              ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-              : 'bg-[#0329E9] text-white hover:bg-blue-700'
-              }`}
-            disabled={isPrevDisabled}
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
           >
             <ChevronLeft className="size-4" />
           </button>
 
-          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-            const pageNumber = i + 1;
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => setCurrentPage(pageNumber)}
-                className={`size-8 rounded-full transition-colors ${currentPage === pageNumber
-                  ? 'bg-[#0329E9] font-semibold text-white shadow'
-                  : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
-                  }`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`size-8 rounded-full transition-colors ${currentPage === i + 1
+                ? 'bg-[#0329E9] font-semibold text-white shadow'
+                : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'
+                }`}
+              aria-label={`Trang ${i + 1}`}
+              title={`Trang ${i + 1}`}
+            >
+              {i + 1}
+            </button>
+          ))}
 
           <button
-            aria-label="Trang tiếp"
-            title="Trang tiếp"
-            className={`rounded-md p-2 shadow-sm transition-colors ${isNextDisabled
-              ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-              : 'bg-[#0329E9] text-white hover:bg-blue-700'
-              }`}
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            className="rounded-md border border-gray-300 px-3 py-1 text-sm"
             disabled={isNextDisabled}
-            onClick={() =>
-              setCurrentPage(Math.min(totalPages, currentPage + 1))
-            }
+            aria-label="Trang sau"
+            title="Trang sau"
           >
             <ChevronRight className="size-4" />
           </button>
+
           <button
+            onClick={() => setCurrentPage(totalPages)}
+            className="rounded-md border border-gray-300 px-3 py-1 text-sm"
+            disabled={isLastDisabled}
             aria-label="Trang cuối"
             title="Trang cuối"
-            className={`rounded-md p-2 shadow-sm transition-colors ${isLastDisabled
-              ? 'bg-white text-blue-700 disabled:cursor-not-allowed disabled:opacity-30'
-              : 'bg-[#0329E9] text-white hover:bg-blue-700'
-              }`}
-            disabled={isLastDisabled}
-            onClick={() => setCurrentPage(totalPages)}
           >
-            <ChevronsRight className="size-4" />
+            <ChevronDoubleRightIcon className="size-4" />
           </button>
         </nav>
       </div>

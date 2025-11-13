@@ -89,9 +89,9 @@ export function FilterPopup({ onClose }: FilterPopupProps) {
 
   return (
     // Lớp phủ (overlay)  z
-    <div className="fixed inset-0 z-50 mt-20 flex items-start justify-end bg-black/40 px-10 py-32">
+    <div className="fixed inset-0 z-50 mt-12 flex items-start justify-end px-10 py-32" onClick={onClose}>
       {/* Container của popup - đặt ở góc trên phải */}
-      <div className="relative flex w-full max-w-sm flex-col rounded-2xl bg-gray-50 p-6 shadow-xl">
+      <div className="relative flex w-full max-w-sm flex-col rounded-2xl border border-gray-600 bg-gray-50 p-6 shadow-custom-yellow">
         
         {/* Header: "Filter" và nút X */}
         <div className="flex items-center justify-between pb-4">

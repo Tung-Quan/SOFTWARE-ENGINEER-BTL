@@ -29,7 +29,6 @@ import { Route as LibraryQueryIndexRouteImport } from './features/~library/~$que
 import { Route as PrivateProfileIndexRouteImport } from './features/~_private/~profile/~index'
 import { Route as PrivateDashboardIndexRouteImport } from './features/~_private/~dashboard/~index'
 import { Route as PrivateCourseIndexRouteImport } from './features/~_private/~course/~index'
-import { Route as StatisticalIdRatingIndexRouteImport } from './features/~statistical/~$id/~rating/~index'
 import { Route as ScheduleRequestNewIndexRouteImport } from './features/~schedule/~request/~new/~index'
 import { Route as ScheduleHistoryIdIndexRouteImport } from './features/~schedule/~history/~$id/~index'
 import { Route as PrivateCourseIdIndexRouteImport } from './features/~_private/~course/~$id/~index'
@@ -37,6 +36,7 @@ import { Route as PrivateCourseIdSubmissionsIndexRouteImport } from './features/
 import { Route as PrivateCourseIdRatingIndexRouteImport } from './features/~_private/~course/~$id/~rating/~index'
 import { Route as PrivateCourseIdMembersIndexRouteImport } from './features/~_private/~course/~$id/~members/~index'
 import { Route as PrivateCourseIdNameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~index'
+import { Route as PrivateCourseIdRatingIdIndexRouteImport } from './features/~_private/~course/~$id/~rating/~$id/~$index'
 import { Route as PrivateCourseIdNameStunameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~$stuname/~index'
 
 const PrivateRoute = PrivateRouteImport.update({
@@ -141,12 +141,6 @@ const PrivateCourseIndexRoute = PrivateCourseIndexRouteImport.update({
   path: '/course/',
   getParentRoute: () => PrivateRoute,
 } as any)
-const StatisticalIdRatingIndexRoute =
-  StatisticalIdRatingIndexRouteImport.update({
-    id: '/statistical/$id/rating/',
-    path: '/statistical/$id/rating/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ScheduleRequestNewIndexRoute = ScheduleRequestNewIndexRouteImport.update({
   id: '/schedule/request/new/',
   path: '/schedule/request/new/',
@@ -186,6 +180,12 @@ const PrivateCourseIdNameIndexRoute =
     path: '/course/$id/$name/',
     getParentRoute: () => PrivateRoute,
   } as any)
+const PrivateCourseIdRatingIdIndexRoute =
+  PrivateCourseIdRatingIdIndexRouteImport.update({
+    id: '/course/$id/rating/$id/$index',
+    path: '/course/$id/rating/$id/$index',
+    getParentRoute: () => PrivateRoute,
+  } as any)
 const PrivateCourseIdNameStunameIndexRoute =
   PrivateCourseIdNameStunameIndexRouteImport.update({
     id: '/course/$id/$name/$stuname/',
@@ -216,12 +216,12 @@ export interface FileRoutesByFullPath {
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/schedule/history/$id': typeof ScheduleHistoryIdIndexRoute
   '/schedule/request/new': typeof ScheduleRequestNewIndexRoute
-  '/statistical/$id/rating': typeof StatisticalIdRatingIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
   '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
   '/course/$id/rating': typeof PrivateCourseIdRatingIndexRoute
   '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
   '/course/$id/$name/$stuname': typeof PrivateCourseIdNameStunameIndexRoute
+  '/course/$id/rating/$id/$index': typeof PrivateCourseIdRatingIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -246,12 +246,12 @@ export interface FileRoutesByTo {
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/schedule/history/$id': typeof ScheduleHistoryIdIndexRoute
   '/schedule/request/new': typeof ScheduleRequestNewIndexRoute
-  '/statistical/$id/rating': typeof StatisticalIdRatingIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
   '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
   '/course/$id/rating': typeof PrivateCourseIdRatingIndexRoute
   '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
   '/course/$id/$name/$stuname': typeof PrivateCourseIdNameStunameIndexRoute
+  '/course/$id/rating/$id/$index': typeof PrivateCourseIdRatingIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -278,12 +278,12 @@ export interface FileRoutesById {
   '/_private/course/$id/': typeof PrivateCourseIdIndexRoute
   '/schedule/history/$id/': typeof ScheduleHistoryIdIndexRoute
   '/schedule/request/new/': typeof ScheduleRequestNewIndexRoute
-  '/statistical/$id/rating/': typeof StatisticalIdRatingIndexRoute
   '/_private/course/$id/$name/': typeof PrivateCourseIdNameIndexRoute
   '/_private/course/$id/members/': typeof PrivateCourseIdMembersIndexRoute
   '/_private/course/$id/rating/': typeof PrivateCourseIdRatingIndexRoute
   '/_private/course/$id/submissions/': typeof PrivateCourseIdSubmissionsIndexRoute
   '/_private/course/$id/$name/$stuname/': typeof PrivateCourseIdNameStunameIndexRoute
+  '/_private/course/$id/rating/$id/$index': typeof PrivateCourseIdRatingIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -310,12 +310,12 @@ export interface FileRouteTypes {
     | '/course/$id'
     | '/schedule/history/$id'
     | '/schedule/request/new'
-    | '/statistical/$id/rating'
     | '/course/$id/$name'
     | '/course/$id/members'
     | '/course/$id/rating'
     | '/course/$id/submissions'
     | '/course/$id/$name/$stuname'
+    | '/course/$id/rating/$id/$index'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -340,12 +340,12 @@ export interface FileRouteTypes {
     | '/course/$id'
     | '/schedule/history/$id'
     | '/schedule/request/new'
-    | '/statistical/$id/rating'
     | '/course/$id/$name'
     | '/course/$id/members'
     | '/course/$id/rating'
     | '/course/$id/submissions'
     | '/course/$id/$name/$stuname'
+    | '/course/$id/rating/$id/$index'
   id:
     | '__root__'
     | '/'
@@ -371,12 +371,12 @@ export interface FileRouteTypes {
     | '/_private/course/$id/'
     | '/schedule/history/$id/'
     | '/schedule/request/new/'
-    | '/statistical/$id/rating/'
     | '/_private/course/$id/$name/'
     | '/_private/course/$id/members/'
     | '/_private/course/$id/rating/'
     | '/_private/course/$id/submissions/'
     | '/_private/course/$id/$name/$stuname/'
+    | '/_private/course/$id/rating/$id/$index'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -399,7 +399,6 @@ export interface RootRouteChildren {
   StatisticalReportsIndexRoute: typeof StatisticalReportsIndexRoute
   ScheduleHistoryIdIndexRoute: typeof ScheduleHistoryIdIndexRoute
   ScheduleRequestNewIndexRoute: typeof ScheduleRequestNewIndexRoute
-  StatisticalIdRatingIndexRoute: typeof StatisticalIdRatingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -544,13 +543,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateCourseIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
-    '/statistical/$id/rating/': {
-      id: '/statistical/$id/rating/'
-      path: '/statistical/$id/rating'
-      fullPath: '/statistical/$id/rating'
-      preLoaderRoute: typeof StatisticalIdRatingIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/schedule/request/new/': {
       id: '/schedule/request/new/'
       path: '/schedule/request/new'
@@ -600,6 +592,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateCourseIdNameIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/course/$id/rating/$id/$index': {
+      id: '/_private/course/$id/rating/$id/$index'
+      path: '/course/$id/rating/$id/$index'
+      fullPath: '/course/$id/rating/$id/$index'
+      preLoaderRoute: typeof PrivateCourseIdRatingIdIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
     '/_private/course/$id/$name/$stuname/': {
       id: '/_private/course/$id/$name/$stuname/'
       path: '/course/$id/$name/$stuname'
@@ -620,6 +619,7 @@ interface PrivateRouteChildren {
   PrivateCourseIdRatingIndexRoute: typeof PrivateCourseIdRatingIndexRoute
   PrivateCourseIdSubmissionsIndexRoute: typeof PrivateCourseIdSubmissionsIndexRoute
   PrivateCourseIdNameStunameIndexRoute: typeof PrivateCourseIdNameStunameIndexRoute
+  PrivateCourseIdRatingIdIndexRoute: typeof PrivateCourseIdRatingIdIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
@@ -632,6 +632,7 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateCourseIdRatingIndexRoute: PrivateCourseIdRatingIndexRoute,
   PrivateCourseIdSubmissionsIndexRoute: PrivateCourseIdSubmissionsIndexRoute,
   PrivateCourseIdNameStunameIndexRoute: PrivateCourseIdNameStunameIndexRoute,
+  PrivateCourseIdRatingIdIndexRoute: PrivateCourseIdRatingIdIndexRoute,
 }
 
 const PrivateRouteWithChildren =
@@ -657,7 +658,6 @@ const rootRouteChildren: RootRouteChildren = {
   StatisticalReportsIndexRoute: StatisticalReportsIndexRoute,
   ScheduleHistoryIdIndexRoute: ScheduleHistoryIdIndexRoute,
   ScheduleRequestNewIndexRoute: ScheduleRequestNewIndexRoute,
-  StatisticalIdRatingIndexRoute: StatisticalIdRatingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -427,11 +427,11 @@ function RouteComponent() {
               <div className="mt-6 flex gap-4">
                 <Link
                   to={`/course/${id}` as any}
-                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80"
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
                 >
                   Tổng quan
                 </Link>
-                <button className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
+                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
                   Đánh giá
                 </button>
               </div>

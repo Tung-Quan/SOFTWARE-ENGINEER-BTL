@@ -72,7 +72,7 @@ function RouteComponent() {
               </button>
               <button
                 onClick={() => {
-                  navigate({ to: `/statistical/${id}/rating` });
+                  navigate({ to: `/course/${id}/rating` });
                 }}
                 className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
               >

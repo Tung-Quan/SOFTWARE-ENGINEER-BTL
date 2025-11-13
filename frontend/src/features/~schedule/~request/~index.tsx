@@ -4,11 +4,13 @@ import {
   ChevronDownIcon
 } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { mockCourses } from '@/components/data/~mock-courses'
-import { getRandomMembers } from '@/components/data/~mock-names';
+import { getAllNames } from '@/components/data/~mock-names'
+import { saveSession, type SessionMember } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/schedule/request/')({
@@ -17,6 +19,84 @@ export const Route = createFileRoute('/schedule/request/')({
 
 // === COMPONENT CHÍNH CỦA TRANG ===
 function RouteComponent() {
+  const navigate = useNavigate()
+  
+  // Form states
+  const [title, setTitle] = useState('')
+  const [courseId, setCourseId] = useState('')
+  const [method, setMethod] = useState<'hybrid' | 'online'>('hybrid')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [selectedMembers, setSelectedMembers] = useState<Set<number>>(new Set())
+
+  // Get all available names
+  const allNames = getAllNames()
+
+  const toggleMember = (id: number) => {
+    setSelectedMembers((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // Validation
+    if (!title.trim()) {
+      toast.error('Vui lòng nhập chủ đề buổi học')
+      return
+    }
+    if (!courseId) {
+      toast.error('Vui lòng chọn khóa học')
+      return
+    }
+    if (!startDate || !endDate) {
+      toast.error('Vui lòng chọn thời gian học')
+      return
+    }
+    if (selectedMembers.size === 0) {
+      toast.error('Vui lòng chọn ít nhất một học sinh')
+      return
+    }
+
+    // Create session object
+    const members: SessionMember[] = allNames
+      .filter((n) => selectedMembers.has(n.id))
+      .map((n) => ({
+        id: n.id,
+        name: n.name,
+        present: false, // Default to not present yet
+      }))
+
+    const course = mockCourses.find((c) => c.id === courseId)
+
+    const newSession = {
+      id: `s-${Date.now().toString(36)}`,
+      courseId,
+      title,
+      instructor: course?.instructor ?? 'TBD',
+      method,
+      link: method === 'online' ? 'https://meet.example.com/new-session' : undefined,
+      location: method === 'hybrid' ? 'Phòng học TBA' : undefined,
+      start: new Date(startDate).toISOString(),
+      end: new Date(endDate).toISOString(),
+      members,
+      status: 'scheduled' as const,
+      requestType: 'new' as const,
+      createdAt: new Date().toISOString(),
+    }
+
+    saveSession(newSession)
+    toast.success('Tạo buổi học thành công!')
+    navigate({ to: '/schedule' })
+  }
+
   return (
     <StudyLayout>
       <div className="min-h-screen bg-gray-50">
@@ -36,14 +116,29 @@ function RouteComponent() {
           </h1>
 
           {/* 3. Form */}
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-8">
 
               {/* Section: Thông tin cơ bản */}
-              <BasicInfoSection />
+              <BasicInfoSection
+                title={title}
+                setTitle={setTitle}
+                courseId={courseId}
+                setCourseId={setCourseId}
+                method={method}
+                setMethod={setMethod}
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+              />
 
-              {/* Section: Thông báo */}
-              <NotificationSection />
+              {/* Section: Chọn học sinh */}
+              <StudentSelectionSection
+                allNames={allNames}
+                selectedMembers={selectedMembers}
+                toggleMember={toggleMember}
+              />
 
               {/* Section: Nút bấm */}
               <FormActions />
@@ -61,7 +156,31 @@ function RouteComponent() {
 /**
  * Section 1: Thông tin cơ bản (Card có sóng)
  */
-function BasicInfoSection() {
+interface BasicInfoSectionProps {
+  title: string
+  setTitle: (v: string) => void
+  courseId: string
+  setCourseId: (v: string) => void
+  method: 'hybrid' | 'online'
+  setMethod: (v: 'hybrid' | 'online') => void
+  startDate: string
+  setStartDate: (v: string) => void
+  endDate: string
+  setEndDate: (v: string) => void
+}
+
+function BasicInfoSection({
+  title,
+  setTitle,
+  courseId,
+  setCourseId,
+  method,
+  setMethod,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}: BasicInfoSectionProps) {
   function BannerWave() {
     return (
       <svg
@@ -108,7 +227,7 @@ function BasicInfoSection() {
     );
   }
 
-  const [sessionType, setSessionType] = useState('hybrid');
+  // const [sessionType, setSessionType] = useState('hybrid');
 
   return (
     <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
@@ -157,11 +276,15 @@ function BasicInfoSection() {
           label="Chủ đề buổi học (*):"
           id="topic"
           placeholder="Nhập chủ đề..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
         <FormSelect
           label="Khóa học (*):"
           id="course"
+          value={courseId}
+          onChange={(e) => setCourseId(e.target.value)}
         >
           <option value="">Chọn khóa học</option>
           {mockCourses.map((c) => (
@@ -180,8 +303,8 @@ function BasicInfoSection() {
                 type="radio"
                 name="sessionType"
                 value="online"
-                checked={sessionType === 'online'}
-                onChange={(e) => setSessionType(e.target.value)}
+                checked={method === 'online'}
+                onChange={(e) => setMethod(e.target.value as 'online')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-800">online</span>
@@ -191,8 +314,8 @@ function BasicInfoSection() {
                 type="radio"
                 name="sessionType"
                 value="hybrid"
-                checked={sessionType === 'hybrid'}
-                onChange={(e) => setSessionType(e.target.value)}
+                checked={method === 'hybrid'}
+                onChange={(e) => setMethod(e.target.value as 'hybrid')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-800">hybrid</span>
@@ -208,8 +331,10 @@ function BasicInfoSection() {
           <div className="flex flex-col items-center gap-4 sm:flex-row">
             <div className="relative w-full">
               <input
-                type="text" // Dùng type="datetime-local" nếu muốn, nhưng text dễ style hơn
-                placeholder="DD/MM/YYYY HH:MM"
+                aria-label="Chọn giờ bắt đầu"
+                type="datetime-local"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
               <CalendarDaysIcon className="pointer-events-none absolute right-3 top-2.5 size-5 text-gray-400" />
@@ -217,8 +342,10 @@ function BasicInfoSection() {
             <span className="hidden font-bold text-gray-500 sm:block">−</span>
             <div className="relative w-full">
               <input
-                type="text"
-                placeholder="DD/MM/YYYY HH:MM"
+                aria-label="Chọn giờ kết thúc"
+                type="datetime-local"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
               <CalendarDaysIcon className="pointer-events-none absolute right-3 top-2.5 size-5 text-gray-400" />
@@ -232,30 +359,65 @@ function BasicInfoSection() {
 }
 
 /**
- * Section 2: Thông báo (Danh sách thành viên)
+ * Section 2: Chọn học sinh tham gia
  */
-function NotificationSection() {
-  // Dữ liệu giả cho 11 thành viên
-  const members = getRandomMembers(11).map((m) => ({ id: m.id, name: m.name }));
+interface StudentSelectionSectionProps {
+  allNames: Array<{ id: number; name: string; present: boolean }>
+  selectedMembers: Set<number>
+  toggleMember: (id: number) => void
+}
 
+function StudentSelectionSection({
+  allNames,
+  selectedMembers,
+  toggleMember,
+}: StudentSelectionSectionProps) {
   return (
     <div className="rounded-lg bg-white p-6 shadow-md md:p-8">
-      <h2 className="mb-6 text-xl font-semibold text-gray-800">
-        Thông báo
-      </h2>
-      <div className="grid grid-cols-4 gap-x-2 gap-y-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12">
-        {members.map((member) => (
-          <div
-            key={member.id}
-            className="group flex cursor-pointer flex-col items-center text-center"
-          >
-            <UserCircleIcon className="size-10 text-gray-400 transition-colors group-hover:text-blue-600" />
-            <span className="mt-1 text-xs text-gray-700">{member.name}</span>
-          </div>
-        ))}
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-800">
+          Chọn học sinh tham gia
+        </h2>
+        <span className="text-sm text-gray-600">
+          Đã chọn: {selectedMembers.size}/{allNames.length}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        {allNames.map((member) => {
+          const isSelected = selectedMembers.has(member.id)
+          return (
+            <div
+              key={member.id}
+              onClick={() => toggleMember(member.id)}
+              className={`group flex cursor-pointer items-center gap-2 rounded-lg border-2 p-3 transition-all ${
+                isSelected
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50'
+              }`}
+            >
+              <div className="relative shrink-0">
+                <UserCircleIcon
+                  className={`size-8 transition-colors ${
+                    isSelected ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-500'
+                  }`}
+                />
+                {isSelected && (
+                  <div className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-blue-600">
+                    <svg className="size-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <span className={`text-sm font-medium ${isSelected ? 'text-blue-800' : 'text-gray-700'}`}>
+                {member.name}
+              </span>
+            </div>
+          )
+        })}
       </div>
     </div>
-  );
+  )
 }
 
 /**

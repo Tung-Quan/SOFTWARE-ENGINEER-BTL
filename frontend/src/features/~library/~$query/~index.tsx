@@ -12,125 +12,134 @@ import StudyLayout from '@/components/study-layout'
 import { type Book as BookType } from '@/types/book.type'
 import { searchVNULibrary } from '@/utils/vnu-library'
 
+import { BookDetailsModal } from './lib-popup'
+
 export const Route = createFileRoute('/library/$query/')({
   component: RouteComponent,
 })
 
-// Book Card Component với design giống dashboard
-function BookCard({ book }: { book: BookType }) {
-  // Normalize availability values to the canonical set defined in `Book` type
-  // Book.availability is typed as 'available' | 'borrowed' | 'reserved' | undefined
-  // But external data or mocks may contain variants like 'checked-out' or 'on-hold',
-  // so we coerce them into the canonical values here.
-  const normalizedAvailability = (() => {
-    const raw = (book.availability ?? '') as string
-    const lower = raw.toLowerCase()
-    if (lower === 'checked-out' || lower === 'borrowed') return 'borrowed'
-    if (lower === 'on-hold' || lower === 'reserved') return 'reserved'
-    if (lower === 'available') return 'available'
-    return 'unknown'
-  })()
 
-  const getAvailabilityColor = () => {
-    switch (normalizedAvailability) {
-      case 'available':
-        return 'bg-green-100 text-green-800'
-      case 'borrowed':
-        return 'bg-red-100 text-red-800'
-      case 'reserved':
-        return 'bg-yellow-100 text-yellow-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  const getAvailabilityText = () => {
-    switch (normalizedAvailability) {
-      case 'available':
-        return 'Có sẵn'
-      case 'borrowed':
-        return 'Đã mượn'
-      case 'reserved':
-        return 'Đang giữ'
-      default:
-        return 'Không rõ'
-    }
-  }
-
-  return (
-    <div
-      className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-      style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
-    >
-      {/* Book Cover */}
-      <div className="relative flex h-64 items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-6">
-        {book?.coverImage ? (
-          <img
-            src={book.coverImage}
-            alt={book.title}
-            className="h-full w-auto object-contain shadow-lg"
-          />
-        ) : (
-          <Book className="size-32 text-blue-300" />
-        )}
-        {/* Availability Badge */}
-        <div
-          className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${getAvailabilityColor()}`}
-        >
-          {getAvailabilityText()}
-        </div>
-      </div>
-
-      {/* Book Info */}
-      <div className="flex flex-1 flex-col bg-white p-4">
-        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-800 group-hover:text-[#0329E9]">
-          {book.title}
-        </h3>
-        <p className="mb-1 text-sm text-gray-600">
-          <span className="font-semibold">Tác giả:</span> {book.author || 'Không rõ'}
-        </p>
-        {book.publisher && (
-          <p className="mb-1 text-sm text-gray-600">
-            <span className="font-semibold">NXB:</span> {book.publisher}
-          </p>
-        )}
-        {book.year && (
-          <p className="mb-2 text-sm text-gray-600">
-            <span className="font-semibold">Năm:</span> {book.year}
-          </p>
-        )}
-        
-        {/* Stats */}
-        <div className="mt-auto flex justify-around border-t border-gray-200 pt-3 text-center">
-          {book.location && (
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500">Vị trí</span>
-              <span className="text-sm font-bold text-gray-800">{book.location}</span>
-            </div>
-          )}
-          {book.callNumber && (
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500">Mã số</span>
-              <span className="text-sm font-bold text-gray-800">{book.callNumber}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Action Button */}
-        <button
-          aria-label="Xem chi tiết sách"
-          title="Xem chi tiết sách"
-          className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-[#0329E9] py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-        >
-          Chi tiết
-          <ChevronRight className="size-4" />
-        </button>
-      </div>
-    </div>
-  )
-}
 
 function RouteComponent() {
+
+  const [popupDetails, setPopupDetails] = useState<null | BookType>(null);
+  const [isSeeingDetails, setIsSeeingDetails] = useState(false);
+
+  // Book Card Component với design giống dashboard
+  function BookCard({ book }: { book: BookType }) {
+
+    const normalizedAvailability = (() => {
+      const raw = (book.availability ?? '') as string
+      const lower = raw.toLowerCase()
+      if (lower === 'checked-out' || lower === 'borrowed') return 'borrowed'
+      if (lower === 'on-hold' || lower === 'reserved') return 'reserved'
+      if (lower === 'available') return 'available'
+      return 'unknown'
+    })()
+
+
+    const getAvailabilityColor = () => {
+      switch (normalizedAvailability) {
+        case 'available':
+          return 'bg-green-100 text-green-800'
+        case 'borrowed':
+          return 'bg-red-100 text-red-800'
+        case 'reserved':
+          return 'bg-yellow-100 text-yellow-800'
+        default:
+          return 'bg-gray-100 text-gray-800'
+      }
+    }
+
+    const getAvailabilityText = () => {
+      switch (normalizedAvailability) {
+        case 'available':
+          return 'Có sẵn'
+        case 'borrowed':
+          return 'Đã mượn'
+        case 'reserved':
+          return 'Đang giữ'
+        default:
+          return 'Không rõ'
+      }
+    }
+
+    return (
+      <div
+        className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+        style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+      >
+        {/* Book Cover */}
+        <div className="relative flex h-64 items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-6">
+          {book?.coverImage ? (
+            <img
+              src={book.coverImage}
+              alt={book.title}
+              className="h-full w-auto object-contain shadow-lg"
+            />
+          ) : (
+            <Book className="size-32 text-blue-300" />
+          )}
+          {/* Availability Badge */}
+          <div
+            className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${getAvailabilityColor()}`}
+          >
+            {getAvailabilityText()}
+          </div>
+        </div>
+
+        {/* Book Info */}
+        <div className="flex flex-1 flex-col bg-white p-4">
+          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-800 group-hover:text-[#0329E9]">
+            {book.title}
+          </h3>
+          <p className="mb-1 text-sm text-gray-600">
+            <span className="font-semibold">Tác giả:</span> {book.author || 'Không rõ'}
+          </p>
+          {book.publisher && (
+            <p className="mb-1 text-sm text-gray-600">
+              <span className="font-semibold">NXB:</span> {book.publisher}
+            </p>
+          )}
+          {book.year && (
+            <p className="mb-2 text-sm text-gray-600">
+              <span className="font-semibold">Năm:</span> {book.year}
+            </p>
+          )}
+
+          {/* Stats */}
+          <div className="mt-auto flex justify-around border-t border-gray-200 pt-3 text-center">
+            {book.location && (
+              <div className="flex flex-col items-center">
+                <span className="text-xs text-gray-500">Vị trí</span>
+                <span className="text-sm font-bold text-gray-800">{book.location}</span>
+              </div>
+            )}
+            {book.callNumber && (
+              <div className="flex flex-col items-center">
+                <span className="text-xs text-gray-500">Mã số</span>
+                <span className="text-sm font-bold text-gray-800">{book.callNumber}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Action Button */}
+          <button
+            aria-label="Xem chi tiết sách"
+            onClick={() => {
+              setPopupDetails(book);
+              setIsSeeingDetails(true);
+            }}
+            title="Xem chi tiết sách"
+            className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-[#0329E9] py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          >
+            Chi tiết
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
+      </div>
+    )
+  }
   const navigate = useNavigate()
   const { query } = Route.useParams()
   const [books, setBooks] = useState<BookType[]>([])
@@ -173,7 +182,7 @@ function RouteComponent() {
   const handleNewSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (!searchInput.trim()) return
-    
+
     navigate({
       to: '/library/$query',
       params: { query: searchInput.trim() },
@@ -186,6 +195,10 @@ function RouteComponent() {
 
   return (
     <StudyLayout>
+      {isSeeingDetails && (
+
+        <BookDetailsModal book={popupDetails} onClose={() => setPopupDetails(null)} />
+      )}
       <div className="mb-6 flex items-center gap-4">
         <button
           onClick={handleBackToLibrary}
@@ -313,15 +326,15 @@ function RouteComponent() {
 
             {/* Pagination Controls */}
             <nav className="flex items-center justify-center gap-1 text-sm">
-                <button
-                  aria-label="Trang đầu tiên"
-                  title="Trang đầu tiên"
-                  className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(1)}
-                >
-                  <ChevronsLeft className="size-4" />
-                </button>
+              <button
+                aria-label="Trang đầu tiên"
+                title="Trang đầu tiên"
+                className={currentPage === 1 ? 'pagination-btn-disabled' : 'pagination-btn'}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(1)}
+              >
+                <ChevronsLeft className="size-4" />
+              </button>
               <button
                 aria-label="Trang trước"
                 title="Trang trước"

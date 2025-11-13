@@ -115,7 +115,7 @@ function RouteComponent() {
           {pageItems.map((s) => {
 
             // Map session.status to a badge
-            const badge = (() => {
+            const statusBadge = (() => {
               if (s.status === 'completed') {
                 return (
                   <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">Đã chấp nhận</span>
@@ -128,9 +128,22 @@ function RouteComponent() {
               }
               // cancelled
               return (
-                <span className="text-sm font-medium text-red-600">Declined</span>
+                <span className="inline-block rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-600">Bị từ chối</span>
               )
             })()
+
+            // Display requestType badge if present
+            const typeBadge = s.requestType ? (
+              <span className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
+                s.requestType === 'makeup' 
+                  ? 'bg-orange-100 text-orange-800' 
+                  : s.requestType === 'absent'
+                  ? 'bg-purple-100 text-purple-800'
+                  : 'bg-blue-100 text-blue-800'
+              }`}>
+                {s.requestType === 'makeup' ? 'Buổi bù' : s.requestType === 'absent' ? 'Xin nghỉ' : 'Buổi học mới'}
+              </span>
+            ) : null
 
             return (
               <div key={s.id} className="relative flex items-center gap-4 rounded-md border border-gray-200 bg-white p-4 shadow-sm">
@@ -145,7 +158,10 @@ function RouteComponent() {
                       <div className="text-sm text-gray-500">{s.courseId}</div>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
-                      {badge}
+                      <div className="flex flex-wrap items-center justify-end gap-2">
+                        {typeBadge}
+                        {statusBadge}
+                      </div>
                       <Link to={`/schedule/history/${s.id}` as string} className="rounded-md bg-blue-600 px-4 py-1 text-sm font-medium text-white hover:bg-blue-700">Xem chi tiết</Link>
                     </div>
                   </div>

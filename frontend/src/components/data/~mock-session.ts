@@ -8,6 +8,8 @@ export type Session = {
   courseId: string;
   title: string;
   desc?: string;
+  // Optional note written by tutor after the session
+  tutorNote?: string;
   instructor: string;
   method: 'hybrid' | 'online';
   link?: string;
@@ -18,6 +20,7 @@ export type Session = {
   studentNames?: string[];
   declineReason?: string;
   status: 'scheduled' | 'completed' | 'cancelled';
+  requestType?: 'makeup' | 'new' | 'absent';
   createdAt: string;
 };
 
@@ -58,6 +61,7 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-17T09:00:00')),
     end: toISO(new Date('2025-12-17T10:00:00')),
     members: getRandomMembers(8),
+    requestType: 'new',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
@@ -75,6 +79,7 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-17T13:00:00')),
     end: toISO(new Date('2025-12-17T15:00:00')),
     members: getRandomMembers(6),
+    requestType: 'makeup',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
@@ -92,6 +97,7 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-18T10:00:00')),
     end: toISO(new Date('2025-12-18T11:30:00')),
     members: getRandomMembers(10),
+    requestType: 'new',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
@@ -109,6 +115,7 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-20T14:00:00')),
     end: toISO(new Date('2025-12-20T15:00:00')),
     members: getRandomMembers(8),
+    requestType: 'new',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
@@ -126,11 +133,67 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-12-22T08:00:00')),
     end: toISO(new Date('2025-12-22T10:00:00')),
     members: getRandomMembers(12),
+    requestType: 'makeup',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
     })(),
     createdAt: toISO(addDays(now, -3)),
+  },
+  // Additional sessions requested for days 11 and 13
+  {
+    id: 's-7',
+    courseId: mockCourses[5].id,
+    title: `${mockCourses[5].title} - Buổi bổ sung`,
+    desc: 'Buổi bổ sung: ôn tập và giải đáp',
+    instructor: mockCourses[5].instructor,
+    method: 'hybrid',
+    link: 'https://meet.example.com/s7',
+    start: toISO(new Date('2025-11-11T09:00:00')),
+    end: toISO(new Date('2025-11-11T11:00:00')),
+    members: getRandomMembers(8),
+    requestType: 'makeup',
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
+    createdAt: toISO(addDays(now, -6)),
+  },
+  {
+    id: 's-8',
+    courseId: mockCourses[6].id,
+    title: `${mockCourses[6].title} - Lab mở rộng`,
+    desc: 'Lab mở rộng dành cho các nhóm muốn ôn tập thêm',
+    instructor: mockCourses[6].instructor,
+    method: 'online',
+    location: 'Phòng Lab B',
+    start: toISO(new Date('2025-12-11T14:00:00')),
+    end: toISO(new Date('2025-12-11T16:00:00')),
+    members: getRandomMembers(6),
+    requestType: 'new',
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
+    createdAt: toISO(addDays(now, -5)),
+  },
+  {
+    id: 's-9',
+    courseId: mockCourses[7].id,
+    title: `${mockCourses[7].title} - Hợp nhất nội dung`,
+    desc: 'Tổng hợp nội dung chính dành cho buổi học',
+    instructor: mockCourses[7].instructor,
+    method: 'hybrid',
+    link: 'https://meet.example.com/s9',
+    start: toISO(new Date('2025-12-13T10:00:00')),
+    end: toISO(new Date('2025-12-13T12:00:00')),
+    members: getRandomMembers(10),
+    requestType: 'new',
+    ...(() => {
+      const s = randomStatus()
+      return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
+    })(),
+    createdAt: toISO(addDays(now, -4)),
   },
   // Completed session example
   {
@@ -144,6 +207,7 @@ export const mockSessions: Session[] = [
     start: toISO(new Date('2025-11-20T09:00:00')),
     end: toISO(new Date('2025-11-20T10:00:00')),
     members: getRandomMembers(7),
+    requestType: 'makeup',
     ...(() => {
       const s = randomStatus()
       return { status: s, declineReason: s === 'cancelled' ? randomDeclineReason() : undefined }
@@ -198,10 +262,22 @@ export function saveSession(session: Session): Session {
 /**
  * Create a session from a request form and persist it to mockSessions.
  * This is a convenience for the "request new session" page in dev.
+ * Auto-generates start/end times based on current date + 7 days (default 2-hour session).
  */
-export function createRequestSession(request: Partial<Session> & { courseId: string; title: string; start: string; end: string }) {
+export function createRequestSession(request: Partial<Session> & { 
+  courseId: string; 
+  title: string; 
+  requestType?: 'makeup' | 'new' | 'absent';
+  start?: string; 
+  end?: string;
+}) {
   // generate a compact id based on timestamp
   const id = `s-${Date.now().toString(36)}`
+  
+  // Auto-generate reasonable start/end if not provided
+  const defaultStart = request.start ?? new Date(Date.now() + 7 * 24 * 60 * 60_000).toISOString()
+  const defaultEnd = request.end ?? new Date(new Date(defaultStart).getTime() + 2 * 60 * 60_000).toISOString()
+  
   const newSession: Session = {
     id,
     courseId: request.courseId,
@@ -211,10 +287,11 @@ export function createRequestSession(request: Partial<Session> & { courseId: str
     method: request.method ?? 'hybrid',
     link: request.link,
     location: request.location,
-    start: request.start,
-    end: request.end,
+    start: defaultStart,
+    end: defaultEnd,
     members: request.members ?? getRandomMembers(8),
     status: request.status ?? 'scheduled',
+    requestType: request.requestType,
     createdAt: new Date().toISOString(),
   }
 
