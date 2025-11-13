@@ -123,7 +123,7 @@ function RouteComponent() {
           className="absolute bottom-0 left-0 h-auto w-96 md:w-[900px] lg:w-[1100px]"
         />
         
-        <div className="relative z-10 flex grow flex-col">
+        <div className="relative z-10 mt-48 flex grow flex-col">
           {/* Header Logo
           <header className="p-6 md:p-8">
             <div className="flex items-center space-x-3">

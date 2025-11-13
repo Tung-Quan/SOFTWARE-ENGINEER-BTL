@@ -176,7 +176,7 @@ export function DataTab() {
       language: r.language.name,
       type: r.sessionType.name,
       role: 'Student' as const,
-      location: r.location?.name ?? 'Online',
+      location: r.location?.name ?? 'hybrid',
       request: r.specialRequest,
       status: r.status,
     }));
@@ -219,7 +219,7 @@ export function DataTab() {
         }
 
         if (filters.sessionType) {
-          const sessionTypeMap: Record<string, string> = { hybrid: 'Hybrid', online: 'Online' };
+          const sessionTypeMap: Record<string, string> = { hybrid: 'Hybrid', hybrid: 'hybrid' };
           if (req.type !== sessionTypeMap[filters.sessionType]) return false;
         }
 

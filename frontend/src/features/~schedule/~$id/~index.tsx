@@ -40,7 +40,7 @@ function RouteComponent() {
   const membersList = session?.members?.map((m) => ({ id: String(m.id), name: m.name })) ?? mockMembers
 
   // State cho các trường trong form
-  const [sessionType, setSessionType] = useState<'online' | 'offline'>('online')
+  const [sessionType, setSessionType] = useState<'hybrid' | 'online'>('hybrid')
   const [attendance, setAttendance] = useState<AttendanceState>({})
   const [title, setTitle] = useState('')
   const [courseId, setCourseId] = useState('')
@@ -85,7 +85,7 @@ function RouteComponent() {
     // initialize form fields from session
     setTitle(session?.title ?? '')
     setCourseId(session?.courseId ?? '')
-    setSessionType((session?.method ?? 'online') as 'online' | 'offline')
+    setSessionType((session?.method ?? 'hybrid') as 'hybrid' | 'online')
     setStartLocal(toInputLocal(session?.start))
     setEndLocal(toInputLocal(session?.end))
   setLink(session?.link ?? '')
@@ -132,8 +132,8 @@ function RouteComponent() {
       start: toISOFromLocal(startLocal),
       end: toISOFromLocal(endLocal),
       // Include link/location depending on selected method
-      link: sessionType === 'online' ? link || undefined : undefined,
-      location: sessionType === 'offline' ? locationVal || undefined : undefined,
+      link: sessionType === 'hybrid' ? link || undefined : undefined,
+      location: sessionType === 'online' ? locationVal || undefined : undefined,
     }
 
     updateSession(session.id, patch)
@@ -205,12 +205,12 @@ function RouteComponent() {
 interface BasicInfoProps {
   title: string
   courseId: string
-  sessionType: 'online' | 'offline'
+  sessionType: 'hybrid' | 'online'
   startLocal: string
   endLocal: string
   onTitleChange: (v: string) => void
   onCourseIdChange: (v: string) => void
-  onSessionTypeChange: (v: 'online' | 'offline') => void
+  onSessionTypeChange: (v: 'hybrid' | 'online') => void
   onStartChange: (v: string) => void
   onEndChange: (v: string) => void
   link: string
@@ -277,25 +277,25 @@ function BasicInfoSection({
               <input
                 type="radio"
                 name="sessionType"
+                value="hybrid"
+                checked={sessionType === 'hybrid'}
+                onChange={() => onSessionTypeChange('hybrid')}
+                className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                aria-label="session-type-hybrid"
+              />
+              <span className="ml-2 text-sm text-gray-800">hybrid</span>
+            </label>
+            <label className="flex cursor-pointer items-center">
+              <input
+                type="radio"
+                name="sessionType"
                 value="online"
                 checked={sessionType === 'online'}
                 onChange={() => onSessionTypeChange('online')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                 aria-label="session-type-online"
               />
-              <span className="ml-2 text-sm text-gray-800">Online</span>
-            </label>
-            <label className="flex cursor-pointer items-center">
-              <input
-                type="radio"
-                name="sessionType"
-                value="offline"
-                checked={sessionType === 'offline'}
-                onChange={() => onSessionTypeChange('offline')}
-                className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                aria-label="session-type-offline"
-              />
-              <span className="ml-2 text-sm text-gray-800">Offline</span>
+              <span className="ml-2 text-sm text-gray-800">online</span>
             </label>
             
           </div>
@@ -332,7 +332,7 @@ function BasicInfoSection({
         </div>
 
         {/* Conditional: link or location depending on sessionType */}
-        {sessionType === 'online' ? (
+        {sessionType === 'hybrid' ? (
           <div>
             <FormInput
               label="Link buổi học (Meet):"

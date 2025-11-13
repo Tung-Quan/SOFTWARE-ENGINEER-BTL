@@ -16,9 +16,9 @@ export type PastTutorRegistration = {
   tutorEmail: string;
   subjects: DropdownOption[]; // Danh sách các môn học (từ mockCourses)
   languages: DropdownOption[]; // Danh sách ngôn ngữ
-  sessionTypes: DropdownOption[]; // 'online' | 'offline'
+  sessionTypes: DropdownOption[]; // 'hybrid' | 'online'
   locations: DropdownOption[]; // Danh sách địa điểm
-  meetLink?: string; // Optional meet link for online sessions
+  meetLink?: string; // Optional meet link for hybrid sessions
   specialRequest: string;
   status: 'Pending' | 'Approved' | 'Declined';
   createdAt: string; // ISO date string
@@ -49,8 +49,8 @@ const courseOptions = mockCourses.map(c => ({
 
 // Tùy chọn loại hình
 const sessionTypeOptions = [
-  { id: 'offline', name: 'Học trực tiếp' },
-  { id: 'online', name: 'Học online' },
+  { id: 'online', name: 'Học trực tiếp' },
+  { id: 'hybrid', name: 'Học hybrid' },
 ];
 
 // --- Dữ liệu Mock ---
@@ -64,7 +64,7 @@ export const mockTutorRegistrations: PastTutorRegistration[] = [
     languages: [mockLanguages[0], mockLanguages[1]], // Vietnamese, English
     sessionTypes: [sessionTypeOptions[0], sessionTypeOptions[1]], // Cả hai
     locations: [mockLocations[0], mockLocations[11]], // Phường 1, Phường 2
-    specialRequest: 'Tôi có kinh nghiệm dạy chuyên sâu về TCP/IP và định tuyến. Có thể dạy cả online và offline.',
+    specialRequest: 'Tôi có kinh nghiệm dạy chuyên sâu về TCP/IP và định tuyến. Có thể dạy cả hybrid và online.',
     status: 'Approved',
     createdAt: '2025-10-28T09:00:00Z',
   },
@@ -74,9 +74,9 @@ export const mockTutorRegistrations: PastTutorRegistration[] = [
     tutorEmail: createFakeEmail(tutorNames[1]),
     subjects: [courseOptions[1], courseOptions[11]], // Database System, Database II
     languages: [mockLanguages[0]], // Vietnamese
-    sessionTypes: [sessionTypeOptions[1]], // Chỉ Online
+    sessionTypes: [sessionTypeOptions[1]], // Chỉ hybrid
     locations: [mockLocations[2]], // Phường 3
-    specialRequest: 'Chuyên dạy về SQL, tối ưu hóa truy vấn và NoSQL. Chỉ nhận dạy online vào buổi tối.',
+    specialRequest: 'Chuyên dạy về SQL, tối ưu hóa truy vấn và NoSQL. Chỉ nhận dạy hybrid vào buổi tối.',
     status: 'Pending',
     createdAt: '2025-11-10T11:20:00Z',
   },
@@ -86,10 +86,17 @@ export const mockTutorRegistrations: PastTutorRegistration[] = [
     tutorEmail: createFakeEmail(tutorNames[2]),
     subjects: [courseOptions[2]], // Operating System
     languages: [mockLanguages[1]], // English
-    sessionTypes: [sessionTypeOptions[0]], // Chỉ Offline
+    sessionTypes: [sessionTypeOptions[0]], // Chỉ online
     locations: [mockLocations[0], mockLocations[2], mockLocations[3]], // P1, P3, P4
-    specialRequest: 'Kinh nghiệm dạy OS, tập trung vào process scheduling và memory management. Chỉ dạy offline.',
+    specialRequest: 'Kinh nghiệm dạy OS, tập trung vào process scheduling và memory management. Chỉ dạy online.',
     status: 'Approved',
     createdAt: '2025-11-05T16:05:00Z',
   },
 ];
+
+export function deleteTutorRegistration(id: string): boolean {
+  const idx = mockTutorRegistrations.findIndex(r => r.id === id);
+  if (idx === -1) return false;
+  mockTutorRegistrations.splice(idx, 1);
+  return true;
+}

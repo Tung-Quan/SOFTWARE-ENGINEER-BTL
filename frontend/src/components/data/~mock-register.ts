@@ -32,7 +32,7 @@ export type PastTutorRegistration = {
   studentEmail: string;
   course: DropdownOption; // Từ mockCourses
   language: DropdownOption; // Từ mockLanguages
-  sessionType: DropdownOption; // 'online' | 'offline'
+  sessionType: DropdownOption; // 'hybrid' | 'offline'
   location?: DropdownOption; // Từ mockLocations
   specialRequest: string;
   status: 'Pending' | 'Approved' | 'Declined';
@@ -62,7 +62,7 @@ const courseOptions = mockCourses.map(c => ({
 // Tùy chọn loại hình
 const sessionTypeOptions = [
   { id: 'offline', name: 'Học trực tiếp' },
-  { id: 'online', name: 'Học online' },
+  { id: 'hybrid', name: 'Học hybrid' },
 ];
 
 // --- Dữ liệu Mock ---
@@ -113,7 +113,7 @@ export const mockPastRegistrations: PastTutorRegistration[] = [
     course: courseOptions[1],
     language: mockLanguages[1],
     sessionType: sessionTypeOptions[1],
-    // Online registration; omit explicit location so code can default to Online when needed
+    // hybrid registration; omit explicit location so code can default to hybrid when needed
     specialRequest: 'Muốn luyện kỹ năng giải đề và chấm bài mẫu trước kỳ thi cuối khoá.',
     status: 'Pending',
     createdAt: '2025-11-11T12:00:00Z',
@@ -143,11 +143,18 @@ export function createPastRegistration(input: Partial<PastTutorRegistration> & {
     course: input.course,
     language: input.language,
     sessionType: input.sessionType,
-    location: input.location ?? { id: 'online', name: 'Online' },
+    location: input.location ?? { id: 'hybrid', name: 'hybrid' },
     specialRequest: input.specialRequest,
     status: 'Pending',
     createdAt: new Date().toISOString(),
   };
   mockPastRegistrations.unshift(record);
   return record;
+}
+
+export function deletePastRegistration(id: string): boolean {
+  const idx = mockPastRegistrations.findIndex(r => r.id === id);
+  if (idx === -1) return false;
+  mockPastRegistrations.splice(idx, 1);
+  return true;
 }

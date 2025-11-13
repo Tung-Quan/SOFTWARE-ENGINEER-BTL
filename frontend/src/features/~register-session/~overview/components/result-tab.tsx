@@ -107,7 +107,7 @@ export function ResultTab() {
       language: r.language.name,
       type: r.sessionType.name,
       role: 'Student',
-      location: r.location?.name ?? 'Online',
+      location: r.location?.name ?? 'hybrid',
       request: r.specialRequest,
       status: r.status,
     }));

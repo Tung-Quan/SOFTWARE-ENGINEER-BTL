@@ -96,9 +96,49 @@ const mockNotifications: Notification[] = [
   },
 ];
 
-// Simple in-memory notification service so other components (header) can
-// subscribe to changes and keep the unread badge in sync.
-let _notificationsStore: Notification[] = mockNotifications.slice();
+// Mock function to generate more notifications
+const generateMoreNotifications = (startId: number, count: number): Notification[] => {
+  const titles = [
+    'Bài giảng mới',
+    'Nhắc nhở deadline',
+    'Cập nhật khóa học',
+    'Thảo luận mới',
+    'Phản hồi bài tập',
+    'Thông báo hệ thống',
+    'Tin nhắn mới',
+    'Lịch hẹn sắp tới',
+  ];
+  
+  const messages = [
+    'Giảng viên đã đăng bài giảng mới cho tuần này',
+    'Còn 2 ngày để nộp bài tập lớn',
+    'Khóa học đã được cập nhật nội dung mới',
+    'Có thảo luận mới trong diễn đàn',
+    'Giảng viên đã phản hồi bài tập của bạn',
+    'Hệ thống sẽ bảo trì vào cuối tuần',
+    'Bạn có tin nhắn mới từ giảng viên',
+    'Lịch hẹn tư vấn sẽ diễn ra vào ngày mai',
+  ];
+  
+  const types: Array<'info' | 'success' | 'warning' | 'error'> = ['info', 'success', 'warning', 'error'];
+  
+  return Array.from({ length: count }, (_, i) => ({
+    id: String(startId + i),
+    title: titles[i % titles.length],
+    message: messages[i % messages.length],
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * (6 + i)), // Giờ trước đó
+    isRead: Math.random() > 0.3, // 70% đã đọc
+    type: types[i % types.length],
+  }));
+};
+
+
+const initialNotifications = [
+  ...mockNotifications,
+  ...generateMoreNotifications(mockNotifications.length + 1, 20),
+];
+
+let _notificationsStore: Notification[] = initialNotifications.slice();
 const _subscribers = new Set<(items: Notification[]) => void>();
 
 export const getNotificationsStore = () => _notificationsStore;
@@ -127,6 +167,7 @@ type NotificationPopupProps = {
 
 const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
   const [notifications, setNotifications] = useState<Notification[]>(() => getNotificationsStore());
+  const [showSettings, setShowSettings] = useState(false);
 
   // Lock body scroll while notification popup is open
   useLockBodyScroll(!!isOpen);
@@ -179,7 +220,7 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
       />
 
       {/* Popup */}
-      <div className="fixed right-4 top-24 z-[99] flex h-[calc(100vh-120px)] w-[400px] flex-col rounded-lg bg-white shadow-2xl">
+      <div className="fixed right-4 top-24 z-[99] flex h-[calc(100vh-120px)] w-[400px] flex-col overflow-hidden rounded-lg bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-4">
           <div className="flex items-center gap-2">
@@ -202,6 +243,7 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
               </button>
             )}
             <button
+              onClick={() => setShowSettings(!showSettings)}
               className="flex items-center justify-center rounded-lg p-1.5 text-gray-600 transition hover:bg-gray-100"
               title="Cài đặt thông báo"
             >
@@ -209,6 +251,31 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
             </button>
           </div>
         </div>
+
+        {/* Settings Panel */}
+        {showSettings && (
+          <div className="border-b border-gray-200 bg-gray-50 p-4">
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">Cài đặt thông báo</h3>
+            <div className="space-y-2">
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Thông báo bài nộp</span>
+                <input type="checkbox" className="size-4 rounded border-gray-300" defaultChecked />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Thông báo điểm số</span>
+                <input type="checkbox" className="size-4 rounded border-gray-300" defaultChecked />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Thông báo tài liệu</span>
+                <input type="checkbox" className="size-4 rounded border-gray-300" defaultChecked />
+              </label>
+              <label className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Thông báo hệ thống</span>
+                <input type="checkbox" className="size-4 rounded border-gray-300" defaultChecked />
+              </label>
+            </div>
+          </div>
+        )}
 
         {/* Notification List */}
         <div className="flex-1 overflow-y-auto">
@@ -266,19 +333,6 @@ const NotificationPopup = ({ isOpen, onClose }: NotificationPopupProps) => {
               ))}
             </div>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="border-t border-gray-200 p-3">
-          <button
-            className="w-full rounded-lg py-2 text-center text-sm font-medium text-[#0329E9] transition hover:bg-blue-50"
-            onClick={() => {
-              // Navigate to full notifications page
-              console.log('See all notifications');
-            }}
-          >
-            Xem tất cả thông báo
-          </button>
         </div>
       </div>
     </>

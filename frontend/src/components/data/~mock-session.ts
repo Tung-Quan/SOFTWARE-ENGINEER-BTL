@@ -9,7 +9,7 @@ export type Session = {
   title: string;
   desc?: string;
   instructor: string;
-  method: 'online' | 'offline';
+  method: 'hybrid' | 'online';
   link?: string;
   location?: string;
   start: string; // ISO datetime
@@ -53,7 +53,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[0].title} - Buổi 1`,
     desc: 'Orient and setup. Giới thiệu syllabus và môi trường học tập.',
     instructor: mockCourses[0].instructor,
-    method: 'online',
+    method: 'hybrid',
     link: 'https://meet.example.com/abc-123',
     start: toISO(new Date('2025-12-17T09:00:00')),
     end: toISO(new Date('2025-12-17T10:00:00')),
@@ -70,7 +70,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[1].title} - Lab`,
     desc: 'Bài lab: Thiết kế schema và queries cơ bản',
     instructor: mockCourses[1].instructor,
-    method: 'offline',
+    method: 'online',
     location: 'Phòng A-101',
     start: toISO(new Date('2025-12-17T13:00:00')),
     end: toISO(new Date('2025-12-17T15:00:00')),
@@ -87,7 +87,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[2].title} - Tổng hợp`,
     desc: 'Tổng hợp chương 1-3 và Q&A',
     instructor: mockCourses[2].instructor,
-    method: 'offline',
+    method: 'online',
     link: 'https://meet.example.com/xyz-789',
     start: toISO(new Date('2025-12-18T10:00:00')),
     end: toISO(new Date('2025-12-18T11:30:00')),
@@ -104,7 +104,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[3].title} - Bài tập về nhà`,
     desc: 'Nộp bài tập về nhà và chấm điểm sơ bộ',
     instructor: mockCourses[3].instructor,
-    method: 'online',
+    method: 'hybrid',
     link: 'https://meet.example.com/homework-1',
     start: toISO(new Date('2025-12-20T14:00:00')),
     end: toISO(new Date('2025-12-20T15:00:00')),
@@ -121,7 +121,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[4].title} - Kiểm tra giữa kỳ`,
     desc: 'Midterm test; phòng thi được phân bổ',
     instructor: mockCourses[4].instructor,
-    method: 'offline',
+    method: 'online',
     location: 'Hội trường 2',
     start: toISO(new Date('2025-12-22T08:00:00')),
     end: toISO(new Date('2025-12-22T10:00:00')),
@@ -139,7 +139,7 @@ export const mockSessions: Session[] = [
     title: `${mockCourses[0].title} - Buổi thử nghiệm`,
     desc: 'Buổi thử nghiệm đã hoàn tất',
     instructor: mockCourses[0].instructor,
-    method: 'online',
+    method: 'hybrid',
     link: 'https://meet.example.com/done-1',
     start: toISO(new Date('2025-11-20T09:00:00')),
     end: toISO(new Date('2025-11-20T10:00:00')),
@@ -208,7 +208,7 @@ export function createRequestSession(request: Partial<Session> & { courseId: str
     title: request.title,
     desc: request.desc ?? '',
     instructor: request.instructor ?? 'TBD',
-    method: request.method ?? 'online',
+    method: request.method ?? 'hybrid',
     link: request.link,
     location: request.location,
     start: request.start,

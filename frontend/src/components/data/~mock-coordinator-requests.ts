@@ -16,9 +16,9 @@ export type CourseCreationRequest = {
   courseName: string; // Tên môn học mới
   courseCode: string; // Mã môn học (auto-generated hoặc nhập tay)
   languages: DropdownOption[]; // Danh sách ngôn ngữ giảng dạy
-  sessionTypes: DropdownOption[]; // 'online' | 'offline'
+  sessionTypes: DropdownOption[]; // 'hybrid' | 'online'
   locations: DropdownOption[]; // Danh sách địa điểm
-  meetLink?: string; // Optional meet link for online sessions
+  meetLink?: string; // Optional meet link for hybrid sessions
   timeSlots?: Array<{id: string; date: string; time: string}>; // Khung giờ dạy đã thêm
   description: string; // Mô tả môn học
   status: 'Pending' | 'Approved' | 'Rejected';
@@ -28,8 +28,8 @@ export type CourseCreationRequest = {
 
 // Tùy chọn loại hình
 const sessionTypeOptions = [
-  { id: 'offline', name: 'Học trực tiếp' },
-  { id: 'online', name: 'Học online' },
+  { id: 'online', name: 'Học trực tiếp' },
+  { id: 'hybrid', name: 'Học hybrid' },
 ];
 
 // --- Dữ liệu Mock ---
@@ -42,7 +42,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     courseName: 'Advanced Machine Learning',
     courseCode: 'CS401',
     languages: [mockLanguages[0], mockLanguages[1]], // Vietnamese, English
-    sessionTypes: [sessionTypeOptions[0], sessionTypeOptions[1]], // Cả hai
+    sessionTypes: [sessionTypeOptions[0], sessionTypeOptions[1]], 
     locations: [mockLocations[0], mockLocations[1]], // Phường 1, Phường 2
     timeSlots: [
       { id: 'slot-1', date: '2025-11-15', time: '08:00' },
@@ -60,7 +60,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     courseName: 'Cloud Computing Fundamentals',
     courseCode: 'CS350',
     languages: [mockLanguages[0]], // Vietnamese
-    sessionTypes: [sessionTypeOptions[1]], // Chỉ Online
+    sessionTypes: [sessionTypeOptions[1]], 
     locations: [],
     meetLink: 'https://meet.google.com/abc-xyz-123',
     timeSlots: [
@@ -78,7 +78,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     courseName: 'Blockchain & Cryptocurrency',
     courseCode: 'CS425',
     languages: [mockLanguages[1]], // English
-    sessionTypes: [sessionTypeOptions[0]], // Chỉ Offline
+    sessionTypes: [sessionTypeOptions[0]], // Chỉ online
     locations: [mockLocations[2], mockLocations[3], mockLocations[4]], // P3, P4, P5
     timeSlots: [
       { id: 'slot-5', date: '2025-11-18', time: '09:00' },
@@ -97,7 +97,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     courseName: 'Mobile App Development with React Native',
     courseCode: 'CS380',
     languages: [mockLanguages[0], mockLanguages[1]], // Vietnamese, English
-    sessionTypes: [sessionTypeOptions[1]], // Online
+    sessionTypes: [sessionTypeOptions[1]], // hybrid
     locations: [],
     meetLink: 'https://zoom.us/j/123456789',
     timeSlots: [

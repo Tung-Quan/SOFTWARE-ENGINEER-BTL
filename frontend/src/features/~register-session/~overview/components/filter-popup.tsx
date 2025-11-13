@@ -18,8 +18,8 @@ const roleOptions = [
 
 // Dữ liệu cho Hình thức
 const sessionTypeOptions = [
-  { id: 'offline', name: 'Offline' },
-  { id: 'online', name: 'Online' },
+  { id: 'online', name: 'online' },
+  { id: 'hybrid', name: 'hybrid' },
 ];
 
 // // --- Định nghĩa Types ---

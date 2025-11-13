@@ -29,7 +29,7 @@ const CourseCard: React.FC<{ course: Course }> = ({ course }) => {
       className="flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
       style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
       onClick={() =>
-        navigate({ to: '/course/$id', params: { id: course.id } })
+        navigate({ to: '/statistical/$id', params: { id: course.id } })
       }
     >
       <div

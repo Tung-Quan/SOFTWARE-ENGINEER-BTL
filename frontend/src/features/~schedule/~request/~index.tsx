@@ -108,7 +108,7 @@ function BasicInfoSection() {
     );
   }
 
-  const [sessionType, setSessionType] = useState('online');
+  const [sessionType, setSessionType] = useState('hybrid');
 
   return (
     <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
@@ -179,23 +179,23 @@ function BasicInfoSection() {
               <input
                 type="radio"
                 name="sessionType"
-                value="offline"
-                checked={sessionType === 'offline'}
-                onChange={(e) => setSessionType(e.target.value)}
-                className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-800">Offline</span>
-            </label>
-            <label className="flex cursor-pointer items-center">
-              <input
-                type="radio"
-                name="sessionType"
                 value="online"
                 checked={sessionType === 'online'}
                 onChange={(e) => setSessionType(e.target.value)}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="ml-2 text-sm text-gray-800">Online</span>
+              <span className="ml-2 text-sm text-gray-800">online</span>
+            </label>
+            <label className="flex cursor-pointer items-center">
+              <input
+                type="radio"
+                name="sessionType"
+                value="hybrid"
+                checked={sessionType === 'hybrid'}
+                onChange={(e) => setSessionType(e.target.value)}
+                className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-800">hybrid</span>
             </label>
           </div>
         </div>

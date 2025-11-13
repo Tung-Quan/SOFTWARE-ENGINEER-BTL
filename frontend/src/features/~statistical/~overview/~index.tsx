@@ -1,22 +1,13 @@
 import { ClockIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
+import { mockCourses } from '@/components/data/~mock-courses'
 import StudyLayout from '@/components/study-layout'
 
 // 1. Dữ liệu mockup dựa trên hình ảnh
 // Sinh ra nhiều khóa học khác nhau (đa dạng tên khoa và nhiều bản ghi)
-const sampleTitles = [
-  'Khoa Khoa học và Kỹ thuật máy tính',
-  'Khoa Toán - Ứng dụng',
-  'Khoa Vật lý - Kỹ thuật',
-  'Khoa Công nghệ Thông tin',
-  'Khoa Hệ thống Thông tin',
-  'Khoa Điện tử - Viễn thông',
-  'Khoa Khoa học Tự nhiên',
-  'Khoa Kinh tế và Quản trị',
-  'Khoa Ngôn ngữ và Văn hóa',
-  'Khoa Công nghệ Sinh học',
-]
+// Lấy tên môn trực tiếp từ mockCourses để luôn đồng bộ
+// (dùng mockCourses.map để tạo dữ liệu hiển thị)
 
 const sampleTimes = [
   '19:00 10/10/2024',
@@ -25,10 +16,10 @@ const sampleTimes = [
   '08:30 13/10/2024',
 ]
 
-// Tạo 12 entry để hiển thị nhiều khoa hơn
-const mockCourseData = Array.from({ length: 12 }, (_, i) => ({
-  id: i + 1,
-  title: sampleTitles[i % sampleTitles.length],
+// Tạo dữ liệu hiển thị từ mockCourses (mỗi entry lấy title từ mockCourses)
+const mockCourseData = mockCourses.map((c, i) => ({
+  id: c.id,
+  title: c.title,
   time: sampleTimes[i % sampleTimes.length],
 }))
 

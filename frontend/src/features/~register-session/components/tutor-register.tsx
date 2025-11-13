@@ -1,6 +1,6 @@
 import { 
   ChevronDownIcon, 
-  PlusIcon // [MỚI] Icon cho nút "Thêm"
+  PlusIcon 
 } from '@heroicons/react/24/solid';
 import { useNavigate } from '@tanstack/react-router';
 import React, { useState, useRef, useEffect } from 'react';
@@ -62,8 +62,8 @@ interface DropdownOption {
 }
 
 const sessionTypeOptions: DropdownOption[] = [
-  { id: 'offline', name: 'Học trực tiếp' },
-  { id: 'online', name: 'Học online' },
+  { id: 'online', name: 'Học trực tuyến' },
+  { id: 'hybrid', name: 'Học trực tuyến và trực tiếp' },
 ];
 
 // === COMPONENT CHÍNH ===
@@ -116,13 +116,12 @@ export function TutorRegister() {
       {/* Form Content */}
       <main className="p-6">
         <form 
-          className="relative rounded-lg bg-white shadow-lg"
+            className="relative rounded-lg bg-white shadow-custom-yellow"
           onSubmit={(e) => e.preventDefault()}
         >
           {/* Container cho các trường */}
           <div className="space-y-8 p-8">
             
-            {/* [SỬA] Môn học (Input + Nút Thêm) */}
             <FormSection title="Môn học giảng viên muốn dạy">
               <FormDropdown
                 icon={<SubjectIcon className="size-5" />}
@@ -194,8 +193,7 @@ export function TutorRegister() {
               )}
             </FormSection>
 
-            {/* [SỬA] Địa điểm (Chỉ hiện khi đã thêm "Học trực tiếp") */}
-            {addedSessionTypes.some(t => t.id === 'offline') && (
+            {addedSessionTypes.some(t => t.id === 'hybrid') && (
               <FormSection title="Địa điểm">
                 <FormDropdown
                   icon={<LocationIcon className="size-5" />}
@@ -219,9 +217,7 @@ export function TutorRegister() {
               </FormSection>
             )}
 
-            {/* Link meet cho các loại hình online (Chỉ hiện khi đã thêm "Học online") */}
-            {addedSessionTypes.some(t => t.id === 'online') && (
-              <FormSection title="Link buổi học online">
+              <FormSection title="Link buổi học">
                 <input
                   type="text"
                   value={meetLink}
@@ -230,7 +226,6 @@ export function TutorRegister() {
                   className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormSection>
-            )}
 
             {/* Yêu cầu đặc biệt (Giữ nguyên) */}
             <FormSection title="Yêu cầu đặc biệt">
