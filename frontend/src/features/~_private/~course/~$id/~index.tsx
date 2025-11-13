@@ -11,8 +11,8 @@ import CalendarIcon from '@/components/icons/calendar';
 import LinkIcon from '@/components/icons/link';
 import StudyLayout from '@/components/study-layout';
 
-import pdfIcon from './components/pdfIcon.png'
 import { CheckCircleIcon, FolderIcon } from './components/course-icons';
+import pdfIcon from './components/pdfIcon.png'
 
 export const Route = createFileRoute('/_private/course/$id/')({
   component: CourseDetailsComponent,
@@ -675,7 +675,7 @@ function CourseDetailsComponent() {
 
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Tên file nguồn (trong thư mục data)
+                      Tên file nguồn
                     </label>
                     <input
                       type="text"

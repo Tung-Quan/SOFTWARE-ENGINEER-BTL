@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pagination utility classes to centralize Tailwind ordering and avoid linter errors */
 .pagination-btn {
   @apply p-1 rounded transition-colors bg-white text-[#0329E9] hover:bg-blue-600 hover:text-white;
 }

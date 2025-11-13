@@ -30,6 +30,7 @@ interface User {
   isChairman: boolean;
   isCoordinator: boolean;
   isManager: boolean;
+  isStudent: boolean;
   isTutor: boolean;
   lastName: string;
   phone: string | null;
@@ -98,13 +99,11 @@ function RouteComponent() {
   // console.log('userStore', userStore);
 
   // Role checking variables
-  const isStudent = userStore?.state?.isStudent ?? false;
+  const isStudent = userStore?.state?.user?.isStudent ?? false;
   const isChairman = userStore?.state?.user?.isChairman ?? false;
-  //   const isCoordinator = userStore?.state?.user?.isCoordinator ?? false;
-  const isCoordinator = true;
+  const isCoordinator = userStore?.state?.user?.isCoordinator ?? false;
   const isManager = userStore?.state?.user?.isManager ?? false;
-  //   const isTutor = userStore?.state?.user?.isTutor ?? false;
-  const isTutor = false;
+  const isTutor = userStore?.state?.user?.isTutor ?? false;
   const hasStatisticalPermission =
     userStore?.state?.user?.statisticalPermission ?? false;
 
@@ -273,7 +272,7 @@ function RouteComponent() {
               <div className="mt-6 flex gap-4">
                 <Link
                   to={`/course/${id}` as any}
-                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80">
                   Tổng quan
                 </Link>
 
@@ -282,7 +281,7 @@ function RouteComponent() {
                   // onClick={() => {
                   //   navigate({ to: `/course/${id}/rating` });
                   // }}
-                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                  className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80"
                 >
                   Đánh giá
                 </button>
@@ -500,7 +499,7 @@ function RouteComponent() {
             {[1, 2, 3].map((index) => (
               <div
                 key={index}
-                className="rounded-lg border-2 border-yellow-400 bg-white p-6"
+                className="rounded-lg border-2 border-gray-400 bg-white p-6 shadow-custom-yellow"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-4">

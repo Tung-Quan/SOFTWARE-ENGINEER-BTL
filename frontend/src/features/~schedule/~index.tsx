@@ -54,7 +54,7 @@ function getWeekLabels(reference = new Date()) {
   return labels;
 }
 
-const CALENDAR_DAYS = getWeekLabels();
+// Calendar week labels are computed per-component so they can change when user navigates weeks.
 
 // Các mốc thời gian hiển thị (mỗi 30 phút). We render labels for every half-hour
 // so each grid row represents 30 minutes.
@@ -89,14 +89,43 @@ function dayIndexFromISO(iso: string) {
 // --- COMPONENT CHÍNH CỦA TRANG ---
 
 function RouteComponent() {
-  // Filter and map sessions to calendar items, only showing those within visible hours (07:00-22:00)
-  // Computed inside component so it re-runs on every render and picks up changes from mockSessions
+  // Reference date (any date within the currently visible week). We start at today.
+  const [referenceDate, setReferenceDate] = useState(new Date());
+
+  // Compute week labels for the header based on the referenceDate
+  const weekLabels = getWeekLabels(referenceDate);
+
+  // Determine the Monday (start) of the current week and the exclusive end (next Monday)
+  const daysToMonday = (referenceDate.getDay() + 6) % 7;
+  const weekStart = new Date(referenceDate);
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(referenceDate.getDate() - daysToMonday);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 7);
+
+  // Handlers to move between weeks
+  const goToPreviousWeek = () => setReferenceDate((d) => {
+    const nd = new Date(d);
+    nd.setDate(d.getDate() - 7);
+    return nd;
+  });
+  const goToNextWeek = () => setReferenceDate((d) => {
+    const nd = new Date(d);
+    nd.setDate(d.getDate() + 7);
+    return nd;
+  });
+
+  // Filter and map sessions to calendar items, only showing those within the currently visible week
+  // and within visible hours (07:00-22:00). Computed inside component so it re-runs on state change.
   const calendarItems = getMockSessions()
     .filter((s) => {
-      const startHour = new Date(s.start).getHours()
-      const endHour = new Date(s.end).getHours()
+      const startDate = new Date(s.start);
+      // Keep only sessions starting within [weekStart, weekEnd)
+      if (startDate < weekStart || startDate >= weekEnd) return false;
+      const startHour = startDate.getHours();
+      const endHour = new Date(s.end).getHours();
       // Only show sessions that start between 07:00-21:59 or end between 07:01-22:00
-      return (startHour >= 7 && startHour < 22) || (endHour > 7 && endHour <= 22)
+      return (startHour >= 7 && startHour < 22) || (endHour > 7 && endHour <= 22);
     })
     .map((s) => ({
       id: s.id,
@@ -105,7 +134,7 @@ function RouteComponent() {
       endTime: toHHMM(s.end),
       title: s.title,
       desc: s.desc ?? '',
-    }))
+    }));
 
   return (
     <StudyLayout>
@@ -137,10 +166,10 @@ function RouteComponent() {
           <div className="relative rounded-lg bg-white pb-4">
 
             {/* 3.1. Header của Lịch (Thời khóa biểu + Controls) */}
-            <ScheduleHeader />
+            <ScheduleHeader onPrevWeek={goToPreviousWeek} onNextWeek={goToNextWeek} />
 
             {/* 3.2. Grid Lịch */}
-            <CalendarGrid items={calendarItems} />
+            <CalendarGrid items={calendarItems} weekLabels={weekLabels} />
           </div>
 
           {/* 4. Nút "Yêu cầu buổi học" và liên kết Lịch sử */}
@@ -215,7 +244,11 @@ function BannerWave() {
 /**
  * Header của Lịch (Thời khóa biểu, Filter, Pagination)
  */
-function ScheduleHeader() {
+function ScheduleHeader({ onPrevWeek, onNextWeek }: { onPrevWeek: () => void; onNextWeek: () => void }) {
+  // onPrevWeek / onNextWeek are provided by the parent to navigate calendar weeks
+  onPrevWeek = onPrevWeek ?? (() => {});
+  onNextWeek = onNextWeek ?? (() => {});
+  
   return (
     <div className="flex flex-col items-center justify-between border-gray-200 p-4 md:flex-row">
       <h2 className="text-xl font-semibold text-gray-800">Thời khóa biểu</h2>
@@ -248,10 +281,10 @@ function ScheduleHeader() {
             </svg>
           </div>
           <div className="flex items-center justify-end">
-            <button aria-label='Chuyển tuần' className="rounded-md border border-black bg-white p-1 text-gray-400 shadow-sm hover:bg-gray-50 hover:text-gray-600">
+            <button aria-label='Chuyển tuần trước' onClick={onPrevWeek} className="rounded-md border border-black bg-white p-1 text-gray-400 shadow-sm hover:bg-gray-50 hover:text-gray-600">
               <ChevronLeftIcon className="size-5" />
             </button>
-            <button className="ml-2 rounded-md border border-black bg-white p-1 text-gray-400 shadow-sm hover:bg-gray-50 hover:text-gray-600">
+            <button aria-label='Chuyển tuần sau' onClick={onNextWeek} className="ml-2 rounded-md border border-black bg-white p-1 text-gray-400 shadow-sm hover:bg-gray-50 hover:text-gray-600">
               <ChevronRightIcon className="size-5" />
             </button>
           </div>
@@ -274,9 +307,10 @@ interface CalendarGridProps {
     title: string;
     desc: string;
   }>;
+  weekLabels: Array<{ weekday: string; date: string }>;
 }
 
-function CalendarGrid({ items }: CalendarGridProps) {
+function CalendarGrid({ items, weekLabels }: CalendarGridProps) {
   // Grid được chia thành 30 hàng (30 phút mỗi hàng), từ 07:00 đến 22:00
   const totalRows = (22 - 7) * 2; // = 30 rows (1 row = 30 minutes)
 
@@ -296,7 +330,7 @@ function CalendarGrid({ items }: CalendarGridProps) {
         <div className="sticky left-0 z-10 col-start-1 row-start-1 border-b border-r border-gray-200 bg-white"></div>
 
         {/* Header các ngày trong tuần */}
-        {CALENDAR_DAYS.map((d, idx) => (
+        {weekLabels.map((d, idx) => (
           <div
             key={d.date + idx}
             className="row-start-1 bg-[#3D4863] p-3 text-center font-semibold text-white"

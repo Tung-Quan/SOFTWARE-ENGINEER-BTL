@@ -9,6 +9,7 @@ export type User = {
   email: string;
   phone: string | null;
   isManager: boolean;
+  isStudent: boolean;
   isChairman: boolean;
   isTutor: boolean;
   isCoordinator: boolean;
