@@ -54,7 +54,7 @@ function RouteComponent() {
     if (current?.requestType !== 'absent') {
       // nếu không phải là yêu cầu xin nghỉ thì tạo một buổi học mới ở /schedule/request
       navigate({
-        to: '/schedule/request/new', search: (old) => ({
+        to: '/schedule/request', search: (old) => ({
           ...old,
           courseId: current?.courseId,
           title: current?.title,

@@ -310,7 +310,7 @@ function CourseDetailsComponent() {
       case 'introduction':
         return (
           <>
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex flex-1 items-center gap-3">
@@ -470,7 +470,7 @@ function CourseDetailsComponent() {
       case 'material':
         return (
           <>
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="mb-6 flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
@@ -767,7 +767,7 @@ function CourseDetailsComponent() {
       case 'movie': {
         return (
           <>
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
@@ -1009,7 +1009,7 @@ function CourseDetailsComponent() {
       case 'note':
         return (
           <>
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
@@ -1257,7 +1257,7 @@ function CourseDetailsComponent() {
       case 'reference':
         return (
           <>
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
@@ -1480,7 +1480,7 @@ function CourseDetailsComponent() {
         return (
           <>
             <div className="mb-6 flex items-center justify-between">
-              {changing ? (
+              {userLocalStore?.isManager ? (
                 <div className="flex flex-1 items-center gap-3">
                   <div className="flex size-12 items-center justify-center rounded border border-gray-200 bg-gray-50 p-2">
                     <Icon className="size-6 text-gray-700" />
@@ -1640,7 +1640,7 @@ function CourseDetailsComponent() {
               )}
             </div>
 
-            {changing ? (
+            {userLocalStore?.isManager ? (
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                 {/* Grid 2 cột */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
@@ -1655,6 +1655,7 @@ function CourseDetailsComponent() {
                       </div>
                       <label className="mb-2 flex items-center text-sm font-medium text-gray-700">
                         <input
+                          aria-label="datetime-local"
                           type="datetime-local" // Dùng datetime-local để có cả ngày và giờ
                           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
                           value={item.data.dueDate || ''} // Giả sử bạn lưu vào item.data.dueDate
@@ -1758,6 +1759,7 @@ function CourseDetailsComponent() {
                 {/* Các nút bấm ở dưới */}
                 <p className="mt-4">Mô tả</p>
                 <input
+                  aria-label="description"
                   className=" mt-2 h-12 w-full rounded-md border border-gray-500 pl-2 text-left focus:outline-none"
                   type="text"
                 />
@@ -1813,6 +1815,13 @@ function CourseDetailsComponent() {
                               {item.data.dueDate}
                             </span>
                           </span>
+
+                          {(item.data.submittedFile?.submittedAt && item.data.dueDate &&
+                            (new Date(item.data.submittedFile.submittedAt).getTime() > new Date(item.data.dueDate).getTime())) && (
+                              <span className="ml-4 rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                                Nộp trễ
+                              </span>
+                            )}
                         </div>
                         <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
                           Chỉnh sửa bài nộp
@@ -1865,10 +1874,17 @@ function CourseDetailsComponent() {
                             {item.data.dueDate}
                           </span>
                         </span>
+                        {(item.data.submittedFile?.submittedAt && item.data.dueDate &&
+                          (new Date(item.data.submittedFile.submittedAt).getTime() > new Date(item.data.dueDate).getTime())) && (
+                            <span className="ml-4 rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                              Nộp trễ
+                            </span>
+                          )}
                       </div>
-                      <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                      {/* <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
                         Chỉnh sửa bài nộp
-                      </button>
+                      </button> */}
+
                     </div>
                   </div>
                 )}

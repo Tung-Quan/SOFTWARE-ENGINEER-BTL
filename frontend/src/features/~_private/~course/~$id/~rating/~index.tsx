@@ -416,10 +416,12 @@ function RouteComponent() {
       <StudyLayout>
         <div className="w-full font-['Archivo']">
           {/* Back button */}
-          <button className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700">
+          <Link
+            to='/dashboard'
+          className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700">
             <ArrowLeft className="size-5" />
             <span className="font-medium">Quay lại</span>
-          </button>
+          </Link>
 
           {/* Course header */}
           <div

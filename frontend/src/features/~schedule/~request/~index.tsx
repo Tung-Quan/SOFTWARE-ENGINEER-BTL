@@ -4,8 +4,8 @@ import {
   ChevronDownIcon
 } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import { createFileRoute, Link, useNavigate, useSearch } from '@tanstack/react-router'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import { mockCourses } from '@/components/data/~mock-courses'
@@ -15,15 +15,24 @@ import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/schedule/request/')({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      courseId: (search.courseId as string) || '',
+      title: (search.title as string) || '',
+      desc: (search.desc as string) || '',
+      requestType: (search.requestType as string) || '',
+    }
+  },
 })
 
 // === COMPONENT CHÍNH CỦA TRANG ===
 function RouteComponent() {
   const navigate = useNavigate()
+  const searchParams = useSearch({ from: '/schedule/request/' })
   
   // Form states
-  const [title, setTitle] = useState('')
-  const [courseId, setCourseId] = useState('')
+  const [title, setTitle] = useState(searchParams.title || '')
+  const [courseId, setCourseId] = useState(searchParams.courseId || '')
   const [method, setMethod] = useState<'hybrid' | 'online'>('hybrid')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
@@ -31,6 +40,14 @@ function RouteComponent() {
 
   // Get all available names
   const allNames = getAllNames()
+
+  // Update form fields when query params are present
+  useEffect(() => {
+    if (searchParams.courseId) setCourseId(searchParams.courseId)
+    if (searchParams.title) setTitle(searchParams.title)
+    // Note: desc and requestType from URL are available but not used in this form
+    // You can add state for them if needed
+  }, [searchParams])
 
   const toggleMember = (id: number) => {
     setSelectedMembers((prev) => {

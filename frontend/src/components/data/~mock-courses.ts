@@ -253,7 +253,7 @@ export const dataCourses = [
           status: 'submitted',
           submittedFile: {
             name: 'MiniGo_Specifications.pdf',
-            submittedAt: '20:00 10/10/2024',
+            submittedAt: '20:00 12/10/2024',
           },
           dueDate: '20:00 10/10/2024',
           canEdit: false,
@@ -268,7 +268,7 @@ export const dataCourses = [
           status: 'graded',
           submittedFile: {
             name: 'group07_report 02.pdf',
-            submittedAt: '18:30 10/10/2024',
+            submittedAt: '18:30 12/10/2024',
           },
           dueDate: '20:00 10/10/2024',
           grade: 2.5,

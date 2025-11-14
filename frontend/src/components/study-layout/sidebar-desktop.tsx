@@ -227,7 +227,7 @@ const SidebarDesktop = ({ opened }: SidebarDesktopProps) => {
             />
           </Item>
 
-          {userLocalStore && userLocalStore.isManager && (
+          {userLocalStore && userLocalStore.statisticalPermission && (
 
             <Item
               opened={opened}
