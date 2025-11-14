@@ -13,7 +13,7 @@ import { mockLocations } from '@/components/data/~mock-register'
 import { getSessionById, updateSession, Session } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
-export const Route = createFileRoute('/schedule/$id/')({
+export const Route = createFileRoute('/_private/schedule/$id/')({
   component: RouteComponent,
 })
 

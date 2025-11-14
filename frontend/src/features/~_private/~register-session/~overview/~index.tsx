@@ -13,7 +13,7 @@ import { ResultTab } from './components/result-tab'
 // SVG helpers removed — icons used inside DataTab now
 
 // --- Định nghĩa Type --- (moved into DataTab)
-export const Route = createFileRoute('/register-session/overview/')({
+export const Route = createFileRoute('/_private/register-session/overview/')({
   component: RouteComponent,
 })
 

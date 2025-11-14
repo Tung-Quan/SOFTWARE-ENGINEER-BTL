@@ -13,7 +13,7 @@ import { getAllNames } from '@/components/data/~mock-names'
 import { saveSession, type SessionMember } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
-export const Route = createFileRoute('/schedule/request/')({
+export const Route = createFileRoute('/_private/schedule/request/')({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => {
     return {

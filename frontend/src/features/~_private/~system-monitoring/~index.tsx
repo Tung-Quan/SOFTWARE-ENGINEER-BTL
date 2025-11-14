@@ -7,7 +7,7 @@ import StudyLayout from '@/components/study-layout'
 
 
 // Định nghĩa route
-export const Route = createFileRoute('/system-monitoring/')({
+export const Route = createFileRoute('/_private/system-monitoring/')({
   component: RouteComponent,
 })
 

@@ -7,7 +7,7 @@ import { mockCourses } from '@/components/data/~mock-courses'
 import { createRequestSession } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
-export const Route = createFileRoute('/schedule/request/new/')({
+export const Route = createFileRoute('/_private/schedule/request/new/')({
   component: RouteComponent,
 })
 

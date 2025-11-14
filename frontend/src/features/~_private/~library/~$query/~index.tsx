@@ -14,7 +14,7 @@ import { searchVNULibrary } from '@/utils/vnu-library'
 
 import { BookDetailsModal } from './lib-popup'
 
-export const Route = createFileRoute('/library/$query/')({
+export const Route = createFileRoute('/_private/library/$query/')({
   component: RouteComponent,
 })
 

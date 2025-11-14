@@ -6,7 +6,7 @@ import { CoordinatorRegister } from './components/coordinator-register';
 import { StudentRegister } from './components/student-register';
 import { TutorRegister } from './components/tutor-register';
 
-export const Route = createFileRoute('/register-session/')({
+export const Route = createFileRoute('/_private/register-session/')({
   component: RouteComponent,
 })
 

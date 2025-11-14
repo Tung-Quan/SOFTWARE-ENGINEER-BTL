@@ -10,7 +10,7 @@ import StudyLayout from '@/components/study-layout'
 import { DeclinePopup } from './components/decline-popup'
 
 
-export const Route = createFileRoute('/schedule/history/$id/')({
+export const Route = createFileRoute('/_private/schedule/history/$id/')({
   component: RouteComponent,
 })
 

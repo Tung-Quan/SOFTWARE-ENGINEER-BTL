@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import StudyLayout from '@/components/study-layout'
 
-export const Route = createFileRoute('/library/')({
+export const Route = createFileRoute('/_private/library/')({
   component: RouteComponent,
 })
 

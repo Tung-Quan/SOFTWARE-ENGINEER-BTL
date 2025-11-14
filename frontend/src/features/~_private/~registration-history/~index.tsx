@@ -37,7 +37,7 @@ export function RemoveIcon(props: SVGProps<SVGSVGElement>) {
 
   )
 }
-export const Route = createFileRoute('/registration-history/')({
+export const Route = createFileRoute('/_private/registration-history/')({
   component: RouteComponent,
 });
 
@@ -133,23 +133,22 @@ function RouteComponent() {
     <StudyLayout>
       {user.isCoordinator ? (
         // --- GIAO DIỆN MANAGER ---
-        <div className="rounded bg-white p-4 shadow">
+        (<div className="rounded bg-white p-4 shadow">
           <h1 className="mb-4 text-2xl font-bold">Lịch sử đăng ký (Quản lý)</h1>
           <p className="mb-4">Tổng số: {registrations.length} đơn</p>
           <RegistrationTable registrations={registrations} isManager={true} onDelete={handleRemove} />
-        </div>
+        </div>)
       ) : (
         // --- GIAO DIỆN USER ---
-        <div className="rounded bg-white p-4 shadow">
+        (<div className="rounded bg-white p-4 shadow">
           <h1 className="mb-4 text-2xl font-bold">Lịch sử đăng ký của bạn</h1>
           {registrations.length > 0 ? (
             <RegistrationTable registrations={registrations} isManager={false} onDelete={handleRemove} />
           ) : (
             <p>Bạn chưa có lịch sử đăng ký nào.</p>
           )}
-        </div>
+        </div>)
       )}
-
     </StudyLayout>
   )
 }

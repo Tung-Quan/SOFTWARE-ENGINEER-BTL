@@ -6,7 +6,7 @@ import React, { useMemo, useState } from 'react'
 import { getMockSessions } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
-export const Route = createFileRoute('/schedule/history/')({
+export const Route = createFileRoute('/_private/schedule/history/')({
   component: RouteComponent,
 })
 

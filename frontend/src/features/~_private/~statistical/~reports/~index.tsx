@@ -3,10 +3,10 @@ import { useState } from 'react'
 
 import { ArrowLeft } from '@/components/icons'
 import StudyLayout from '@/components/study-layout'
-import ScoreBarChart from '@/features/~statistical/~reports/components/chart-placeholder'
-import { FilterPopup } from '@/features/~statistical/~reports/components/filter-popup'
-import ScorePieChart from '@/features/~statistical/~reports/components/score-piechart'
-export const Route = createFileRoute('/statistical/reports/')({
+import ScoreBarChart from '@/features/~_private/~statistical/~reports/components/chart-placeholder'
+import { FilterPopup } from '@/features/~_private/~statistical/~reports/components/filter-popup'
+import ScorePieChart from '@/features/~_private/~statistical/~reports/components/score-piechart'
+export const Route = createFileRoute('/_private/statistical/reports/')({
   component: RouteComponent,
 })
 

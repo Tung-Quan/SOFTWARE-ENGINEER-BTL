@@ -56,7 +56,7 @@ function CourseStatsCard({
 }
 
 // 3. Component chính của Route
-export const Route = createFileRoute('/statistical/overview/')({
+export const Route = createFileRoute('/_private/statistical/overview/')({
   component: RouteComponent,
 })
 

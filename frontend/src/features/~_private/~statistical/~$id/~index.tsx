@@ -5,7 +5,7 @@ import ArrowLeft from '@/components/icons/arrow-left';
 import StudyLayout from '@/components/study-layout';
 
 
-export const Route = createFileRoute('/statistical/$id/')({
+export const Route = createFileRoute('/_private/statistical/$id/')({
   component: RouteComponent,
 })
 
@@ -141,15 +141,15 @@ function RouteComponent() {
             </h2>
             <div className="space-y-3 text-gray-600">
               <p>
-                <span className="font-semibold">Mã khóa học:</span>{' '}
+                <span className="font-semibold">Mã khóa học:</span>{" "}
                 {course.code}
               </p>
               <p>
-                <span className="font-semibold">Tên khóa học:</span>{' '}
+                <span className="font-semibold">Tên khóa học:</span>{" "}
                 {course.title}
               </p>
               <p>
-                <span className="font-semibold">Giảng viên:</span>{' '}
+                <span className="font-semibold">Giảng viên:</span>{" "}
                 {course.instructor}
               </p>
             </div>
@@ -179,7 +179,7 @@ function RouteComponent() {
             <div className="text-gray-600">
               <p className="mb-2">
                 Có{' '}
-                <span className="font-semibold">{course.stats.documents}</span>{' '}
+                <span className="font-semibold">{course.stats.documents}</span>{" "}
                 tài liệu có sẵn trong khóa học này.
               </p>
               <p className="text-sm text-gray-500">

@@ -11,7 +11,7 @@ import StudyLayout from '@/components/study-layout'
 
 import { ScheduleDetailPopup } from './components/schedule-detail-popup'
 
-export const Route = createFileRoute('/schedule/')({
+export const Route = createFileRoute('/_private/schedule/')({
   component: RouteComponent,
 })
 
