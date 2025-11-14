@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_private/course/$id/rating/')({
   component: RouteComponent,
 });
 
-interface RatingItem {
+export interface RatingItem {
   id: string;
   title: string;
   rating: number;
@@ -52,7 +52,7 @@ interface UserStore {
   version: number;
 }
 
-function StarRating({
+export function StarRating({
   rating,
   onRate,
 }: {
@@ -101,10 +101,10 @@ function RouteComponent() {
 
   // Role checking variables
   const isStudent = userStore?.state?.user?.isStudent ?? false;
-  const isChairman = userStore?.state?.user?.isChairman ?? false;
+
   const isCoordinator = userStore?.state?.user?.isCoordinator ?? false;
-  const isManager = userStore?.state?.user?.isManager ?? false;
   const isTutor = userStore?.state?.user?.isTutor ?? false;
+  // const isTutor = true;
   const hasStatisticalPermission =
     userStore?.state?.user?.statisticalPermission ?? false;
 
@@ -196,7 +196,9 @@ function RouteComponent() {
             {/* Rating Table */}
             <div className="mt-8 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
               <div className="bg-[#4A5568] px-6 py-4">
-                <h2 className="text-lg font-semibold text-white">Tiêu đề</h2>
+                <h2 className="text-lg font-semibold text-white">
+                  Đánh giá môn học
+                </h2>
               </div>
               <div className="divide-y divide-gray-200">
                 {ratings.map((item) => (
@@ -303,7 +305,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -317,7 +319,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -331,7 +333,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -345,7 +347,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -359,7 +361,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -373,7 +375,7 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
           ></input>
           <div className="mt-6 flex flex-row items-center justify-start space-x-4">
             <Icon className="size-6" />
@@ -387,7 +389,21 @@ function RouteComponent() {
             onChange={(e) => {
               setComment(e.target.value);
             }}
-            placeholder="Tên danh mục"
+            placeholder="Nhận xét"
+          ></input>
+          <div className="mt-6 flex flex-row items-center justify-start space-x-4">
+            <Icon className="size-6" />
+            <p className="font-bold">Bạn có nhận xét thế nào về môn học</p>
+          </div>
+          <input
+            className="mt-4 h-36 w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm focus:outline-none"
+            style={{ boxShadow: '4px 4px 0 0 rgba(249,186,8,1)' }}
+            type="text"
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+            placeholder="Nhận xét"
           ></input>
         </div>
         <button className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
@@ -502,7 +518,7 @@ function RouteComponent() {
             {[1, 2, 3].map((index) => (
               <div
                 key={index}
-                className="rounded-lg border-2 border-gray-400 bg-white p-6 shadow-custom-yellow"
+                className="relative rounded-lg border-2 border-gray-400 bg-white p-6 shadow-custom-yellow"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -541,11 +557,24 @@ function RouteComponent() {
                     <span className="text-sm">19:00 {10 + index}/10/2024</span>
                   </div>
                 </div>
+                <div className="absolute bottom-10 right-3 ">
+                  <StarRating
+                    rating={4}
+                    onRate={(newRating) => {
+                      void newRating;
+                    }}
+                  />
+                </div>
+
+                <p className="text-[12px] italic">
+                  In MiniGo, an identifier is the name used to identify
+                  variables, constants, types, functions...
+                </p>
                 <button
                   onClick={() => {
                     navigate({ to: `/course/${id}/rating/1/$index` });
                   }}
-                  className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700"
+                  className="mt-2 rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700"
                 >
                   Xem đánh giá
                 </button>

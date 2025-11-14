@@ -1,24 +1,47 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
 
 import { ArrowLeft } from '@/components/icons';
 import StudyLayout from '@/components/study-layout';
+
+import { RatingItem, StarRating } from '../~index';
 
 export const Route = createFileRoute('/_private/course/$id/rating/$id/$index')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const [ratings, setRatings] = useState<RatingItem[]>(() => {
+    const saved = localStorage.getItem(`course-ratings-${1}`);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    // Default data
+    return Array.from({ length: 11 }, (_, i) => ({
+      id: `rating-${i + 1}`,
+      title:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ipsum magna, rutrum tempus urna quis, cursus porttitor neque. Aliquam commodo enim sit.',
+      rating: 3,
+    }));
+  });
+  void setRatings;
+  useEffect(() => {
+    localStorage.setItem(`course-ratings-${1}`, JSON.stringify(ratings));
+  }, [ratings]);
+
   return (
     <StudyLayout>
       <div className="w-full font-['Archivo']">
         {/* Back button */}
-        <Link
-          to="/dashboard"
+        <button
+          onClick={() => {
+            window.history.go(-1);
+          }}
           className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
         >
           <ArrowLeft className="size-5" />
           <span className="font-medium">Quay lại</span>
-        </Link>
+        </button>
 
         {/* User Info Card */}
         <div className="flex items-start gap-6">
@@ -60,6 +83,32 @@ function RouteComponent() {
           </div>
         </div>
 
+        <div className="flex w-full items-start gap-6">
+          {/* Rating Table */}
+          <div className="mt-8 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+            <div className="bg-[#4A5568] px-6 py-4">
+              <h2 className="text-lg font-semibold text-white">
+                Đánh giá môn học
+              </h2>
+            </div>
+            <div className="divide-y divide-gray-200">
+              {ratings.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between gap-6 px-6 py-4 transition hover:bg-gray-50"
+                >
+                  <p className="flex-1 text-sm text-gray-700">{item.title}</p>
+                  <StarRating
+                    rating={item.rating}
+                    onRate={(newRating) => {
+                      void newRating;
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         {/* Information Box */}
         <div
           className="mt-4 h-fit w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm focus:outline-none"
