@@ -121,9 +121,7 @@ export const mockCourses: Course[] = [
     instructor: 'Đặng Thị H',
     stats: { documents: 3, links: 1, assignments: 0 },
     bgImage: bgRed,
-    students: [
-      { name: 'Đinh Văn U', email: 'dinhvanu@student.hcmut.edu.vn' },
-    ],
+    students: [{ name: 'Đinh Văn U', email: 'dinhvanu@student.hcmut.edu.vn' }],
     sessionsOrganized: 8,
   },
   {
@@ -182,137 +180,151 @@ export const mockCourses: Course[] = [
   },
 ];
 
-export const dataCourses = [{
-  id: '4',
-  code: '79748_CO2013_003186_CLC',
-  title: 'Principles of Programming Language',
-  instructor: 'Nguyễn Hứa Phùng',
-  content: [
-    {
-      type: 'introduction',
-      title: 'Giới thiệu khóa học',
-      data: {
-        text: 'Đây là khóa học Principles of Programming Language. Khóa học cung cấp kiến thức nền tảng và thực hành về lĩnh vực này.'
-      }
-    },
-    {
-      type: 'material',
-      title: 'Material',
-      data: {
-        document: {
-          id: 'a1',
-          title: '01_Ch1 Introduction_2025',
-          description: 'Thiết kế bài tập về nhà chương 1: Giới thiệu về ngôn ngữ lập trình',
-          dueDate: '2024-09-15',
-          source: '01_Ch1_Introduction_2025.pdf',
-        }
-      }
-    },
-    {
-      type: 'movie',
-      title: 'Movie 1',
-      data: {
-        video: {
-          id: 'm1',
-          title: 'Giới thiệu về ngôn ngữ lập trình',
-          description: 'Video giới thiệu các khái niệm cơ bản về ngôn ngữ lập trình.',
-          url: 'https://www.youtube.com/watch?v=Kcp48dcm4QA',
-        }
-      }
-    },
-    {
-      type: 'note',
-      title: 'Note for Assignment 1',
-      data: {
-        assignment: {
-          id: 'd1',
-          title: 'Bài tập về nhà 1: Cài đặt ngôn ngữ lập trình đơn giản',
-          description: 'In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\tComposition: An identifier must start with a letter(A- Z or a - z) or an underscore().Subsequent characters can include letters, digits(0 - 9), or underscores.\n\tCase Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n\tLength: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n\tKeywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.',
-          dueDate: '2024-10-01',
-          source: 'assignment1.pdf',
-        }
-      }
-    },
-    {
-      type: 'reference',
-      title: 'Reference',
-      data: {
-        link: {
-          id: 'l1',
-          title: 'Giới thiệu về ngôn ngữ lập trình',
-          url: 'https://example.com/intro-to-programming-languages',
-        }
-      }
-    },
-    {
-      type: 'submission',
-      title: 'Submission 1',
-      data: {
-        status: 'submitted',
-        submittedFile: {
-          name: 'MiniGo_Specifications.pdf',
-          submittedAt: '20:00 10/10/2024'
+export const dataCourses = [
+  {
+    id: '4',
+    code: '79748_CO2013_003186_CLC',
+    title: 'Principles of Programming Language',
+    instructor: 'Nguyễn Hứa Phùng',
+    content: [
+      {
+        type: 'introduction',
+        title: 'Giới thiệu khóa học',
+        data: {
+          text: 'Đây là khóa học Principles of Programming Language. Khóa học cung cấp kiến thức nền tảng và thực hành về lĩnh vực này.',
         },
-        dueDate: '20:00 10/10/2024',
-        canEdit: false,
-        maxFiles: 1,
-        allowedTypes: ['pdf', 'doc', 'docx']
-      }
-    },
-    {
-      type: 'submission',
-      title: 'Submission 2',
-      data: {
-
-        status: 'graded',
-        submittedFile: {
-          name: 'group07_report 02.pdf',
-          submittedAt: '18:30 10/10/2024'
+      },
+      {
+        type: 'material',
+        title: 'Material',
+        data: {
+          document: {
+            id: 'a1',
+            title: '01_Ch1 Introduction_2025',
+            description:
+              'Thiết kế bài tập về nhà chương 1: Giới thiệu về ngôn ngữ lập trình',
+            dueDate: '2024-09-15',
+            source: '01_Ch1_Introduction_2025.pdf',
+          },
         },
-        dueDate: '20:00 10/10/2024',
-        grade: 2.5,
-        maxGrade: 10,
-        feedback: 'Lorem ipsum',
-        canEdit: false,
-        maxFiles: 2,
-        allowedTypes: ['pdf', 'docx']
-      }
-    },
-    {
-      type: 'submission',
-      title: 'Submission 3',
-      data: {
-        status: 'not-submitted',
-        dueDate: '20:00 15/11/2024',
-        canEdit: true,
-        maxFiles: 3,
-        allowedTypes: ['pdf', 'docx', 'zip']
-      }
-    },
-    {
-      type: 'reference',
-      title: 'Reference 2',
-      data: {
-        link: {
-          id: 'l3',
-          title: 'Các cấu trúc dữ liệu cơ bản',
-          url: 'https://example.com/basic-data-structures',
-        }
-      }
-    }
-  ]
-}];
+      },
+      {
+        type: 'movie',
+        title: 'Movie 1',
+        data: {
+          video: {
+            id: 'm1',
+            title: 'Giới thiệu về ngôn ngữ lập trình',
+            description:
+              'Video giới thiệu các khái niệm cơ bản về ngôn ngữ lập trình.',
+            url: 'https://www.youtube.com/watch?v=Kcp48dcm4QA',
+          },
+        },
+      },
+      {
+        type: 'note',
+        title: 'Note for Assignment 1',
+        data: {
+          assignment: {
+            id: 'd1',
+            title: 'Bài tập về nhà 1: Cài đặt ngôn ngữ lập trình đơn giản',
+            description:
+              'In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\tComposition: An identifier must start with a letter(A- Z or a - z) or an underscore().Subsequent characters can include letters, digits(0 - 9), or underscores.\n\tCase Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n\tLength: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n\tKeywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.',
+            dueDate: '2024-10-01',
+            source: 'assignment1.pdf',
+          },
+        },
+      },
+      {
+        type: 'reference',
+        title: 'Reference',
+        data: {
+          link: {
+            id: 'l1',
+            title: 'Giới thiệu về ngôn ngữ lập trình',
+            url: 'https://example.com/intro-to-programming-languages',
+          },
+        },
+      },
+      {
+        type: 'submission',
+        title: 'Submission 1',
+        data: {
+          status: 'submitted',
+          submittedFile: {
+            name: 'MiniGo_Specifications.pdf',
+            submittedAt: '20:00 10/10/2024',
+          },
+          dueDate: '20:00 10/10/2024',
+          canEdit: false,
+          maxFiles: 1,
+          allowedTypes: ['pdf', 'doc', 'docx'],
+        },
+      },
+      {
+        type: 'submission',
+        title: 'Submission 2',
+        data: {
+          status: 'graded',
+          submittedFile: {
+            name: 'group07_report 02.pdf',
+            submittedAt: '18:30 10/10/2024',
+          },
+          dueDate: '20:00 10/10/2024',
+          grade: 2.5,
+          maxGrade: 10,
+          feedback: 'Lorem ipsum',
+          canEdit: false,
+          maxFiles: 2,
+          allowedTypes: ['pdf', 'docx'],
+        },
+      },
+      {
+        type: 'submission',
+        title: 'Submission 3',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ipsum magna, rutrum tempus urna quis,',
+        data: {
+          status: 'not-submitted',
+          dueDate: '20:00 15/11/2024',
+          canEdit: true,
+          maxFiles: 3,
+          allowedTypes: ['pdf', 'docx', 'zip'],
+        },
+      },
+      {
+        type: 'reference',
+        title: 'Reference 2',
+        data: {
+          link: {
+            id: 'l3',
+            title: 'Các cấu trúc dữ liệu cơ bản',
+            url: 'https://example.com/basic-data-structures',
+          },
+        },
+      },
+    ],
+  },
+];
 // Mock: số lượng bài đã nộp theo khóa học và submission
 // key: courseId -> key: submission key (tên hoặc id) -> số bài đã nộp
-export const mockSubmissionSubmittedCounts: Record<string, Record<string, number>> = {
+export const mockSubmissionSubmittedCounts: Record<
+  string,
+  Record<string, number>
+> = {
   '4': {
     // 'Submission 1' trong dataCourses cho course id 4
     submission1: 1,
   },
 };
 
-
-export const mockSubmissionEntries: Record<string, Record<string, Array<{ name: string; email: string; submittedAt: string; score?: number }>>> = {
+export const mockSubmissionEntries: Record<
+  string,
+  Record<
+    string,
+    Array<{ name: string; email: string; submittedAt: string; score?: number }>
+  >
+> = {
   '4': {
     submission1: [
       {

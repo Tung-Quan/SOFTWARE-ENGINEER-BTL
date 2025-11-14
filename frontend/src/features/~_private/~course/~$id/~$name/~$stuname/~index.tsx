@@ -5,6 +5,7 @@ import React, { useState, type SVGProps, useMemo } from 'react';
 import { mockSessions } from '@/components/data/~mock-session';
 import { getSubmission, updateSubmission } from '@/components/data/~mock-submissions';
 import StudyLayout from '@/components/study-layout';
+import filePDF from 'public/group07_report 02.pdf';
 
 
 /**
@@ -262,10 +263,9 @@ function RouteComponent() {
             <div className="rounded-lg bg-white p-4 shadow-xl md:p-6">
               <div className="aspect-[3/4] max-h-[1000px] w-full overflow-hidden rounded-md border border-gray-200">
                 <iframe
-                  src={matchingEntry.fileUrl} // [Dùng matchingEntry]
+                  src={filePDF} // [Dùng matchingEntry]
                   className="size-full"
                   title={`Bài nộp của ${matchingEntry.name}`}
-                  frameBorder="0"
                 />
               </div>
             </div>

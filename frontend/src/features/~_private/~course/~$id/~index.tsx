@@ -8,11 +8,13 @@ import { Paper as PaperIcon } from '@/components/icons';
 import ArrowLeft from '@/components/icons/arrow-left';
 import BookIcon from '@/components/icons/book';
 import CalendarIcon from '@/components/icons/calendar';
+import DescriptionIcon from '@/components/icons/description';
 import LinkIcon from '@/components/icons/link';
 import StudyLayout from '@/components/study-layout';
+import filePDF from 'public/group07_report 02.pdf';
 
 import { CheckCircleIcon, FolderIcon } from './components/course-icons';
-import pdfIcon from './components/pdfIcon.png'
+import pdfIcon from './components/pdfIcon.png';
 
 export const Route = createFileRoute('/_private/course/$id/')({
   component: CourseDetailsComponent,
@@ -746,8 +748,10 @@ function CourseDetailsComponent() {
                       {/* Inline PDF viewer - falls back to link if browser can't render */}
                       <div className="overflow-hidden rounded-md border">
                         <iframe
-                          src={getAssetUrl(item.data.document.source)}
+                          src={filePDF}
                           title={item.data.document.title}
+                          width="100%"
+                          height="600px"
                           className="h-[600px] w-full bg-white"
                         />
                       </div>
@@ -1546,9 +1550,10 @@ function CourseDetailsComponent() {
                                   key={type.id}
                                   value={type.id}
                                   className={({ active }) =>
-                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${active
-                                      ? 'bg-blue-100 text-blue-900'
-                                      : 'text-gray-900'
+                                    `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                                      active
+                                        ? 'bg-blue-100 text-blue-900'
+                                        : 'text-gray-900'
                                     }`
                                   }
                                 >
@@ -1640,12 +1645,15 @@ function CourseDetailsComponent() {
                 {/* Grid 2 cột */}
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
                   {/* Cột bên trái */}
-                  <div className="space-y-6">
+                  <div className="space-y-2">
                     {/* Hạn chót */}
-                    <div>
-                      <label className="mb-2 flex items-center text-sm font-medium text-gray-700">
+                    <div className="flex flex-col gap-y-2">
+                      <div className="flex flex-row space-x-3">
+                        {' '}
                         <CalendarIcon className="mr-2 size-5 text-gray-500" />
                         Hạn chót
+                      </div>
+                      <label className="mb-2 flex items-center text-sm font-medium text-gray-700">
                         <input
                           type="datetime-local" // Dùng datetime-local để có cả ngày và giờ
                           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
@@ -1658,11 +1666,11 @@ function CourseDetailsComponent() {
                     </div>
 
                     {/* Các đuôi tệp cho phép */}
-                    <div className="mt-10 pt-6">
-                      <label className="mb-2 flex items-center text-sm font-medium text-gray-700">
+                    <div className=" -mt-4">
+                      <div className="mb-2 flex items-center text-sm font-medium text-gray-700">
                         <CheckCircleIcon className="mr-2 size-5 text-gray-500" />
                         Các đuôi tệp cho phép
-                      </label>
+                      </div>
                       <input
                         type="text"
                         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
@@ -1744,23 +1752,15 @@ function CourseDetailsComponent() {
                         }
                       />
                     </div>
-
-                    {/* Định dạng file cho phép (hiển thị/preview) */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-700">
-                        Định dạng cho phép
-                      </label>
-                      <div className="text-sm text-gray-600">
-                        {item.data.allowedTypes &&
-                          item.data.allowedTypes.length > 0
-                          ? item.data.allowedTypes.join(', ')
-                          : item.data.allowedExtensions || 'Không có'}
-                      </div>
-                    </div>
                   </div>
                 </div>
 
                 {/* Các nút bấm ở dưới */}
+                <p className="mt-4">Mô tả</p>
+                <input
+                  className=" mt-2 h-12 w-full rounded-md border border-gray-500 pl-2 text-left focus:outline-none"
+                  type="text"
+                />
                 <div className="mt-8 flex justify-end gap-3">
                   <button className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700">
                     Xóa bài nộp
@@ -1875,12 +1875,20 @@ function CourseDetailsComponent() {
 
                 {item.data.status === 'not-submitted' && (
                   <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <DescriptionIcon className="size-4" />
+                      <span>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Donec ipsum magna, rutrum tempus urna quis
+                      </span>
+                    </div>
                     <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
                       <p className="mb-4 text-gray-500">Chưa có bài nộp</p>
                       <button className="rounded-lg bg-[#0329E9] px-6 py-2 font-medium text-white transition hover:bg-blue-700">
                         + Thêm bài nộp
                       </button>
                     </div>
+
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <CalendarIcon className="size-4" />
                       <span>Hạn chót: {item.data.dueDate}</span>
@@ -1895,7 +1903,6 @@ function CourseDetailsComponent() {
         return null;
     }
   };
-
 
   if (!course) {
     return (
@@ -2064,7 +2071,9 @@ function CourseDetailsComponent() {
               <div className="text-gray-600">
                 <p className="mb-2">
                   Có{' '}
-                  <span className="font-semibold">{course.stats.documents}</span>{' '}
+                  <span className="font-semibold">
+                    {course.stats.documents}
+                  </span>{' '}
                   tài liệu có sẵn trong khóa học này.
                 </p>
                 <p className="text-sm text-gray-500">
@@ -2083,7 +2092,9 @@ function CourseDetailsComponent() {
               <div className="text-gray-600">
                 <p className="mb-4">
                   Tổng số học viên:{' '}
-                  <span className="font-semibold">{course.students.length}</span>
+                  <span className="font-semibold">
+                    {course.students.length}
+                  </span>
                 </p>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
@@ -2122,7 +2133,7 @@ function CourseDetailsComponent() {
           </div>
         </div>
       </StudyLayout>
-    )
+    );
   }
 
   // Nếu có data chi tiết, hiển thị layout với sidebar tabs
@@ -2236,8 +2247,9 @@ function CourseDetailsComponent() {
                         className={`relative ${isFirst ? 'mt-2' : 'mt-8'} flex w-full items-center gap-3 pl-3 text-left transition-colors`}
                       >
                         <div
-                          className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${isActive ? 'border-[#0329E9]' : 'border-gray-300'
-                            }`}
+                          className={`absolute -left-6 flex size-7 items-center justify-center rounded-full border-2 bg-white transition ${
+                            isActive ? 'border-[#0329E9]' : 'border-gray-300'
+                          }`}
                         >
                           <div
                             className={`size-2 rounded-full transition ${isActive ? 'bg-[#0329E9]' : 'bg-transparent'}`}
@@ -2390,12 +2402,11 @@ function CourseDetailsComponent() {
     );
   }
 
-    return(
-      <StudyLayout>
-        <Link to="/dashboard" className="hover:font-bold">
-          NOTHING FOUND COMBACK LATER
-        </Link>
-      </StudyLayout>
-    )
-
+  return (
+    <StudyLayout>
+      <Link to="/dashboard" className="hover:font-bold">
+        NOTHING FOUND COMBACK LATER
+      </Link>
+    </StudyLayout>
+  );
 }
