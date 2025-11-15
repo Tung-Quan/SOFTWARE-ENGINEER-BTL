@@ -28,7 +28,7 @@ export const Route = createFileRoute('/_private/schedule/request/')({
 // === COMPONENT CHÍNH CỦA TRANG ===
 function RouteComponent() {
   const navigate = useNavigate()
-  const searchParams = useSearch({ from: '/schedule/request/' })
+  const searchParams = useSearch({ from: '/_private/schedule/request/' })
   
   // Form states
   const [title, setTitle] = useState(searchParams.title || '')
