@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from '@tanstack/react-router';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -69,6 +69,8 @@ export function StudentRegister() {
   const [specialRequest, setSpecialRequest] = useState(
     ``
   );
+  const [desiredScore, setDesiredScore] = useState(4.0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,16 +85,7 @@ export function StudentRegister() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="relative h-40 bg-blue-800 p-6 text-white">
-        <button className="flex items-center gap-2 text-sm font-medium opacity-90 hover:opacity-100">
-          <ArrowLeftIcon className="size-5" />
-          Quay lại
-        </button>
-        <h1 className="mt-4 text-3xl font-bold">
-          Register Tutor Program - Student
-        </h1>
-      </header>
+
 
       {/* Form Content */}
       <main className="p-6">
@@ -156,6 +149,16 @@ export function StudentRegister() {
                 }
               />
             </FormSection>
+            {/* Điểm mong muốn */}
+            <FormSection title="Điểm mong muốn">
+              <FormTextArea
+                value={desiredScore.toString()}
+                onChange={(e) => setDesiredScore(parseFloat(e.target.value))}
+                rows={1}
+                placeholder="4.0"
+              />
+            </FormSection>
+
           </div>
 
           {/* Footer Nút bấm */}
@@ -190,7 +193,7 @@ export function StudentRegister() {
                     id: `reg-${Date.now()}`,
                     studentName: `${stuName}`,
                     studentEmail: `${stuEmail}`,
-                    course: subject ,
+                    course: subject,
                     language,
                     sessionType,
                     specialRequest,

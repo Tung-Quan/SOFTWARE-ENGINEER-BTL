@@ -9,6 +9,9 @@
 ## 🎨 Class Diagram (UML)
 
 ```mermaid
+---
+id: 300a9a66-206d-4437-954d-8c1c1f52dd9d
+---
 classDiagram
     %% ==================== CORE ENTITIES ====================
     
