@@ -7,6 +7,7 @@ import StudyLayout from '@/components/study-layout'
 import { CoordinatorRegister } from './components/coordinator-register';
 import { StudentRegister } from './components/student-register';
 import { TutorRegister } from './components/tutor-register';
+import AdminRegister from './components/admin-register';
 
 export const Route = createFileRoute('/_private/register-session/')({
   component: RouteComponent,
@@ -25,7 +26,7 @@ function RouteComponent() {
     document.title = 'Register Tutor Program - BK Learning';
   }, []);
 
-  
+
   const rawUserStore = localStorage.getItem('userStore');
   const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
   const State = userStore?.state ?? null;
@@ -40,6 +41,13 @@ function RouteComponent() {
   if (userLocalStore.isCoordinator) {
     return (<StudyLayout>
       <CoordinatorRegister />
+    </StudyLayout>
+    );
+  }
+
+  if (userLocalStore.isChairman){
+    return (<StudyLayout>
+      <AdminRegister />
     </StudyLayout>
     );
   }
@@ -61,7 +69,7 @@ function RouteComponent() {
         <button className="absolute right-6 top-6 rounded bg-white/20 px-4 py-2 text-sm font-medium hover:bg-white/30"
           onClick={() => setRole(role === 'student' ? 'tutor' : 'student')}
         >
-          {role === 'student' ? 'Đăng ký với tư cách gia sư' : 'Đăng ký với tư cách học sinh'}
+          {role === 'student' ? 'Đăng ký với tư cách học sinh' : 'Đăng ký với tư cách gia sư'}
         </button>
       </header>
 

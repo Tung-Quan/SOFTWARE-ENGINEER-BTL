@@ -182,11 +182,7 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
   // draggingId removed (not needed) to avoid unused-state lint warnings
 
   // Get user info
-  const rawUserStore = localStorage.getItem('userStore');
-  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-  const State = userStore?.state ?? null;
-  const userLocalStore = State?.user ?? null;
-  const isTutor = userLocalStore?.isTutor ?? false;
+  const isTutor = true;
 
   // Load students and conversations
   useState(() => {
@@ -553,40 +549,42 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
               {/* Selected members (draggable, ordered) */}
               <div className="mb-3">
                 <div className="mb-2 text-sm font-medium text-gray-700">Thành viên đã chọn</div>
-                <div className="flex flex-col gap-2 overflow-auto" style={{ maxHeight: '18vh', paddingRight: '0.5rem' }}>
-                  {selectedOrder.map((id, idx) => {
-                    const member = allStudents.find((s) => s.id === id);
-                    if (!member) return null;
-                    return (
-                      <div
-                        key={id}
-                        draggable
-                        onDragStart={(e) => onDragStartSelectedItem(e, id)}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => onDropSelectedItem(e, idx)}
-                        className="cursor-move rounded-lg border bg-white p-3"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-800">{member.name}</span>
-                          <button
-                            onClick={() => handleRemoveSelectedById(id)}
-                            aria-label={`Xóa ${member.name}`}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <TrashIcon />
-                          </button>
+                <div className="rounded-lg border border-gray-200 p-2">
+                  <div className="flex max-h-28 flex-col gap-2 overflow-auto pr-2">
+                    {selectedOrder.map((id, idx) => {
+                      const member = allStudents.find((s) => s.id === id);
+                      if (!member) return null;
+                      return (
+                        <div
+                          key={id}
+                          draggable
+                          onDragStart={(e) => onDragStartSelectedItem(e, id)}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={(e) => onDropSelectedItem(e, idx)}
+                          className="cursor-move rounded-lg bg-white p-3"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-800">{member.name}</span>
+                            <button
+                              onClick={() => handleRemoveSelectedById(id)}
+                              aria-label={`Xóa ${member.name}`}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <TrashIcon />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
                 <div
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={onDropToSelected}
-                  className="overflow-auto"
-                  style={{ maxHeight: '36vh', paddingRight: '0.5rem' }}
+                  className="overflow-auto rounded-lg border border-gray-200 p-2"
+                  style={{ maxHeight: '30vh', paddingRight: '0.5rem' }}
                 >
                   {allStudents.map((student) => {
                     const isSelected = selectedMembers.has(student.id);
@@ -622,7 +620,6 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
             </div>
           </div>
 
-          {/* Create button */}
           <div className="border-t border-gray-200 p-4">
             <button
               onClick={handleCreateGroup}

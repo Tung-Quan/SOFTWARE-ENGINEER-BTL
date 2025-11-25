@@ -125,360 +125,202 @@ export function CoordinatorRegister() {
 
   return (
 
-      <div className="min-h-screen bg-gray-100">
-        {/* Header */}
-        <header className="relative h-40 bg-blue-800 p-6 text-white">
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="relative h-40 bg-blue-800 p-6 text-white">
 
-          <div className="relative z-10 flex items-center justify-between">
-            <h1 className="mt-4 text-3xl font-bold">
-              Create New Course - Coordinator
-            </h1>
-            <div className="mt-4 flex items-center gap-3">
+        <div className="relative z-10 flex items-center justify-between">
+          <h1 className="mt-4 text-3xl font-bold">
+            Create New Course - Coordinator
+          </h1>
+          <div className="mt-4 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate({ to: '/register-session/overview' })}
+              className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
+            >
+              <OverviewIcon className="size-6" />
+              <span className="font-medium">Overview</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsHistoryModalOpen(true)}
+              className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
+            >
+              <HistoryIcon className="size-6" />
+              <span className="font-medium">Lịch sử</span>
+            </button>
+            {/* <button
+              type="button"
+              onClick={() => setIsScheduleModalOpen(true)}
+              className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
+            >
+              <ClockIcon className="size-6" />
+              <span className="font-medium">Thêm lịch học</span>
+            </button> */}
+          </div>
+        </div>
+      </header>
+
+      {/* Modal Lịch sử môn học đã tạo */}
+      {isHistoryModalOpen && (
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/50 p-4" onClick={() => setIsHistoryModalOpen(false)}>
+          <div className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-gray-200 bg-blue-700 p-6 text-white">
+              <h2 className="text-2xl font-bold">Lịch sử môn học đã tạo</h2>
               <button
                 type="button"
-                onClick={() => navigate({ to: '/register-session/overview' })}
-                className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
+                onClick={() => setIsHistoryModalOpen(false)}
+                className="rounded-lg p-2 hover:bg-white/20"
               >
-                <OverviewIcon className="size-6" />
-                <span className="font-medium">Overview</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsHistoryModalOpen(true)}
-                className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
-              >
-                <HistoryIcon className="size-6" />
-                <span className="font-medium">Lịch sử</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsScheduleModalOpen(true)}
-                className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
-              >
-                <ClockIcon className="size-6" />
-                <span className="font-medium">Thêm lịch học</span>
+                <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-          </div>
-        </header>
 
-        {/* Modal Lịch sử môn học đã tạo */}
-        {isHistoryModalOpen && (
-          <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/50 p-4" onClick={() => setIsHistoryModalOpen(false)}>
-            <div className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-lg bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between border-b border-gray-200 bg-blue-700 p-6 text-white">
-                <h2 className="text-2xl font-bold">Lịch sử môn học đã tạo</h2>
-                <button
-                  type="button"
-                  onClick={() => setIsHistoryModalOpen(false)}
-                  className="rounded-lg p-2 hover:bg-white/20"
-                >
-                  <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+            <div className="max-h-[calc(90vh-120px)] overflow-y-auto p-6">
+              {mockCourseCreationRequests.length === 0 ? (
+                <div className="py-12 text-center text-gray-500">
+                  <HistoryIcon className="mx-auto mb-4 size-16 opacity-20" />
+                  <p className="text-lg">Chưa có môn học nào được tạo</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {mockCourseCreationRequests.map((request) => (
+                    <div
+                      key={request.id}
+                      className="rounded-lg border border-gray-200 bg-white p-6 shadow-custom-yellow transition hover:shadow-md"
+                    >
+                      <div className="mb-4 flex items-start justify-between">
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">
+                            {request.courseName}
+                          </h3>
+                          <p className="text-sm text-gray-500">Mã: {request.courseCode}</p>
+                        </div>
+                         {/* <span
+                          className={`rounded-full px-3 py-1 text-sm font-medium ${request.status === 'Approved'
+                            ? 'bg-green-100 text-green-800'
+                            : request.status === 'Rejected'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                        >
+                          {request.status === 'Approved' ? 'Đã duyệt' : request.status === 'Rejected' ? 'Bị từ chối' : 'Chờ duyệt'}
+                        </span> */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`Bạn có chắc chắn muốn xóa môn học "${request.courseName}"?`)) {
+                              const index = mockCourseCreationRequests.findIndex(r => r.id === request.id);
+                              if (index > -1) {
+                                mockCourseCreationRequests.splice(index, 1);
+                                // Force re-render by closing and reopening modal
+                                setIsHistoryModalOpen(false);
+                                setTimeout(() => setIsHistoryModalOpen(true), 0);
+                              }
+                            }
+                          }}
+                          className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
+                          title="Xóa môn học"
+                        >
+                          <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                      {/* <div className="mb-4 flex items-center text-sm text-gray-600">
+                        <span className="ml-4 border p-2 text-sm italic text-gray-600">"{request.reasons}"</span>
+                      </div> */}
 
-              <div className="max-h-[calc(90vh-120px)] overflow-y-auto p-6">
-                {mockCourseCreationRequests.length === 0 ? (
-                  <div className="py-12 text-center text-gray-500">
-                    <HistoryIcon className="mx-auto mb-4 size-16 opacity-20" />
-                    <p className="text-lg">Chưa có môn học nào được tạo</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {mockCourseCreationRequests.map((request) => (
-                      <div
-                        key={request.id}
-                        className="rounded-lg border border-gray-200 bg-white p-6 shadow-custom-yellow transition hover:shadow-md"
-                      >
-                        <div className="mb-4 flex items-start justify-between">
-                          <div>
-                            <h3 className="text-xl font-bold text-gray-900">
-                              {request.courseName}
-                            </h3>
-                            <p className="text-sm text-gray-500">Mã: {request.courseCode}</p>
-                          </div>
-                          <span
-                            className={`rounded-full px-3 py-1 text-sm font-medium ${request.status === 'Approved'
-                                ? 'bg-green-100 text-green-800'
-                                : request.status === 'Rejected'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-yellow-100 text-yellow-800'
-                              }`}
-                          >
-                            {request.status === 'Approved' ? 'Đã duyệt' : request.status === 'Rejected' ? 'Bị từ chối' : 'Chờ duyệt'}
+                      <div className="space-y-2 text-sm text-gray-700">
+                        <p className="line-clamp-2">{request.description}</p>
+
+                        <div className="flex flex-wrap gap-4 pt-2">
+                          {request.languages.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <LanguageIcon className="size-4" />
+                              <span>{request.languages.map(l => l.name).join(', ')}</span>
+                            </div>
+                          )}
+
+                          {request.sessionTypes.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <SessionTypeIcon className="size-4" />
+                              <span>{request.sessionTypes.map(t => t.name).join(', ')}</span>
+                            </div>
+                          )}
+
+                          {/* {request.timeSlots && request.timeSlots.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <ClockIcon className="size-4" />
+                              <span>{request.timeSlots.length} khung giờ</span>
+                            </div>
+                          )} */}
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 text-xs text-gray-500">
+                          <span>Tạo bởi: {request.coordinatorName}</span>
+                          <span>
+                            {new Date(request.createdAt).toLocaleDateString('vi-VN', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
                           </span>
                         </div>
-
-                        <div className="space-y-2 text-sm text-gray-700">
-                          <p className="line-clamp-2">{request.description}</p>
-
-                          <div className="flex flex-wrap gap-4 pt-2">
-                            {request.languages.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <LanguageIcon className="size-4" />
-                                <span>{request.languages.map(l => l.name).join(', ')}</span>
-                              </div>
-                            )}
-
-                            {request.sessionTypes.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <SessionTypeIcon className="size-4" />
-                                <span>{request.sessionTypes.map(t => t.name).join(', ')}</span>
-                              </div>
-                            )}
-
-                            {request.timeSlots && request.timeSlots.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <ClockIcon className="size-4" />
-                                <span>{request.timeSlots.length} khung giờ</span>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 text-xs text-gray-500">
-                            <span>Tạo bởi: {request.coordinatorName}</span>
-                            <span>
-                              {new Date(request.createdAt).toLocaleDateString('vi-VN', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </span>
-                          </div>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Hẹn giờ */}
-        {isScheduleModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setIsScheduleModalOpen(false)}>
-            <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-              <h2 className="mb-4 text-xl font-bold text-gray-800">Thêm lịch dạy</h2>
-
-              <div className="space-y-4">
-                {/* Date picker */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">Chọn ngày</label>
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    placeholder="Chọn ngày dạy"
-                    className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Time picker */}
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">Chọn giờ</label>
-                  <input
-                    type="time"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                    placeholder="Chọn giờ dạy"
-                    className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Display added time slots */}
-                {addedTimeSlots.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-700">Các khung giờ đã thêm:</p>
-                    <div className="max-h-32 space-y-1 overflow-y-auto">
-                      {addedTimeSlots.map(slot => (
-                        <div key={slot.id} className="flex items-center justify-between rounded bg-blue-50 px-3 py-2 text-sm">
-                          <span>{slot.date} - {slot.time}</span>
-                          <button
-                            type="button"
-                            onClick={() => setAddedTimeSlots(addedTimeSlots.filter(s => s.id !== slot.id))}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Modal footer */}
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsScheduleModalOpen(false)}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Đóng
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (selectedDate && selectedTime) {
-                      const newSlot = {
-                        id: `slot-${Date.now()}`,
-                        date: selectedDate,
-                        time: selectedTime
-                      };
-                      setAddedTimeSlots([...addedTimeSlots, newSlot]);
-                      setSelectedDate('');
-                      setSelectedTime('');
-                    }
-                  }}
-                  className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
-                >
-                  Thêm
-                </button>
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Form Content */}
-        <main className="p-6">
-          <form
-            className="relative rounded-lg bg-white shadow-lg"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            {/* Container cho các trường */}
-            <div className="space-y-8 p-8">
+      {/* Modal Hẹn giờ */}
+      {isScheduleModalOpen && (
+        <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/50" onClick={() => setIsScheduleModalOpen(false)}>
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h2 className="mb-4 text-xl font-bold text-gray-800">Thêm lịch dạy</h2>
 
-              {/* Tên môn học */}
-              <FormSection title="Tên môn học">
+            <div className="space-y-4">
+              {/* Date picker */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Chọn ngày</label>
                 <input
-                  type="text"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                  placeholder="Nhập tên môn học..."
-                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  placeholder="Chọn ngày dạy"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 />
-              </FormSection>
+              </div>
 
-              {/* Mã môn học */}
-              <FormSection title="Mã môn học">
+              {/* Time picker */}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Chọn giờ</label>
                 <input
-                  type="text"
-                  value={courseCode}
-                  onChange={(e) => setCourseCode(e.target.value)}
-                  placeholder="Ví dụ: CS401, IT302..."
-                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+                  type="time"
+                  value={selectedTime}
+                  onChange={(e) => setSelectedTime(e.target.value)}
+                  placeholder="Chọn giờ dạy"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                 />
-              </FormSection>
+              </div>
 
-              {/* [SỬA] Ngôn ngữ (Dropdown + Nút Thêm) */}
-              <FormSection title="Ngôn ngữ">
-                <FormDropdown
-                  icon={<LanguageIcon className="size-5" />}
-                  options={mockLanguages}
-                  selected={language}
-                  onSelect={setLanguage}
-                />
-                <AddButton title="Thêm ngôn ngữ" onClick={() => addIfNotExists(addedLanguages, setAddedLanguages, language)} />
-
-                {addedLanguages.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {addedLanguages.map(l => (
-                      <span key={l.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
-                        {l.name}
-                        <button type="button" onClick={() => removeItem(addedLanguages, setAddedLanguages, l.id)} className="text-gray-500">✕</button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </FormSection>
-
-              {/* [SỬA] Loại hình (Dropdown + Nút Thêm, icon mới) */}
-              <FormSection title="Loại hình">
-                <FormDropdown
-                  icon={<SessionTypeIcon className="size-5" />}
-                  options={sessionTypeOptions}
-                  selected={sessionType}
-                  onSelect={setSessionType}
-                />
-                <AddButton title="Thêm loại hình" onClick={() => addIfNotExists(addedSessionTypes, setAddedSessionTypes, sessionType)} />
-
-                {addedSessionTypes.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {addedSessionTypes.map(t => (
-                      <span key={t.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
-                        {t.name}
-                        <button type="button" onClick={() => removeItem(addedSessionTypes, setAddedSessionTypes, t.id)} className="text-gray-500">✕</button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </FormSection>
-
-              {/* [SỬA] Địa điểm (Chỉ hiện khi đã thêm "Học trực tiếp") */}
-              {addedSessionTypes.some(t => t.id === 'online') && (
-                <FormSection title="Địa điểm">
-                  <FormDropdown
-                    icon={<LocationIcon className="size-5" />}
-                    options={mockLocations}
-                    selected={location}
-                    onSelect={setLocation}
-                  />
-                  <div className="mt-2">
-                    <AddButton title="Thêm địa điểm" onClick={() => addIfNotExists(addedLocations, setAddedLocations, location)} />
-                    {addedLocations.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {addedLocations.map(l => (
-                          <span key={l.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
-                            {l.name}
-                            <button type="button" onClick={() => removeItem(addedLocations, setAddedLocations, l.id)} className="text-gray-500">✕</button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </FormSection>
-              )}
-
-              {/* Link meet cho các loại hình hybrid (Chỉ hiện khi đã thêm "Học hybrid") */}
-              {addedSessionTypes.some(t => t.id === 'hybrid') && (
-                <FormSection title="Link buổi học hybrid">
-                  <input
-                    type="text"
-                    value={meetLink}
-                    onChange={(e) => setMeetLink(e.target.value)}
-                    placeholder="https://meet.example.com/abc-123"
-                    className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </FormSection>
-              )}
-
-              {/* Mô tả môn học */}
-              <FormSection title="Mô tả môn học">
-                <FormTextArea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Nhập mô tả chi tiết về môn học, nội dung, mục tiêu..."
-                  rows={8}
-                />
-              </FormSection>
-
-              {/* Hiển thị các khung giờ đã hẹn */}
+              {/* Display added time slots */}
               {addedTimeSlots.length > 0 && (
-                <FormSection title="Lịch dạy đã thêm">
-                  <div className="space-y-2">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-700">Các khung giờ đã thêm:</p>
+                  <div className="max-h-32 space-y-1 overflow-y-auto">
                     {addedTimeSlots.map(slot => (
-                      <div key={slot.id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-blue-50 px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <ClockIcon className="size-5" />
-                          <span className="text-sm font-medium text-gray-800">
-                            {new Date(slot.date).toLocaleDateString('vi-VN')} - {slot.time}
-                          </span>
-                        </div>
+                      <div key={slot.id} className="flex items-center justify-between rounded bg-blue-50 px-3 py-2 text-sm">
+                        <span>{slot.date} - {slot.time}</span>
                         <button
                           type="button"
                           onClick={() => setAddedTimeSlots(addedTimeSlots.filter(s => s.id !== slot.id))}
@@ -489,69 +331,251 @@ export function CoordinatorRegister() {
                       </div>
                     ))}
                   </div>
-                </FormSection>
+                </div>
               )}
             </div>
 
-            {/* Footer Nút bấm (Giữ nguyên) */}
-            <div className="flex justify-end gap-4 rounded-b-lg border-t border-gray-200 bg-gray-50 p-6">
+            {/* Modal footer */}
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
-                className="rounded-lg border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                onClick={() => setIsScheduleModalOpen(false)}
+                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
-                Hủy bỏ
+                Đóng
               </button>
               <button
                 type="button"
-                className="rounded-lg bg-blue-700 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-800"
                 onClick={() => {
-                  // Validate required fields
-                  if (!courseName.trim() || !courseCode.trim()) {
-                    alert('Vui lòng nhập tên môn học và mã môn học');
-                    return;
+                  if (selectedDate && selectedTime) {
+                    const newSlot = {
+                      id: `slot-${Date.now()}`,
+                      date: selectedDate,
+                      time: selectedTime
+                    };
+                    setAddedTimeSlots([...addedTimeSlots, newSlot]);
+                    setSelectedDate('');
+                    setSelectedTime('');
                   }
-
-                  // Get coordinator name from localStorage if available
-                  let coordinatorName = 'Anonymous Coordinator';
-                  try {
-                    const rawUserStore = localStorage.getItem('userStore');
-                    const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-                    const State = userStore?.state ?? null;
-                    const userLocalStore = State?.user ?? null;
-                    coordinatorName = userLocalStore?.firstName ?? coordinatorName;
-                  } catch {
-                    // ignore
-                  }
-
-                  const coordinatorEmail = coordinatorName.toLowerCase().replace(/\s+/g, '.') + '@coordinator.example.com';
-
-                  const newRequest: CourseCreationRequest = {
-                    id: `course-req-${Date.now()}`,
-                    coordinatorName,
-                    coordinatorEmail,
-                    courseName: courseName.trim(),
-                    courseCode: courseCode.trim().toUpperCase(),
-                    languages: addedLanguages.length ? addedLanguages : [],
-                    sessionTypes: addedSessionTypes.length ? addedSessionTypes : [],
-                    locations: addedLocations.length ? addedLocations : [],
-                    meetLink: meetLink || undefined,
-                    timeSlots: addedTimeSlots.length ? addedTimeSlots : undefined,
-                    description: description.trim(),
-                    status: 'Pending',
-                    createdAt: new Date().toISOString(),
-                  };
-
-                  mockCourseCreationRequests.unshift(newRequest);
-                  alert('Yêu cầu tạo môn học đã được gửi!');
-                  setTimeout(() => navigate({ to: '/registration-history' }), 1500);
                 }}
+                className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
               >
-                Tạo môn học
+                Thêm
               </button>
             </div>
-          </form>
-        </main>
-      </div>
+          </div>
+        </div>
+      )}
+
+      {/* Form Content */}
+      <main className="p-6">
+        <form
+          className="relative rounded-lg bg-white shadow-lg"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          {/* Container cho các trường */}
+          <div className="space-y-8 p-8">
+
+            {/* Tên môn học */}
+            <FormSection title="Tên môn học">
+              <input
+                type="text"
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                placeholder="Nhập tên môn học..."
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+              />
+            </FormSection>
+
+            {/* Mã môn học */}
+            <FormSection title="Mã môn học">
+              <input
+                type="text"
+                value={courseCode}
+                onChange={(e) => setCourseCode(e.target.value)}
+                placeholder="Ví dụ: CS401, IT302..."
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+              />
+            </FormSection>
+
+            {/* [SỬA] Ngôn ngữ (Dropdown + Nút Thêm) */}
+            <FormSection title="Ngôn ngữ">
+              <FormDropdown
+                icon={<LanguageIcon className="size-5" />}
+                options={mockLanguages}
+                selected={language}
+                onSelect={setLanguage}
+              />
+              <AddButton title="Thêm ngôn ngữ" onClick={() => addIfNotExists(addedLanguages, setAddedLanguages, language)} />
+
+              {addedLanguages.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {addedLanguages.map(l => (
+                    <span key={l.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
+                      {l.name}
+                      <button type="button" onClick={() => removeItem(addedLanguages, setAddedLanguages, l.id)} className="text-gray-500">✕</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </FormSection>
+
+            {/* [SỬA] Loại hình (Dropdown + Nút Thêm, icon mới) */}
+            <FormSection title="Loại hình">
+              <FormDropdown
+                icon={<SessionTypeIcon className="size-5" />}
+                options={sessionTypeOptions}
+                selected={sessionType}
+                onSelect={setSessionType}
+              />
+              <AddButton title="Thêm loại hình" onClick={() => addIfNotExists(addedSessionTypes, setAddedSessionTypes, sessionType)} />
+
+              {addedSessionTypes.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {addedSessionTypes.map(t => (
+                    <span key={t.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
+                      {t.name}
+                      <button type="button" onClick={() => removeItem(addedSessionTypes, setAddedSessionTypes, t.id)} className="text-gray-500">✕</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </FormSection>
+
+            {/* [SỬA] Địa điểm (Chỉ hiện khi đã thêm "Học trực tiếp") */}
+            {addedSessionTypes.some(t => t.id === 'online') && (
+              <FormSection title="Địa điểm">
+                <FormDropdown
+                  icon={<LocationIcon className="size-5" />}
+                  options={mockLocations}
+                  selected={location}
+                  onSelect={setLocation}
+                />
+                <div className="mt-2">
+                  <AddButton title="Thêm địa điểm" onClick={() => addIfNotExists(addedLocations, setAddedLocations, location)} />
+                  {addedLocations.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {addedLocations.map(l => (
+                        <span key={l.id} className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm">
+                          {l.name}
+                          <button type="button" onClick={() => removeItem(addedLocations, setAddedLocations, l.id)} className="text-gray-500">✕</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </FormSection>
+            )}
+
+            {/* Link meet cho các loại hình hybrid (Chỉ hiện khi đã thêm "Học hybrid") */}
+            {addedSessionTypes.some(t => t.id === 'hybrid') && (
+              <FormSection title="Link buổi học hybrid">
+                <input
+                  type="text"
+                  value={meetLink}
+                  onChange={(e) => setMeetLink(e.target.value)}
+                  placeholder="https://meet.example.com/abc-123"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
+                />
+              </FormSection>
+            )}
+
+            {/* Mô tả môn học */}
+            <FormSection title="Mô tả môn học">
+              <FormTextArea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Nhập mô tả chi tiết về môn học, nội dung, mục tiêu..."
+                rows={8}
+              />
+            </FormSection>
+
+            {/* Hiển thị các khung giờ đã hẹn */}
+            {addedTimeSlots.length > 0 && (
+              <FormSection title="Lịch dạy đã thêm">
+                <div className="space-y-2">
+                  {addedTimeSlots.map(slot => (
+                    <div key={slot.id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-blue-50 px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <ClockIcon className="size-5" />
+                        <span className="text-sm font-medium text-gray-800">
+                          {new Date(slot.date).toLocaleDateString('vi-VN')} - {slot.time}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setAddedTimeSlots(addedTimeSlots.filter(s => s.id !== slot.id))}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </FormSection>
+            )}
+          </div>
+
+          {/* Footer Nút bấm (Giữ nguyên) */}
+          <div className="flex justify-end gap-4 rounded-b-lg border-t border-gray-200 bg-gray-50 p-6">
+            <button
+              type="button"
+              className="rounded-lg border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+              Hủy bỏ
+            </button>
+            <button
+              type="button"
+              className="rounded-lg bg-blue-700 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-800"
+              onClick={() => {
+                // Validate required fields
+                if (!courseName.trim() || !courseCode.trim()) {
+                  alert('Vui lòng nhập tên môn học và mã môn học');
+                  return;
+                }
+
+                // Get coordinator name from localStorage if available
+                let coordinatorName = 'Anonymous Coordinator';
+                try {
+                  const rawUserStore = localStorage.getItem('userStore');
+                  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+                  const State = userStore?.state ?? null;
+                  const userLocalStore = State?.user ?? null;
+                  coordinatorName = userLocalStore?.firstName ?? coordinatorName;
+                } catch {
+                  // ignore
+                }
+
+                const coordinatorEmail = coordinatorName.toLowerCase().replace(/\s+/g, '.') + '@coordinator.example.com';
+
+                const newRequest: CourseCreationRequest = {
+                  id: `course-req-${Date.now()}`,
+                  coordinatorName,
+                  coordinatorEmail,
+                  courseName: courseName.trim(),
+                  courseCode: courseCode.trim().toUpperCase(),
+                  languages: addedLanguages.length ? addedLanguages : [],
+                  sessionTypes: addedSessionTypes.length ? addedSessionTypes : [],
+                  locations: addedLocations.length ? addedLocations : [],
+                  meetLink: meetLink || undefined,
+                  timeSlots: addedTimeSlots.length ? addedTimeSlots : undefined,
+                  description: description.trim(),
+                  status: 'Pending',
+                  reasons: '',
+                  createdAt: new Date().toISOString(),
+                };
+
+                mockCourseCreationRequests.unshift(newRequest);
+                alert('Yêu cầu tạo môn học đã được gửi!');
+                setTimeout(() => navigate({ to: '/registration-history' }), 1500);
+              }}
+            >
+              Tạo môn học
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
   );
 }
 
@@ -649,8 +673,8 @@ function FormDropdown({ icon, options, selected, onSelect }: FormDropdownProps) 
               <li
                 key={option.id}
                 className={`cursor-pointer px-4 py-2 text-gray-900 ${option.id === selected.id
-                    ? 'bg-blue-700 text-white'
-                    : 'hover:bg-blue-50'
+                  ? 'bg-blue-700 text-white'
+                  : 'hover:bg-blue-50'
                   }`}
                 onClick={() => {
                   onSelect(option);

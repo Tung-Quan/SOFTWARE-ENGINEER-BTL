@@ -23,6 +23,7 @@ export type CourseCreationRequest = {
   description: string; // Mô tả môn học
   status: 'Pending' | 'Approved' | 'Rejected';
   createdAt: string; // ISO date string
+  reasons: string; // Lý do phê duyệt hoặc từ chối
   updatedAt?: string; // ISO date string
 };
 
@@ -50,6 +51,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     ],
     description: 'Khóa học chuyên sâu về Machine Learning, tập trung vào Deep Learning, Neural Networks và ứng dụng thực tế.',
     status: 'Approved',
+    reasons: 'Nội dung khóa học rất phù hợp với xu hướng công nghệ hiện nay và có tiềm năng ứng dụng cao trong thực tế.',
     createdAt: '2025-11-01T09:00:00Z',
     updatedAt: '2025-11-03T14:30:00Z',
   },
@@ -69,6 +71,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     ],
     description: 'Giới thiệu về điện toán đám mây, các dịch vụ AWS, Azure, Google Cloud và triển khai ứng dụng trên cloud.',
     status: 'Pending',
+    reasons: 'Chờ phê duyệt từ ban giám hiệu.',
     createdAt: '2025-11-10T11:20:00Z',
   },
   {
@@ -87,6 +90,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     ],
     description: 'Khóa học về công nghệ Blockchain, smart contracts, DeFi và các ứng dụng cryptocurrency.',
     status: 'Approved',
+    reasons: 'Nội dung khóa học rất phù hợp với xu hướng công nghệ hiện nay và có tiềm năng ứng dụng cao trong thực tế.',
     createdAt: '2025-11-05T16:05:00Z',
     updatedAt: '2025-11-07T10:15:00Z',
   },
@@ -106,6 +110,7 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     ],
     description: 'Học xây dựng ứng dụng mobile đa nền tảng với React Native, từ cơ bản đến nâng cao.',
     status: 'Rejected',
+    reasons: 'Nội dung khóa học chưa phù hợp với định hướng chương trình đào tạo hiện tại.',
     createdAt: '2025-11-08T13:45:00Z',
     updatedAt: '2025-11-09T09:20:00Z',
   },

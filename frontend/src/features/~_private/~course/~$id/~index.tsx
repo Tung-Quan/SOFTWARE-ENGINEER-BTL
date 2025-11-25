@@ -1227,20 +1227,33 @@ function CourseDetailsComponent() {
                     <label className="mb-1 block text-sm font-medium text-gray-700">
                       Tên file đính kèm (nếu có)
                     </label>
-                    <input
-                      type="text"
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                      value={item.data.assignment?.source || ''}
-                      onChange={(e) =>
-                        handleUpdateData('assignment', {
-                          ...(item.data.assignment || {
-                            id: `assign-${Date.now()}`,
-                          }),
-                          source: e.target.value,
-                        })
-                      }
-                      placeholder="Ví dụ: assignment1.pdf"
-                    />
+                    <div className="flex gap-2">
+         
+                      <label className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Chọn file</span>
+                        <input
+                          name="assignment-file"
+                          type="file"
+                          accept="application/pdf"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files;
+                            if (file && file[0]) {
+                              // Update source với tên file đã chọn
+                              handleUpdateData('assignment', {
+                                ...(item.data.assignment || {
+                                  id: `assign-${Date.now()}`,
+                                }),
+                                source: file[0].name,
+                              });
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
               ) : (
