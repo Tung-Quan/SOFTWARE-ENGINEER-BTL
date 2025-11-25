@@ -210,7 +210,7 @@ export const dataCourses = [
       },
       {
         type: 'movie',
-        title: 'Movie 1',
+        title: 'Video 1',
         data: {
           video: {
             id: 'm1',
@@ -223,7 +223,7 @@ export const dataCourses = [
       },
       {
         type: 'note',
-        title: 'Note for Assignment 1',
+        title: 'Ghi chú bài tập lớn 1',
         data: {
           assignment: {
             id: 'd1',
@@ -237,7 +237,7 @@ export const dataCourses = [
       },
       {
         type: 'reference',
-        title: 'Reference',
+        title: 'Tài liệu tham khảo',
         data: {
           link: {
             id: 'l1',
@@ -248,7 +248,7 @@ export const dataCourses = [
       },
       {
         type: 'submission',
-        title: 'Submission 1',
+        title: 'Bài nộp 1',
         data: {
           status: 'submitted',
           submittedFile: {
@@ -263,7 +263,7 @@ export const dataCourses = [
       },
       {
         type: 'submission',
-        title: 'Submission 2',
+        title: 'Bài nộp 2',
         data: {
           status: 'graded',
           submittedFile: {
@@ -281,7 +281,7 @@ export const dataCourses = [
       },
       {
         type: 'submission',
-        title: 'Submission 3',
+        title: 'Bài nộp 3',
         description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ipsum magna, rutrum tempus urna quis,',
         data: {
@@ -294,7 +294,7 @@ export const dataCourses = [
       },
       {
         type: 'reference',
-        title: 'Reference 2',
+        title: 'Tài liệu tham khảo 2',
         data: {
           link: {
             id: 'l3',
