@@ -1,6 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { useState, useEffect, useRef, Fragment } from 'react';
+import { useState, useEffect, useRef, Fragment, useMemo } from 'react';
 
 import { mockCourses, dataCourses } from '@/components/data/~mock-courses';
 import { Play as PlayIcon } from '@/components/icons';
@@ -27,6 +27,17 @@ function CourseDetailsComponent() {
   const originalCourseDetail = dataCourses.find((c) => c.id === id);
   const [courseDetail, setCourseDetail] = useState(originalCourseDetail);
   const [activeTab, setActiveTab] = useState<string>('');
+  const [file, setFile] = useState<File | null>(null);
+  const [changedFile, setchangedFile] = useState<File | null>(null);
+
+  const previewUrl = useMemo(() => {
+    return file ? URL.createObjectURL(file) : '';
+  }, [file]);
+
+  const changedPreviewUrl = useMemo(() => {
+    return changedFile ? URL.createObjectURL(changedFile) : '';
+  }, [changedFile]);
+
   //TODO: PHẢI SET CHANGING LẠI LÀ FALSE KHÔNG LÀ NGAY CẢ SINH VIÊN CŨNG THẤY
   const [changing, setChanging] = useState(false);
 
@@ -1806,7 +1817,7 @@ function CourseDetailsComponent() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col items-start justify-between">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <CalendarIcon className="size-4" />
                           <span>
@@ -1816,16 +1827,46 @@ function CourseDetailsComponent() {
                             </span>
                           </span>
 
-                          {(item.data.submittedFile?.submittedAt && item.data.dueDate &&
-                            (new Date(item.data.submittedFile.submittedAt).getTime() > new Date(item.data.dueDate).getTime())) && (
+                          {item.data.submittedFile?.submittedAt &&
+                            item.data.dueDate &&
+                            new Date(
+                              item.data.submittedFile.submittedAt,
+                            ).getTime() >
+                              new Date(item.data.dueDate).getTime() && (
                               <span className="ml-4 rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
                                 Nộp trễ
                               </span>
                             )}
                         </div>
-                        <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
-                          Chỉnh sửa bài nộp
-                        </button>
+                        {changedFile ? (
+                          <div className="w-full flex-1 overflow-hidden rounded-md border">
+                            <iframe
+                              src={changedPreviewUrl}
+                              title={'Bài nộp'}
+                              width="100%"
+                              height="600px"
+                              className="h-[600px] w-full bg-white"
+                            />
+                          </div>
+                        ) : (
+                          <label className="relative cursor-pointer self-end text-center">
+                            <input
+                              name="image"
+                              type="file"
+                              accept="pdf/*"
+                              className="absolute inset-0 size-full cursor-pointer opacity-0"
+                              onChange={(e) => {
+                                const file = e.target.files;
+                                if (file && file[0]) {
+                                  setchangedFile(file[0]);
+                                }
+                              }}
+                            />
+                            <button className="cursor-pointer rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                              Chỉnh sửa bài nộp
+                            </button>
+                          </label>
+                        )}
                       </div>
                     </div>
                   )}
@@ -1874,8 +1915,12 @@ function CourseDetailsComponent() {
                             {item.data.dueDate}
                           </span>
                         </span>
-                        {(item.data.submittedFile?.submittedAt && item.data.dueDate &&
-                          (new Date(item.data.submittedFile.submittedAt).getTime() > new Date(item.data.dueDate).getTime())) && (
+                        {item.data.submittedFile?.submittedAt &&
+                          item.data.dueDate &&
+                          new Date(
+                            item.data.submittedFile.submittedAt,
+                          ).getTime() >
+                            new Date(item.data.dueDate).getTime() && (
                             <span className="ml-4 rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
                               Nộp trễ
                             </span>
@@ -1884,7 +1929,6 @@ function CourseDetailsComponent() {
                       {/* <button className="rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
                         Chỉnh sửa bài nộp
                       </button> */}
-
                     </div>
                   </div>
                 )}
@@ -1898,12 +1942,37 @@ function CourseDetailsComponent() {
                         Donec ipsum magna, rutrum tempus urna quis
                       </span>
                     </div>
-                    <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
-                      <p className="mb-4 text-gray-500">Chưa có bài nộp</p>
-                      <button className="rounded-lg bg-[#0329E9] px-6 py-2 font-medium text-white transition hover:bg-blue-700">
-                        + Thêm bài nộp
-                      </button>
-                    </div>
+                    {file ? (
+                      <div className="overflow-hidden rounded-md border">
+                        <iframe
+                          src={previewUrl}
+                          title={'Bài nộp'}
+                          width="100%"
+                          height="600px"
+                          className="h-[600px] w-full bg-white"
+                        />
+                      </div>
+                    ) : (
+                      <label className="block cursor-pointer rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+                        <input
+                          name="image"
+                          type="file"
+                          accept="pdf/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files;
+                            if (file && file[0]) {
+                              setFile(file[0]);
+                            }
+                          }}
+                        />
+
+                        <p className="mb-4 text-gray-500">Chưa có bài nộp</p>
+                        <div className="inline-block rounded-lg bg-[#0329E9] px-6 py-2 font-medium text-white transition hover:bg-blue-700">
+                          + Thêm bài nộp
+                        </div>
+                      </label>
+                    )}
 
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <CalendarIcon className="size-4" />
