@@ -14,6 +14,17 @@ import { saveSession, type SessionMember } from '@/components/data/~mock-session
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/_private/schedule/request/')({
+  beforeLoad: async () => {
+    // check 'role' in localStorage
+    const role = localStorage.getItem('role') || 'student'
+    if (role !== 'tutor') {
+      // Redirect to /schedule if not tutor
+      throw new Response('Redirect', {
+        status: 302,
+        headers: { Location: '/schedule' },
+      })
+    }
+  },
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>) => {
     return {
@@ -33,7 +44,7 @@ function RouteComponent() {
   // Form states
   const [title, setTitle] = useState(searchParams.title || '')
   const [courseId, setCourseId] = useState(searchParams.courseId || '')
-  const [method, setMethod] = useState<'hybrid' | 'online'>('hybrid')
+  const [method, setMethod] = useState<'offline' | 'online'>('offline')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedMembers, setSelectedMembers] = useState<Set<number>>(new Set())
@@ -97,10 +108,11 @@ function RouteComponent() {
       id: `s-${Date.now().toString(36)}`,
       courseId,
       title,
+      courseTitle: course?.title ?? 'Unknown Course',
       instructor: course?.instructor ?? 'TBD',
       method,
       link: method === 'online' ? 'https://meet.example.com/new-session' : undefined,
-      location: method === 'hybrid' ? 'Phòng học TBA' : undefined,
+      location: method === 'offline' ? 'Phòng học TBA' : undefined,
       start: new Date(startDate).toISOString(),
       end: new Date(endDate).toISOString(),
       members,
@@ -178,8 +190,8 @@ interface BasicInfoSectionProps {
   setTitle: (v: string) => void
   courseId: string
   setCourseId: (v: string) => void
-  method: 'hybrid' | 'online'
-  setMethod: (v: 'hybrid' | 'online') => void
+  method: 'offline' | 'online'
+  setMethod: (v: 'offline' | 'online') => void
   startDate: string
   setStartDate: (v: string) => void
   endDate: string
@@ -244,7 +256,7 @@ function BasicInfoSection({
     );
   }
 
-  // const [sessionType, setSessionType] = useState('hybrid');
+  // const [sessionType, setSessionType] = useState('offline');
 
   return (
     <div className="relative overflow-hidden rounded-lg bg-white shadow-md">
@@ -330,12 +342,12 @@ function BasicInfoSection({
               <input
                 type="radio"
                 name="sessionType"
-                value="hybrid"
-                checked={method === 'hybrid'}
-                onChange={(e) => setMethod(e.target.value as 'hybrid')}
+                value="offline"
+                checked={method === 'offline'}
+                onChange={(e) => setMethod(e.target.value as 'offline')}
                 className="size-4 border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="ml-2 text-sm text-gray-800">hybrid</span>
+              <span className="ml-2 text-sm text-gray-800">offline</span>
             </label>
           </div>
         </div>

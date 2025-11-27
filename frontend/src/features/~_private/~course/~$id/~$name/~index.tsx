@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { type SVGProps, useMemo } from 'react'; 
+import { type SVGProps, useMemo } from 'react';
 
-import { mockSessions } from '@/components/data/~mock-session';
-import { getSubmission } from '@/components/data/~mock-submissions';
+import { dataCourses, mockCourses } from '@/components/data/~mock-courses';
+import { getSessionMember } from '@/components/data/~mock-session';
+import { getSubmissionBySubmissionId, SubmissionData } from '@/components/data/~mock-submissions';
 import ArrowLeft from '@/components/icons/arrow-left';
-import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
 
 
@@ -41,180 +41,198 @@ function formatISODate(isoString: string): string {
   }
 }
 
-function createFakeEmail(name: string): string {
-  const noDiacritics = name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d");
-  const emailPrefix = noDiacritics.replace(/\s+/g, '.');
-  return `${emailPrefix}@gmail.com`;
-}
 
 
 // === Các Component con (Giữ nguyên) ===
 
 const getScoreColor = (score?: number) => {
   if (score === undefined) return 'text-gray-500';
-  if (score >= 7) return 'text-green-600'; 
-  if (score >= 5) return 'text-[#F9BA08]'; 
-  return 'text-[#EA4335]'; 
+  if (score >= 7) return 'text-green-600';
+  if (score >= 5) return 'text-[#F9BA08]';
+  return 'text-[#EA4335]';
 };
 
-type SubmissionEntry = {
-  name: string;
-  email: string;
-  submittedAt: string;
-  score?: number;
+const getSubmittedAtColor = (submittedAt?: string, dueDate?: string) => {
+  if (!submittedAt || !dueDate) return 'text-gray-500';
+  const submitted = new Date(submittedAt);
+  const due = new Date(dueDate);
+  if (submitted <= due) return 'text-green-600';
+  return 'text-red-600';
 };
 
-function SubmissionItem({ entry, courseId, assignmentName }: { entry: SubmissionEntry; courseId: string; assignmentName: string }) {
-  const { name, email, submittedAt, score } = entry;
-  const scoreColor = getScoreColor(score);
-  
-  const stuname = email.split('@')[0]; 
-
+function SubmissionRow({ entry, dueDate , id }: { entry: SubmissionData, dueDate?: string, id: string }) {
+  const nameEntry = getSessionMember( 's-1', entry.memberId);
+  console.log("id:", id);
   return (
-    <div className="flex items-center justify-between rounded-lg border border-gray-700 bg-white p-5 shadow-custom-yellow">
-      {/* Thông tin sinh viên & thời gian */}
-      <div className="flex items-center gap-4">
-        <UserCircleIcon className="size-12 shrink-0 text-gray-500" />
-        <div className="flex flex-col gap-1.5">
-          {/* Tên & Email */}
-          <div>
-            <p className="text-xs font-semibold text-gray-900">{name}</p>
-            <p className="text-sm text-gray-500">{email}</p>
-          </div>
-          {/* Thời gian */}
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <ClockIcon className="size-4" />
-            <span>{submittedAt}</span>
-          </div>
+    <tr className="border-b last-of-type:border-0">
+      <td className="px-4 py-3">
+        <div className="font-medium text-gray-900">{nameEntry ? nameEntry.name : 'Unknown'}</div>
+      </td>
+      <td className="px-4 py-3">
+        <div className={`font-medium ${getScoreColor(entry.score)}`}>
+          {entry.score !== undefined ? entry.score.toFixed(1) : 'Chưa chấm'}
         </div>
-      </div>
-
-      {/* Điểm & Nút bấm */}
-      <div className="flex shrink-0 items-center gap-6">
-        {score !== undefined ? (
-          <span className={`text-xl font-bold ${scoreColor}`}>
-            {score.toLocaleString('vi-VN')} điểm
-          </span>
+      </td>
+      <td className="px-4 py-3">
+        <div className="text-gray-700">{entry.comment || 'Không có nhận xét'}</div>
+      </td>
+      <td className="px-4 py-3">
+        {entry.submittedAt !== '' ? (
+          <div className={`${getSubmittedAtColor(entry.submittedAt, dueDate)}`}>{formatISODate(entry.submittedAt as string)} 
+        {dueDate && (<span> (Hạn: {formatISODate(dueDate)})</span>)}
+        </div>
         ) : (
-          // Thêm hiển thị "Chưa chấm" nếu không có điểm
-          <span className="text-sm font-medium text-gray-500">Chưa chấm</span>
+          <div className="text-gray-500">Chưa nộp</div>
         )}
+      </td>
+      <td className="px-4 py-3">
         <Link
-          to={"/course/$id/$name/$stuname" as any}
-          params={{ id: courseId, name: assignmentName, stuname } as any}
-          className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+          to={`/course/4/Principles%20of%20Programming%20Language%20-%20B%C3%A0i%20t%E1%BA%ADp%20v%E1%BB%81%20nh%C3%A0/${nameEntry?.name}` as any}
+          className="text-blue-600 hover:underline"
         >
           Xem bài nộp
         </Link>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }
 
 // === Component chính của Route ===
-
 function RouteComponent() {
   const { id, name } = Route.useParams();
+  const course = useMemo(() => {
+    return mockCourses.find((c) => c.id === id) ?? mockCourses[0];
 
-  // === [THAY ĐỔI] Logic lấy data từ mockSessions và mockSubmissions ===
-  const submissions: SubmissionEntry[] = useMemo(() => {
-    // 1. Tìm session khớp với courseId (id) VÀ session title (name)
-    const matchingSession = mockSessions.find(
-      (s) => s.courseId === id && s.title === name
+  }, [id]);
+  const dataCourse = dataCourses.find((c) => c.id === id);
+
+  if (!dataCourse) {
+    return (
+      <StudyLayout>
+        <Link
+          to={`/course/${id}/` as string}
+          className='mb-4 inline-flex items-center gap-2 text-blue-600 hover:underline'
+        >
+          <ArrowLeft className='size-4' />
+          Quay lại trang khóa học
+        </Link>
+        <div>Khóa học không tồn tại.</div>
+      </StudyLayout>
+    )
+  }
+
+  const submissions = getSubmissionBySubmissionId(name as string);
+
+
+  if (!course) {
+    return (
+      <StudyLayout>
+        <Link
+          to={`/_private/course/${id}/` as string}
+          className='mb-4 inline-flex items-center gap-2 text-blue-600 hover:underline'
+        >
+          <ArrowLeft className='size-4' />
+          Quay lại trang khóa học
+        </Link>
+        <div>Khóa học không tồn tại.</div>
+      </StudyLayout>
     );
+  }
 
-    // 2. Nếu không tìm thấy, trả về mảng rỗng
-    if (!matchingSession) {
-      return [];
-    }
-
-    // 3. Nếu tìm thấy, map members của session đó và lấy score từ mock-submissions
-    return matchingSession.members.map(member => {
-      // Lấy submission data ổn định từ mock-submissions
-      const submissionData = getSubmission(matchingSession.id, member.id);
-      
-      return {
-        name: member.name,
-        email: createFakeEmail(member.name), // Tạo email giả
-        submittedAt: formatISODate(matchingSession.start), // Dùng ngày bắt đầu session
-        score: submissionData?.score, // Lấy điểm từ mock-submissions (undefined = chưa chấm)
-      };
-    });
-  }, [id, name]); // Tính toán lại khi id hoặc name thay đổi
+  if (!submissions) {
+    return (
+      <StudyLayout>
+        <Link
+          to={`/course/${id}/` as string}
+          className='mb-4 inline-flex items-center gap-2 text-blue-600 hover:underline'
+        >
+          <ArrowLeft className='size-4' />
+          Quay lại trang khóa học
+        </Link>
+        <div>Dữ liệu bài nộp không tồn tại.</div>
+      </StudyLayout>
+    )
+  }
 
 
+  const dataSubmission = dataCourse['content'].find((c) => c.id === name)?.data;
   return (
     <StudyLayout>
-      <div className="container mx-auto max-w-5xl rounded-2xl border border-[#3D4863] p-2 py-8">
-        {/* Back button (Giữ nguyên) */}
+      <div className="w-full font-['Archivo']">
+        {/* Back button */}
         <Link
-          to={'/course/$id' as any}
+          // onClick={() => navigate({ to: '/dashboard' })}
+          to={`/course/${id}/` as string}
           className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
         >
           <ArrowLeft className="size-5" />
           <span className="font-medium">Quay lại</span>
         </Link>
-        <h1 className="mb-6 text-3xl font-bold text-gray-800">
-          {name}
-        </h1>
-        
-        {/* Thanh filter/search (Giữ nguyên, không kết nối state) */}
-        <div className="flex w-full items-center gap-4 bg-white pb-4">
-          <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <Search className="size-5 text-gray-400" aria-hidden="true" />
-            </div>
-            <input
-              type="text"
-              name="search1"
-              id="search1"
-              className="block w-full rounded-lg border-gray-300 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-              placeholder="Tìm kiếm..."
-            />
-          </div>
 
-          <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <Search className="size-5 text-gray-400" aria-hidden="true" />
-            </div>
-            <input
-              type="text"
-              name="search2"
-              id="search2"
-              className="block w-full rounded-lg border-gray-300 py-2.5 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-              placeholder="Nhập email học sinh để tìm kiếm ..."
-            />
-          </div>
+        {/* Course header */}
+        <div
+          className="relative rounded-lg p-8 text-white shadow-lg"
+          style={{
+            backgroundImage: `url(${course.bgImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            minHeight: '250px',
+          }}
+        >
+          <div className="relative z-10">
+            <p className="mb-2 text-sm font-medium text-gray-200">
+              {course.code}
+            </p>
+            <h1 className="mb-3 text-4xl font-bold">{course.title}</h1>
+            <p className="text-lg text-gray-100">
+              Giảng viên: {course.instructor}
+            </p>
 
-          <div>
-            <select
-              aria-label="Sắp xếp bài nộp theo"
-              id="sort"
-              name="sort"
-              className="block w-full min-w-[120px] rounded-lg border-gray-300 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-              defaultValue="Cũ nhất"
-            >
-              <option>Cũ nhất</option>
-              <option>Mới nhất</option>
-            </select>
+            {/* Button "tổng quan" + "Đánh giá" */}
+            <div className="mt-6 flex gap-4">
+              <Link
+                to={`/course/${id}` as any}
+                className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+              >
+                Tổng quan
+              </Link>
+
+              <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                Đánh giá
+              </button>
+            </div>
           </div>
         </div>
-        
-        {/* Danh sách (Giữ nguyên) */}
-        <div className="space-y-6">
-          {submissions.length > 0 ? (
-            submissions.map((entry, index) => (
-              <SubmissionItem key={index} entry={entry} courseId={id} assignmentName={name} />
-            ))
-          ) : (
-            <div className="py-10 text-center text-gray-500">
-              <p>Không tìm thấy bài nộp nào.</p>
-            </div>
-          )}
+        <div>
+          {/* Submission Table */}
+          <div className="mt-8 overflow-x-auto rounded-lg border">
+            <table className="w-full min-w-[600px] table-auto border-collapse">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700">
+                    Tên sinh viên
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700">
+                    Điểm số
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700">
+                    Nhận xét
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700">
+                    Ngày nộp
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-700">
+                    Xem bài nộp
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {submissions.map((entry, index) => (
+                  <SubmissionRow key={index} entry={entry} dueDate={dataSubmission?.dueDate} id={id} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </StudyLayout>

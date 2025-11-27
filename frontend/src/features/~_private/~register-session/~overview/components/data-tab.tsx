@@ -4,6 +4,7 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from '@heroicons/react/24/solid'
+import { Link } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 
 // --- Import Mock Data ---
@@ -171,24 +172,24 @@ export function DataTab() {
   const allRequests = useMemo(() => {
     const studentRequests = mockPastRegistrations.map(r => ({
       id: r.id,
-      courseCode: r.course.name.split('(')[1]?.replace(')', '') ?? 'N/A',
-      name: r.studentName,
-      language: r.language.name,
-      type: r.sessionType.name,
+      courseCode: r.subjects?.[0]?.name.split('(')[1]?.replace(')', '') ?? 'N/A',
+      name: r.Name,
+      language: r.languages?.[0]?.name ?? 'N/A',
+      type: r.sessionTypes?.[0]?.name ?? 'N/A',
       role: 'Student' as const,
-      location: r.location?.name ?? 'hybrid',
+      location: r.locations?.[0]?.name ?? 'N/A',
       request: r.specialRequest,
       status: r.status,
     }));
 
     const tutorRequests = mockTutorRegistrations.map(r => ({
       id: r.id,
-      courseCode: r.subjects[0]?.name.split('(')[1]?.replace(')', '') ?? 'N/A',
-      name: r.tutorName,
-      language: r.languages[0]?.name ?? 'N/A',
-      type: r.sessionTypes[0]?.name ?? 'N/A',
+      courseCode: r.subjects?.[0]?.name?.split('(')?.[1]?.replace(')', '') ?? 'N/A',
+      name: r.Name,
+      language: r.languages?.[0]?.name ?? 'N/A',
+      type: r.sessionTypes?.[0]?.name ?? 'N/A',
       role: 'Tutor' as const,
-      location: r.locations[0]?.name ?? 'N/A',
+      location: r.locations?.[0]?.name ?? 'N/A',
       request: r.specialRequest,
       status: r.status,
     }));
@@ -219,7 +220,7 @@ export function DataTab() {
         }
 
         if (filters.sessionType) {
-          const sessionTypeMap: Record<string, string> = { hybrid: 'Hybrid', hybrid: 'hybrid' };
+          const sessionTypeMap: Record<string, string> = { offline: 'Offline', online: 'Online' };
           if (req.type !== sessionTypeMap[filters.sessionType]) return false;
         }
 
@@ -245,10 +246,10 @@ export function DataTab() {
     if (!selectedRegistration) return { people: [], label: '' };
     const courseCode = selectedRegistration.courseCode;
     if (selectedRegistration.role === 'Student') {
-      const matchingTutors = mockTutorRegistrations.filter(tutor => tutor.subjects.some(s => s.name.includes(courseCode))).map(t => ({ id: t.id, name: t.tutorName }));
+      const matchingTutors = mockTutorRegistrations.filter(tutor => tutor.subjects?.some(s => s?.name?.includes(courseCode)));
       return { people: matchingTutors, label: 'Tutor' };
     }
-    const matchingStudents = mockPastRegistrations.filter(s => (s.course.name.split('(')[1]?.replace(')', '') ?? '') === courseCode).map(s => ({ id: s.id, name: s.studentName }));
+    const matchingStudents = mockPastRegistrations.filter(s => (s.subjects?.[0]?.name.split('(')?.[1]?.replace(')', '') ?? '') === courseCode);
     return { people: matchingStudents, label: 'Student' };
   };
 
@@ -326,7 +327,16 @@ export function DataTab() {
               {paginatedRequests.map(req => (
                 <tr key={req.id}>
                   <Td>{req.courseCode}</Td>
-                  <Td>{req.name}</Td>
+                  <Td>
+                    <Link
+                      to={`/profile/${req.id}` as string}
+                      className="font-medium text-blue-600 hover:underline"
+                    >
+
+                      {req.name}
+                    </Link>
+
+                  </Td>
                   <Td>{req.language}</Td>
                   <Td>{req.type}</Td>
                   <Td>{req.role}</Td>
@@ -344,7 +354,7 @@ export function DataTab() {
           </table>
         </div>
 
-  <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-600">
+        <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-600">
           <div>
             {filteredRequests.length} kết quả — trang {totalPages === 0 ? 0 : currentPage}/{Math.max(totalPages, 1)}
           </div>

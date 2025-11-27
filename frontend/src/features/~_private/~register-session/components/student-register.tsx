@@ -69,7 +69,7 @@ export function StudentRegister() {
   const [specialRequest, setSpecialRequest] = useState(
     ``
   );
-  const [desiredScore, setDesiredScore] = useState(4.0);
+  const [desiredScore, setDesiredScore] = useState<number | null>(4.0);
 
   const navigate = useNavigate();
 
@@ -152,8 +152,16 @@ export function StudentRegister() {
             {/* Điểm mong muốn */}
             <FormSection title="Điểm mong muốn">
               <FormTextArea
-                value={desiredScore.toString()}
-                onChange={(e) => setDesiredScore(parseFloat(e.target.value))}
+                value={desiredScore === null ? '' : String(desiredScore)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!v || v.trim() === '') {
+                    setDesiredScore(null);
+                    return;
+                  }
+                  const n = parseFloat(v);
+                  if (Number.isFinite(n)) setDesiredScore(n);
+                }}
                 rows={1}
                 placeholder="4.0"
               />
@@ -191,8 +199,8 @@ export function StudentRegister() {
                     // location: sessionType.id === 'online' ? undefined : location,
                     // specialRequest,
                     id: `reg-${Date.now()}`,
-                    studentName: `${stuName}`,
-                    studentEmail: `${stuEmail}`,
+                    Name: `${stuName}`,
+                    Email: `${stuEmail}`,
                     course: subject,
                     language,
                     sessionType,

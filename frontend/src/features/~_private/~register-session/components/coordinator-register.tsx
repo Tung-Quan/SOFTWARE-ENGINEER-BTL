@@ -78,7 +78,7 @@ interface DropdownOption {
 
 const sessionTypeOptions: DropdownOption[] = [
   { id: 'online', name: 'Học trực tiếp' },
-  { id: 'hybrid', name: 'Học hybrid' },
+  { id: 'hybrid', name: 'Học trực tiếp kết hợp trực tuyến' },
 ];
 
 // === COMPONENT CHÍNH ===
@@ -467,9 +467,9 @@ export function CoordinatorRegister() {
               </FormSection>
             )}
 
-            {/* Link meet cho các loại hình hybrid (Chỉ hiện khi đã thêm "Học hybrid") */}
+            {/* Link meet cho các loại hình hybrid (Chỉ hiện khi đã thêm "Học trực tiếp kết hợp trực tuyến") */}
             {addedSessionTypes.some(t => t.id === 'hybrid') && (
-              <FormSection title="Link buổi học hybrid">
+              <FormSection title="Link buổi học trực tuyến">
                 <input
                   type="text"
                   value={meetLink}

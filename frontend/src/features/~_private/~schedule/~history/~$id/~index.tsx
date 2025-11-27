@@ -20,15 +20,23 @@ function RouteComponent() {
 
   useEffect(() => {
     // Đọc localStorage an toàn phía client
-    let managerStatus = false;
-    try {
-      const rawUserStore = localStorage.getItem('userStore');
-      const userStore = rawUserStore ? JSON.parse(rawUserStore) : null;
-      managerStatus = userStore?.state?.user?.isManager ?? false;
+    // let managerStatus = false;
+    // try {
+    //   const rawUserStore = localStorage.getItem('userStore');
+    //   const userStore = rawUserStore ? JSON.parse(rawUserStore) : null;
+    //   managerStatus = userStore?.state?.user?.isManager ?? false;
+    // } catch (e) {
+    //   console.error("Failed to parse userStore from localStorage", e);
+    // }
+    // setIsManager(managerStatus);
+    //random isManager for demo
+    try{
+      const role = localStorage.getItem('role');
+      setIsManager(role === 'tutor' ? true : false);
     } catch (e) {
-      console.error("Failed to parse userStore from localStorage", e);
+      console.error("Failed to read role from localStorage", e);
+      setIsManager(false);
     }
-    setIsManager(managerStatus);
   }, []); // Chạy 1 lần khi component mount
 
   // === Hooks và Data ===
@@ -54,7 +62,7 @@ function RouteComponent() {
     if (current?.requestType !== 'absent') {
       // nếu không phải là yêu cầu xin nghỉ thì tạo một buổi học mới ở /schedule/request
       navigate({
-        to: '/schedule/request', search: (old) => ({
+        to: '/schedule/request', search: (old: any) => ({
           ...old,
           courseId: current?.courseId,
           title: current?.title,

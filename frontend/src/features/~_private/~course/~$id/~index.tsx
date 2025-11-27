@@ -689,21 +689,25 @@ function CourseDetailsComponent() {
                   <div>
                     <label className="mb-1 block text-sm font-medium text-gray-700">
                       Tên file nguồn
+                       <input
+                          name="fileUpload"
+                          type="file"
+                          accept="application/pdf"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files;
+                            if (file && file[0]) {
+                              setFile(file[0]);
+                            }
+                          }}
+                        />
+
+                        <p className="mb-4 text-gray-500">Chưa có tài liệu học tập</p>
+                        <div className="inline-block rounded-lg bg-[#0329E9] px-6 py-2 font-medium text-white transition hover:cursor-pointer hover:bg-blue-700">
+                          + Thêm tài liệu học tập
+                        </div>
                     </label>
-                    <input
-                      type="text"
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                      value={item.data.document?.source || ''}
-                      onChange={(e) =>
-                        handleUpdateData('document', {
-                          ...(item.data.document || {
-                            id: `doc-${Date.now()}`,
-                          }),
-                          source: e.target.value,
-                        })
-                      }
-                      placeholder="Ví dụ: document.pdf"
-                    />
+                    
                   </div>
 
                   {item.data.document?.source && (
@@ -1788,15 +1792,15 @@ function CourseDetailsComponent() {
                   type="text"
                 />
                 <div className="mt-8 flex justify-end gap-3">
-                  <button className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700">
+                  {/* <button className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700">
                     Xóa bài nộp
-                  </button>
+                  </button> */}
                   <Link
                     to={
                       ('/course/' +
                         id +
                         '/' +
-                        (item.title || '')
+                        (item?.id || '')
                           .replace(/\s+/g, '')
                           .replace(/[^a-zA-Z0-9]/g, '')
                           .toLowerCase()) as any
@@ -2207,6 +2211,15 @@ function CourseDetailsComponent() {
                         <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                           Email
                         </th>
+                        <th>
+                          Số bài nộp
+                        </th>
+                        <th>
+                          Số buổi tham gia
+                        </th>
+                        <th>
+                          Điểm trung bình
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -2220,6 +2233,15 @@ function CourseDetailsComponent() {
                           </td>
                           <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600">
                             {student.email}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-3 text-center text-sm text-gray-900">
+                            {student.numberOfSubmissions ?? 0} / {course.stats.assignments}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-3 text-center text-sm text-gray-900">
+                            {student.numberOfJoinedSessions ?? 0} / {course.numberTotalSessions ?? 0}
+                          </td>
+                          <td className="whitespace-nowrap px-4 py-3 text-center text-sm text-gray-900">
+                            {student.averageScore ?? 0}
                           </td>
                         </tr>
                       ))}
@@ -2281,10 +2303,10 @@ function CourseDetailsComponent() {
                       Bài nộp
                     </Link>
                     <Link
-                      to={'/course/$id/members' as any}
+                      to={'/course/$id/stastical' as any}
                       className="font-baloo rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
                     >
-                      Thành viên
+                      Xem thống kê
                     </Link>
                   </>
                 )}

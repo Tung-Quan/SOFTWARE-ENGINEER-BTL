@@ -2,6 +2,7 @@ import bgBlue from '@/assets/bg-dashboard-blue.png';
 import bgGreen from '@/assets/bg-dashboard-green.png';
 import bgRed from '@/assets/bg-dashboard-red.png';
 
+
 export type Course = {
   id: string;
   code: string;
@@ -13,7 +14,8 @@ export type Course = {
     assignments: number;
   };
   bgImage: string;
-  students: Array<{ name: string; email: string }>;
+  numberTotalSessions?: number;
+  students: Array<{ name: string; email: string; numberOfSubmissions?: number ; numberOfJoinedSessions?: number; averageScore?: number }>;
   sessionsOrganized: number;
 };
 
@@ -25,10 +27,11 @@ export const mockCourses: Course[] = [
     instructor: 'Nguyễn Lê Duy Lai',
     stats: { documents: 3, links: 2, assignments: 0 },
     bgImage: bgBlue,
+    numberTotalSessions: 12,
     students: [
-      { name: 'Nguyễn Văn A', email: 'nguyenvana@student.hcmut.edu.vn' },
-      { name: 'Trần Thị B', email: 'tranthib@student.hcmut.edu.vn' },
-      { name: 'Lê Minh C', email: 'leminhc@student.hcmut.edu.vn' },
+      { name: 'Nguyễn Văn A', email: 'nguyenvana@student.hcmut.edu.vn', numberOfSubmissions: 5, numberOfJoinedSessions: 10, averageScore: 85 },
+      { name: 'Trần Thị B', email: 'tranthib@student.hcmut.edu.vn', numberOfSubmissions: 3, numberOfJoinedSessions: 8, averageScore: 90 },
+      { name: 'Lê Minh C', email: 'leminhc@student.hcmut.edu.vn', numberOfSubmissions: 4, numberOfJoinedSessions: 9, averageScore: 88 },
     ],
     sessionsOrganized: 12,
   },
@@ -39,9 +42,10 @@ export const mockCourses: Course[] = [
     instructor: 'Nguyễn Thị Ái Thảo',
     stats: { documents: 5, links: 1, assignments: 1 },
     bgImage: bgRed,
+    numberTotalSessions: 15,
     students: [
-      { name: 'Phạm Văn D', email: 'phamvand@student.hcmut.edu.vn' },
-      { name: 'Hoàng Thị E', email: 'hoangthie@student.hcmut.edu.vn' },
+      { name: 'Phạm Văn D', email: 'phamvand@student.hcmut.edu.vn', numberOfSubmissions: 6, numberOfJoinedSessions: 14, averageScore: 92 },
+      { name: 'Hoàng Thị E', email: 'hoangthie@student.hcmut.edu.vn', numberOfSubmissions: 5, numberOfJoinedSessions: 13, averageScore: 87 },
     ],
     sessionsOrganized: 15,
   },
@@ -52,11 +56,12 @@ export const mockCourses: Course[] = [
     instructor: 'Ngô Thị Vân',
     stats: { documents: 2, links: 3, assignments: 2 },
     bgImage: bgGreen,
+    numberTotalSessions: 10,
     students: [
-      { name: 'Võ Văn F', email: 'vovanf@student.hcmut.edu.vn' },
-      { name: 'Đặng Thị G', email: 'dangthig@student.hcmut.edu.vn' },
-      { name: 'Bùi Minh H', email: 'buiminhh@student.hcmut.edu.vn' },
-      { name: 'Trịnh Văn I', email: 'trinhvani@student.hcmut.edu.vn' },
+      { name: 'Võ Văn F', email: 'vovanf@student.hcmut.edu.vn' , numberOfSubmissions: 4, numberOfJoinedSessions: 9, averageScore: 80 },
+      { name: 'Đặng Thị G', email: 'dangthig@student.hcmut.edu.vn', numberOfSubmissions: 3, numberOfJoinedSessions: 8, averageScore: 75 },
+      { name: 'Bùi Minh H', email: 'buiminhh@student.hcmut.edu.vn', numberOfSubmissions: 5, numberOfJoinedSessions: 10, averageScore: 95 },
+      { name: 'Trịnh Văn I', email: 'trinhvani@student.hcmut.edu.vn', numberOfSubmissions: 2, numberOfJoinedSessions: 7, averageScore: 70 },
     ],
     sessionsOrganized: 10,
   },
@@ -67,10 +72,11 @@ export const mockCourses: Course[] = [
     instructor: 'Nguyễn Hứa Phùng',
     stats: { documents: 4, links: 2, assignments: 1 },
     bgImage: bgBlue,
+    numberTotalSessions: 18,
     students: [
-      { name: 'Lý Thị K', email: 'lythik@student.hcmut.edu.vn' },
-      { name: 'Phan Văn L', email: 'phanvanl@student.hcmut.edu.vn' },
-      { name: 'Mai Thị M', email: 'maithim@student.hcmut.edu.vn' },
+      { name: 'Lý Thị K', email: 'lythik@student.hcmut.edu.vn', numberOfSubmissions: 7, numberOfJoinedSessions: 16, averageScore: 89 },
+      { name: 'Phan Văn L', email: 'phanvanl@student.hcmut.edu.vn', numberOfSubmissions: 6, numberOfJoinedSessions: 15, averageScore: 84 },
+      { name: 'Mai Thị M', email: 'maithim@student.hcmut.edu.vn', numberOfSubmissions: 8, numberOfJoinedSessions: 18, averageScore: 91 },
     ],
     sessionsOrganized: 18,
   },
@@ -81,9 +87,10 @@ export const mockCourses: Course[] = [
     instructor: 'Nguyễn Hứa Phùng',
     stats: { documents: 6, links: 0, assignments: 3 },
     bgImage: bgRed,
+    numberTotalSessions: 14,
     students: [
-      { name: 'Ngô Văn N', email: 'ngovann@student.hcmut.edu.vn' },
-      { name: 'Đỗ Thị O', email: 'dothio@student.hcmut.edu.vn' },
+      { name: 'Ngô Văn N', email: 'ngovann@student.hcmut.edu.vn', numberOfSubmissions: 9, numberOfJoinedSessions: 14, averageScore: 93 },
+      { name: 'Đỗ Thị O', email: 'dothio@student.hcmut.edu.vn', numberOfSubmissions: 7, numberOfJoinedSessions: 12, averageScore: 85 },
     ],
     sessionsOrganized: 14,
   },
@@ -94,10 +101,11 @@ export const mockCourses: Course[] = [
     instructor: 'Ngô Thị F',
     stats: { documents: 4, links: 2, assignments: 1 },
     bgImage: bgGreen,
+    numberTotalSessions: 16,
     students: [
-      { name: 'Trương Văn P', email: 'truongvanp@student.hcmut.edu.vn' },
-      { name: 'Lâm Thị Q', email: 'lamthiq@student.hcmut.edu.vn' },
-      { name: 'Dương Văn R', email: 'duongvanr@student.hcmut.edu.vn' },
+      { name: 'Trương Văn P', email: 'truongvanp@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Lâm Thị Q', email: 'lamthiq@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Dương Văn R', email: 'duongvanr@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 16,
   },
@@ -108,9 +116,10 @@ export const mockCourses: Course[] = [
     instructor: 'Trần Trương Tuấn Phát',
     stats: { documents: 5, links: 2, assignments: 2 },
     bgImage: bgBlue,
+    numberTotalSessions: 20,
     students: [
-      { name: 'Cao Văn S', email: 'caovans@student.hcmut.edu.vn' },
-      { name: 'Hồ Thị T', email: 'hothit@student.hcmut.edu.vn' },
+      { name: 'Cao Văn S', email: 'caovans@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Hồ Thị T', email: 'hothit@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 20,
   },
@@ -121,7 +130,8 @@ export const mockCourses: Course[] = [
     instructor: 'Đặng Thị H',
     stats: { documents: 3, links: 1, assignments: 0 },
     bgImage: bgRed,
-    students: [{ name: 'Đinh Văn U', email: 'dinhvanu@student.hcmut.edu.vn' }],
+    numberTotalSessions: 8,
+    students: [{ name: 'Đinh Văn U', email: 'dinhvanu@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 }],
     sessionsOrganized: 8,
   },
   {
@@ -131,10 +141,11 @@ export const mockCourses: Course[] = [
     instructor: 'Võ Văn I',
     stats: { documents: 7, links: 3, assignments: 4 },
     bgImage: bgGreen,
+    numberTotalSessions: 22,
     students: [
-      { name: 'Tạ Văn V', email: 'tavanv@student.hcmut.edu.vn' },
-      { name: 'Ông Thị W', email: 'ongthiw@student.hcmut.edu.vn' },
-      { name: 'Lưu Văn X', email: 'luuvanx@student.hcmut.edu.vn' },
+      { name: 'Tạ Văn V', email: 'tavanv@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Ông Thị W', email: 'ongthiw@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Lưu Văn X', email: 'luuvanx@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 22,
   },
@@ -145,9 +156,10 @@ export const mockCourses: Course[] = [
     instructor: 'Trịnh Thị K',
     stats: { documents: 2, links: 0, assignments: 1 },
     bgImage: bgBlue,
+    numberTotalSessions: 11,
     students: [
-      { name: 'Vũ Văn Y', email: 'vuvany@student.hcmut.edu.vn' },
-      { name: 'Quách Thị Z', email: 'quachthiz@student.hcmut.edu.vn' },
+      { name: 'Vũ Văn Y', email: 'vuvany@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Quách Thị Z', email: 'quachthiz@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 11,
   },
@@ -158,9 +170,10 @@ export const mockCourses: Course[] = [
     instructor: 'Phan Văn L',
     stats: { documents: 3, links: 2, assignments: 1 },
     bgImage: bgRed,
+    numberTotalSessions: 13,
     students: [
-      { name: 'Kiều Văn AA', email: 'kieuvana@student.hcmut.edu.vn' },
-      { name: 'Từ Thị BB', email: 'tuthibb@student.hcmut.edu.vn' },
+      { name: 'Kiều Văn AA', email: 'kieuvana@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Từ Thị BB', email: 'tuthibb@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 13,
   },
@@ -171,14 +184,26 @@ export const mockCourses: Course[] = [
     instructor: 'Lý Thị M',
     stats: { documents: 4, links: 2, assignments: 2 },
     bgImage: bgGreen,
+    numberTotalSessions: 17,
     students: [
-      { name: 'Lương Văn CC', email: 'luongvancc@student.hcmut.edu.vn' },
-      { name: 'Nghiêm Thị DD', email: 'nghiemthidd@student.hcmut.edu.vn' },
-      { name: 'Ứng Văn EE', email: 'ungvanee@student.hcmut.edu.vn' },
+      { name: 'Lương Văn CC', email: 'luongvancc@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Nghiêm Thị DD', email: 'nghiemthidd@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
+      { name: 'Ứng Văn EE', email: 'ungvanee@student.hcmut.edu.vn', numberOfSubmissions: 0, numberOfJoinedSessions: 0, averageScore: 0 },
     ],
     sessionsOrganized: 17,
   },
 ];
+export type DataCourses={
+  id: string,
+  code: string,
+  title: string,
+  instructor: string,
+  content:{
+    id: string,
+    type: string,
+    data: any
+  }[]
+}
 
 export const dataCourses = [
   {
@@ -188,6 +213,7 @@ export const dataCourses = [
     instructor: 'Nguyễn Hứa Phùng',
     content: [
       {
+        id: 'i1',
         type: 'introduction',
         title: 'Giới thiệu khóa học',
         data: {
@@ -195,6 +221,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 'm1',
         type: 'material',
         title: 'Material',
         data: {
@@ -209,6 +236,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 'v1',
         type: 'movie',
         title: 'Video 1',
         data: {
@@ -222,6 +250,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 'n1',
         type: 'note',
         title: 'Ghi chú bài tập lớn 1',
         data: {
@@ -236,6 +265,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 'l1',
         type: 'reference',
         title: 'Tài liệu tham khảo',
         data: {
@@ -247,6 +277,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 's1',
         type: 'submission',
         title: 'Bài nộp 1',
         data: {
@@ -262,6 +293,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 's2',
         type: 'submission',
         title: 'Bài nộp 2',
         data: {
@@ -280,6 +312,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 's3',
         type: 'submission',
         title: 'Bài nộp 3',
         description:
@@ -293,6 +326,7 @@ export const dataCourses = [
         },
       },
       {
+        id: 'l3',
         type: 'reference',
         title: 'Tài liệu tham khảo 2',
         data: {
@@ -326,7 +360,7 @@ export const mockSubmissionEntries: Record<
   >
 > = {
   '4': {
-    submission1: [
+    's1': [
       {
         name: 'Nguyễn Trần Văn AAA',
         email: 'nguyentranvanaaa123456789@gmail.com',
@@ -346,7 +380,7 @@ export const mockSubmissionEntries: Record<
         score: 2.5,
       },
     ],
-    submission2: [
+    's2': [
       {
         name: 'Nguyễn Trần Văn BBB',
         email: 'nguyentranvanbbb@example.com',
@@ -361,7 +395,7 @@ export const mockSubmissionEntries: Record<
       },
     ],
     // Submission 3 - pending / not graded
-    submission3: [
+    's3': [
       {
         name: 'Phạm Văn D',
         email: 'phamvand@example.com',

@@ -1,32 +1,11 @@
 import { mockCourses } from './~mock-courses';
-import { mockLanguages, mockLocations } from './~mock-register';
+import { mockLanguages, mockLocations , PastRegistration} from './~mock-register';
 
-// --- Định nghĩa Type ---
 
-// Kiểu dữ liệu cho các tùy chọn dropdown
-type DropdownOption = {
-  id: string;
-  name: string;
-};
-
-// Kiểu dữ liệu cho một đơn đăng ký của GIA SƯ
-export type PastTutorRegistration = {
-  id: string;
-  tutorName: string;
-  tutorEmail: string;
-  subjects: DropdownOption[]; // Danh sách các môn học (từ mockCourses)
-  languages: DropdownOption[]; // Danh sách ngôn ngữ
-  sessionTypes: DropdownOption[]; // 'hybrid' | 'online'
-  locations: DropdownOption[]; // Danh sách địa điểm
-  meetLink?: string; // Optional meet link for hybrid sessions
-  specialRequest: string;
-  status: 'Pending' | 'Approved' | 'Declined';
-  createdAt: string; // ISO date string
-};
 
 // --- Helpers ---
 // Lấy tên các giảng viên từ mockCourses để làm gia sư
-const tutorNames = [
+const Names = [
   ...new Set(mockCourses.map(c => c.instructor)),
 ].slice(0, 3); // Lấy 3 giảng viên đầu tiên
 
@@ -50,16 +29,16 @@ const courseOptions = mockCourses.map(c => ({
 // Tùy chọn loại hình
 const sessionTypeOptions = [
   { id: 'online', name: 'Học trực tiếp' },
-  { id: 'hybrid', name: 'Học hybrid' },
+  { id: 'hybrid', name: 'Học trực tiếp kết hợp trực tuyến' },
 ];
 
 // --- Dữ liệu Mock ---
 
-export const mockTutorRegistrations: PastTutorRegistration[] = [
+export const mockTutorRegistrations: PastRegistration[] = [
   {
     id: 'tutor-reg-1',
-    tutorName: tutorNames[0], // Nguyễn Lê Duy Lai
-    tutorEmail: createFakeEmail(tutorNames[0]),
+    Name: Names[0], // Nguyễn Lê Duy Lai
+    Email: createFakeEmail(Names[0]),
     subjects: [courseOptions[0], courseOptions[10]], // Computer Network, Networks II
     languages: [mockLanguages[0], mockLanguages[1]], // Vietnamese, English
     sessionTypes: [sessionTypeOptions[0], sessionTypeOptions[1]], // Cả hai
@@ -70,8 +49,8 @@ export const mockTutorRegistrations: PastTutorRegistration[] = [
   },
   {
     id: 'tutor-reg-2',
-    tutorName: tutorNames[1], // Nguyễn Thị Ái Thảo
-    tutorEmail: createFakeEmail(tutorNames[1]),
+    Name: Names[1], // Nguyễn Thị Ái Thảo
+    Email: createFakeEmail(Names[1]),
     subjects: [courseOptions[1], courseOptions[11]], // Database System, Database II
     languages: [mockLanguages[0]], // Vietnamese
     sessionTypes: [sessionTypeOptions[1]], // Chỉ hybrid
@@ -82,8 +61,8 @@ export const mockTutorRegistrations: PastTutorRegistration[] = [
   },
   {
     id: 'tutor-reg-3',
-    tutorName: tutorNames[2], // Ngô Thị Vân
-    tutorEmail: createFakeEmail(tutorNames[2]),
+    Name: Names[2], // Ngô Thị Vân
+    Email: createFakeEmail(Names[2]),
     subjects: [courseOptions[2]], // Operating System
     languages: [mockLanguages[1]], // English
     sessionTypes: [sessionTypeOptions[0]], // Chỉ online

@@ -103,12 +103,14 @@ function RouteComponent() {
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 7);
 
+  const [role, setRole] = useState<'student' | 'tutor'>('student');
 
-  const rawUserStore = localStorage.getItem('userStore');
-  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-  const State = userStore?.state ?? null;
-  const userLocalStore = State?.user ?? null;
-  
+
+  // const rawUserStore = localStorage.getItem('userStore');
+  // const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  // const State = userStore?.state ?? null;
+  // const userLocalStore = State?.user ?? null;
+
   const goToPreviousWeek = () => setReferenceDate((d) => {
     const nd = new Date(d);
     nd.setDate(d.getDate() - 7);
@@ -119,6 +121,8 @@ function RouteComponent() {
     nd.setDate(d.getDate() + 7);
     return nd;
   });
+
+
 
   // Filter and map sessions to calendar items, only showing those within the currently visible week
   // and within visible hours (07:00-22:00). Computed inside component so it re-runs on state change.
@@ -139,6 +143,7 @@ function RouteComponent() {
       endTime: toHHMM(s.end),
       title: s.title,
       desc: s.desc ?? '',
+      isManager: role === 'tutor',
     }));
 
   return (
@@ -174,27 +179,43 @@ function RouteComponent() {
             <ScheduleHeader onPrevWeek={goToPreviousWeek} onNextWeek={goToNextWeek} />
 
             {/* 3.2. Grid Lịch */}
-            <CalendarGrid items={calendarItems} weekLabels={weekLabels} />
+          <CalendarGrid key={role} items={calendarItems} weekLabels={weekLabels} role={role} />
           </div>
 
           {/* 4. Nút "Yêu cầu buổi học" và liên kết Lịch sử */}
-          <div className="mt-6 flex items-center justify-end gap-3">
-            { userLocalStore.isTutor && (
+          <div className="mt-6 flex items-center justify-between gap-3">
+            <div>
+              <button
+                onClick={() => {
+                  const newRole = role === 'student' ? 'tutor' : 'student';
+                  localStorage.setItem('role', newRole);
+                  setRole(newRole);
+                }}
+                className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 hover:bg-gray-300"
+              >
+                Đổi role: {role === 'student' ? 'Student' : 'Tutor'}
+              </button>
+            </div>
+            {/* { userLocalStore.isTutor && ( */}
+            <div className="flex items-center gap-4">
+              {role === 'tutor' && (
+                <Link
+                  to="/schedule/request"
+                  search={{ courseId: '', title: '', desc: '', requestType: '' }}
+                  className="rounded-md bg-blue-800 px-5 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Tạo buổi học
+                </Link>
+              )}
+
               <Link
-                to="/schedule/request"
-                search={{ courseId: '', title: '', desc: '', requestType: '' }}
+                to="/schedule/history"
                 className="rounded-md bg-blue-800 px-5 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Tạo buổi học
+                Yêu cầu buổi học
               </Link>
-            )}
 
-            <Link
-              to="/schedule/history"
-              className="rounded-md bg-blue-800 px-5 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Yêu cầu buổi học
-            </Link>
+            </div>
 
           </div>
         </main>
@@ -321,9 +342,11 @@ interface CalendarGridProps {
     desc: string;
   }>;
   weekLabels: Array<{ weekday: string; date: string }>;
+  role: 'student' | 'tutor';
 }
 
-function CalendarGrid({ items, weekLabels }: CalendarGridProps) {
+function CalendarGrid({ items, weekLabels, role }: CalendarGridProps) {
+  console.log('CalendarGrid rendered with role:', role);
   // Grid được chia thành 30 hàng (30 phút mỗi hàng), từ 07:00 đến 22:00
   const totalRows = (22 - 7) * 2; // = 30 rows (1 row = 30 minutes)
 
@@ -414,6 +437,7 @@ interface CalendarItemProps {
     endTime: string;   // "HH:mm"
     title: string;
     desc: string;
+    isManager?: boolean;
   }
 }
 
@@ -499,6 +523,7 @@ function CalendarItem({ item }: CalendarItemProps) {
           title={item.title}
           desc={item.desc}
           id={item.id}
+          isManager={item.isManager}
         />
       )}
     </>

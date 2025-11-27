@@ -59,12 +59,13 @@ interface ScheduleDetailPopupProps {
   title?: string; // Tiêu đề của popup
   desc?: string; // Mô tả của popup
   id?: string; // ID của lịch học
+  isManager?: boolean; // Quyền quản lý
 }
 
 /**
  * Component Popup hiển thị chi tiết lịch học
  */
-export function ScheduleDetailPopup({ onClose, position, title, desc, id }: ScheduleDetailPopupProps) {
+export function ScheduleDetailPopup({ onClose, position, title, desc, id, isManager }: ScheduleDetailPopupProps) {
   // Load actual session data from mock store
   const session = id ? getSessionById(id) : undefined
   const sessionMembers = session?.members ?? []
@@ -119,11 +120,14 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
       transform: 'none',
     };
   };
-  const rawUserStore = localStorage.getItem('userStore');
-  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-  const State = userStore?.state ?? null;
-  const userLocalStore = State.user ?? null;
-
+  // const rawUserStore = localStorage.getItem('userStore');
+  // const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  // const State = userStore?.state ?? null;
+  // const userLocalStore = State.user ?? null;
+  // const rawRole = localStorage.getItem('role');
+  // const userLocalStore = {
+  //   isManager: rawRole === 'tutor'
+  // };
   const popupStyle = getPopupStyle();
   const isPositioned = !!position;
 
@@ -148,7 +152,7 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
           className="absolute right-3 top-3 z-10 text-gray-400 hover:text-gray-600"
           aria-label="Đóng popup"
         >
-          {userLocalStore.isManager ? (
+          {isManager ? (
             <ModificationIcon className="size-6" />
           ) : (
 
@@ -189,9 +193,15 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
               </p>
             )}
             <p className="text-gray-800">
+              Course Title: <span className="font-medium text-gray-900">{session?.courseTitle ?? 'N/A'}</span>
+            </p>
+            <p className="text-gray-800">
+              Course ID: <span className="font-medium text-gray-900">{session?.courseId ?? 'N/A'}</span>
+            </p>
+            <p className="text-gray-800">
               Note:{' '}
               <a
-                href="#"
+                href={session?.tutorNote}
                 className="font-medium text-blue-600 underline"
               >
                 tại đây
@@ -221,7 +231,7 @@ export function ScheduleDetailPopup({ onClose, position, title, desc, id }: Sche
             <div className="grid grid-cols-4 gap-x-2 gap-y-4">
               {sessionMembers.map((member) => (
                 <div key={member.id} className="flex flex-col items-center text-center">
-                  {userLocalStore?.isManager ? (
+                  {isManager ? (
                     member.present ? (
                       <PresentIcon className="size-9" />
                     ) : (

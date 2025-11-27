@@ -1,11 +1,13 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { createFileRoute, Link, useParams } from '@tanstack/react-router';
-import React, { useState, type SVGProps, useMemo } from 'react'; 
+import React, { useState, type SVGProps, useMemo } from 'react';
 
+import { mockCourses } from '@/components/data/~mock-courses';
 import { mockSessions } from '@/components/data/~mock-session';
 import { getSubmission, updateSubmission } from '@/components/data/~mock-submissions';
+import { ArrowLeft } from '@/components/icons';
 import StudyLayout from '@/components/study-layout';
-import filePDF from 'public/group07_report 02.pdf';
+import filePDF from '/group07_report 02.pdf';
 
 
 /**
@@ -57,7 +59,7 @@ const getScoreColor = (score?: number) => {
   if (score === undefined) return 'text-gray-500';
   if (score >= 7) return 'text-green-600';
   if (score >= 5) return 'text-[#F9BA08]';
-  return 'text-[#EA4335]'; 
+  return 'text-[#EA4335]';
 };
 
 // --- Định nghĩa Route (Giữ nguyên) ---
@@ -96,7 +98,7 @@ function RouteComponent() {
       submittedAt: formatISODate(session.start),
       score: submissionData?.score, // Lấy từ mock-submissions
       comment: submissionData?.comment ?? '', // Lấy từ mock-submissions
-      fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', // Vẫn dùng file mẫu
+      fileUrl: submissionData?.file ?? filePDF, // Vẫn dùng file mẫu
     };
   }, [id, name, stuname]); // Tính toán lại khi URL thay đổi
 
@@ -105,7 +107,7 @@ function RouteComponent() {
   const [activeTab, setActiveTab] = useState<'baiLam' | 'nhanXet'>('baiLam');
   const [comment, setComment] = useState(matchingEntry?.comment || '');
   const [score, setScore] = useState(matchingEntry?.score);
-  
+
   // Track if there are unsaved changes
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -130,29 +132,68 @@ function RouteComponent() {
   // Handler to save score and comment
   const handleSave = () => {
     if (!matchingEntry) return;
-    
+
     updateSubmission(matchingEntry.sessionId, matchingEntry.memberId, {
       score,
       comment,
     });
-    
+
     setHasChanges(false);
     alert('Đã lưu thành công!');
   };
 
+  const course = useMemo(() => {
+    return mockCourses.find((c) => c.id === id) ?? mockCourses[0];
+
+  }, [id]);
   // [THAY ĐỔI] Xử lý trường hợp không tìm thấy
   if (!matchingEntry) {
     return (
       <StudyLayout>
-        <div className="container mx-auto max-w-7xl p-4 py-8 md:p-8">
+        <div className="w-full font-['Archivo']">
+          {/* Back button */}
           <Link
-            to="/course/$id/$name"
-            params={{ id, name } as any}
-            className="mb-6 flex items-center gap-2 text-sm font-medium text-[#3D4863] transition hover:text-blue-700"
+            // onClick={() => navigate({ to: '/dashboard' })}
+            to={`/course/${id}/${name}` as string}
+            className="mb-6 flex items-center gap-2 text-[#3D4863] transition hover:text-blue-700"
           >
-            <ArrowLeftIcon className="size-5" />
-            <span>Quay lại</span>
+            <ArrowLeft className="size-5" />
+            <span className="font-medium">Quay lại</span>
           </Link>
+          {/* Course header */}
+          <div
+            className="relative rounded-lg p-8 text-white shadow-lg"
+            style={{
+              backgroundImage: `url(${course.bgImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: '250px',
+            }}
+          >
+            <div className="relative z-10">
+              <p className="mb-2 text-sm font-medium text-gray-200">
+                {course.code}
+              </p>
+              <h1 className="mb-3 text-4xl font-bold">{course.title}</h1>
+              <p className="text-lg text-gray-100">
+                Giảng viên: {course.instructor}
+              </p>
+
+              {/* Button "tổng quan" + "Đánh giá" */}
+              <div className="mt-6 flex gap-4">
+                <Link
+                  to={`/course/${id}` as any}
+                  className="rounded-lg bg-white px-4 py-2 font-medium text-[#0329E9] backdrop-blur-sm transition hover:bg-white/80"
+                >
+                  Tổng quan
+                </Link>
+
+                <button className="rounded-lg bg-[#0329E9] px-4 py-2 font-medium backdrop-blur-sm transition hover:bg-[#0329E9]/80">
+                  Đánh giá
+                </button>
+              </div>
+            </div>
+          </div>
           <div className="rounded-lg bg-white p-8 text-center text-gray-700 shadow-md">
             <h1 className="text-xl font-bold">Không tìm thấy bài nộp</h1>
             <p>Không tìm thấy dữ liệu cho sinh viên "{stuname}".</p>
@@ -167,7 +208,7 @@ function RouteComponent() {
 
   return (
     <StudyLayout>
-      <div className="container mx-auto max-w-7xl p-4 py-8 md:p-8">
+      <div className="w-full font-['Archivo']">
         {/* 1. Nút quay lại (Giữ nguyên) */}
         <Link
           to="/course/$id/$name"
@@ -209,21 +250,19 @@ function RouteComponent() {
           <nav className="-mb-px flex flex-wrap items-center gap-x-2 gap-y-1">
             <button
               onClick={() => setActiveTab('baiLam')}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                activeTab === 'baiLam'
-                  ? 'bg-[#0329E9] text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${activeTab === 'baiLam'
+                ? 'bg-[#0329E9] text-white shadow-sm'
+                : 'text-gray-600 hover:bg-gray-100'
+                }`}
             >
               Bài làm
             </button>
             <button
               onClick={() => setActiveTab('nhanXet')}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                activeTab === 'nhanXet'
-                  ? 'bg-[#0329E9] text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${activeTab === 'nhanXet'
+                ? 'bg-[#0329E9] text-white shadow-sm'
+                : 'text-gray-600 hover:bg-gray-100'
+                }`}
             >
               Nhận xét
             </button>
@@ -237,21 +276,19 @@ function RouteComponent() {
               Tải bài làm
             </a>
 
-            <button 
+            <button
               onClick={handleSave}
               disabled={!hasChanges}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                hasChanges
-                  ? 'text-[#0329E9] hover:bg-blue-50'
-                  : 'cursor-not-allowed text-gray-400'
-              }`}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${hasChanges
+                ? 'text-[#0329E9] hover:bg-blue-50'
+                : 'cursor-not-allowed text-gray-400'
+                }`}
             >
               Cập nhật
             </button>
 
-            <span className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              hasChanges ? 'text-orange-600' : 'text-gray-400'
-            }`}>
+            <span className={`rounded-lg px-4 py-2 text-sm font-medium ${hasChanges ? 'text-orange-600' : 'text-gray-400'
+              }`}>
               {hasChanges ? 'Có thay đổi chưa lưu' : 'Đã lưu'}
             </span>
           </nav>
@@ -292,11 +329,10 @@ function RouteComponent() {
                   type="button"
                   onClick={handleSave}
                   disabled={!hasChanges}
-                  className={`rounded-lg px-5 py-2.5 text-sm font-medium text-white transition ${
-                    hasChanges
-                      ? 'bg-[#0329E9] hover:bg-blue-700'
-                      : 'cursor-not-allowed bg-gray-400'
-                  }`}
+                  className={`rounded-lg px-5 py-2.5 text-sm font-medium text-white transition ${hasChanges
+                    ? 'bg-[#0329E9] hover:bg-blue-700'
+                    : 'cursor-not-allowed bg-gray-400'
+                    }`}
                 >
                   Lưu nhận xét
                 </button>

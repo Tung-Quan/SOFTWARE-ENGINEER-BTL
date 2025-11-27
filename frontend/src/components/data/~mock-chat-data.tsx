@@ -100,6 +100,44 @@ export const mockConversations: Conversation[] = [
     description: 'Thắc mắc về môn học Giải tích 1.',
     icon: AcademicIcon,
   },
+  {
+    id: 'group-1',
+    title: 'Nhóm học tập Toán Tin',
+    description: '5 thành viên',
+    icon: GroupIcon,
+    isGroup: true,
+    members: [
+      { id: 1, name: 'Nguyễn Văn A' },
+      { id: 2, name: 'Trần Thị B' },
+      { id: 3, name: 'Lê Văn C' },
+      { id: 4, name: 'Phạm Thị D' },
+      { id: 5, name: 'Hoàng Văn E' },
+    ],
+    createdBy: 'tutor',
+  }
+];
+
+export type Message = {
+  id: string;
+  sender: string;
+  text: string;
+  timestamp: Date;
+};
+
+// chat data cho group-1
+export const chatDataGroup1: Message[] = [
+  {
+    id: 'msg-1',
+    sender: 'Nguyễn Văn A',
+    text: 'Chào mọi người, chúng ta có buổi học nhóm vào thứ 7 này không?',
+    timestamp: new Date('2025-11-01T10:00:00Z'),
+  },
+  {
+    id: 'msg-2',
+    sender: 'Trần Thị B',
+    text: 'Mình nghĩ là có, nhưng chưa chắc chắn lắm. Ai biết thì xác nhận giúp nhé!',
+    timestamp: new Date('2025-11-01T10:05:00Z'),
+  }
 ];
 
 // Helper functions for group chat management
@@ -136,7 +174,7 @@ export function updateGroupName(groupId: string, newName: string): boolean {
 export function addMemberToGroup(groupId: string, member: GroupMember): boolean {
   const group = groupChats.find(g => g.id === groupId);
   if (group && group.members) {
-    if (!group.members.some(m => m.id === member.id)) {
+    if (!group.members.find(m => m.id === member.id)) {
       group.members.push(member);
       group.description = `${group.members.length} thành viên`;
       return true;

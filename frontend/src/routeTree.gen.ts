@@ -28,13 +28,14 @@ import { Route as PrivateScheduleRequestIndexRouteImport } from './features/~_pr
 import { Route as PrivateScheduleHistoryIndexRouteImport } from './features/~_private/~schedule/~history/~index'
 import { Route as PrivateScheduleIdIndexRouteImport } from './features/~_private/~schedule/~$id/~index'
 import { Route as PrivateRegisterSessionOverviewIndexRouteImport } from './features/~_private/~register-session/~overview/~index'
+import { Route as PrivateProfileIdIndexRouteImport } from './features/~_private/~profile/~$id/~index'
 import { Route as PrivateLibraryQueryIndexRouteImport } from './features/~_private/~library/~$query/~index'
 import { Route as PrivateCourseIdIndexRouteImport } from './features/~_private/~course/~$id/~index'
 import { Route as PrivateScheduleRequestNewIndexRouteImport } from './features/~_private/~schedule/~request/~new/~index'
 import { Route as PrivateScheduleHistoryIdIndexRouteImport } from './features/~_private/~schedule/~history/~$id/~index'
 import { Route as PrivateCourseIdSubmissionsIndexRouteImport } from './features/~_private/~course/~$id/~submissions/~index'
+import { Route as PrivateCourseIdStasticalIndexRouteImport } from './features/~_private/~course/~$id/~stastical/~index'
 import { Route as PrivateCourseIdRatingIndexRouteImport } from './features/~_private/~course/~$id/~rating/~index'
-import { Route as PrivateCourseIdMembersIndexRouteImport } from './features/~_private/~course/~$id/~members/~index'
 import { Route as PrivateCourseIdNameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~index'
 import { Route as PrivateCourseIdRatingIdIndexRouteImport } from './features/~_private/~course/~$id/~rating/~$id/~$index'
 import { Route as PrivateCourseIdNameStunameIndexRouteImport } from './features/~_private/~course/~$id/~$name/~$stuname/~index'
@@ -142,6 +143,11 @@ const PrivateRegisterSessionOverviewIndexRoute =
     path: '/register-session/overview/',
     getParentRoute: () => PrivateRoute,
   } as any)
+const PrivateProfileIdIndexRoute = PrivateProfileIdIndexRouteImport.update({
+  id: '/profile/$id/',
+  path: '/profile/$id/',
+  getParentRoute: () => PrivateRoute,
+} as any)
 const PrivateLibraryQueryIndexRoute =
   PrivateLibraryQueryIndexRouteImport.update({
     id: '/library/$query/',
@@ -171,16 +177,16 @@ const PrivateCourseIdSubmissionsIndexRoute =
     path: '/course/$id/submissions/',
     getParentRoute: () => PrivateRoute,
   } as any)
+const PrivateCourseIdStasticalIndexRoute =
+  PrivateCourseIdStasticalIndexRouteImport.update({
+    id: '/course/$id/stastical/',
+    path: '/course/$id/stastical/',
+    getParentRoute: () => PrivateRoute,
+  } as any)
 const PrivateCourseIdRatingIndexRoute =
   PrivateCourseIdRatingIndexRouteImport.update({
     id: '/course/$id/rating/',
     path: '/course/$id/rating/',
-    getParentRoute: () => PrivateRoute,
-  } as any)
-const PrivateCourseIdMembersIndexRoute =
-  PrivateCourseIdMembersIndexRouteImport.update({
-    id: '/course/$id/members/',
-    path: '/course/$id/members/',
     getParentRoute: () => PrivateRoute,
   } as any)
 const PrivateCourseIdNameIndexRoute =
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/system-monitoring': typeof PrivateSystemMonitoringIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/library/$query': typeof PrivateLibraryQueryIndexRoute
+  '/profile/$id': typeof PrivateProfileIdIndexRoute
   '/register-session/overview': typeof PrivateRegisterSessionOverviewIndexRoute
   '/schedule/$id': typeof PrivateScheduleIdIndexRoute
   '/schedule/history': typeof PrivateScheduleHistoryIndexRoute
@@ -224,8 +231,8 @@ export interface FileRoutesByFullPath {
   '/statistical/overview': typeof PrivateStatisticalOverviewIndexRoute
   '/statistical/reports': typeof PrivateStatisticalReportsIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
-  '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
   '/course/$id/rating': typeof PrivateCourseIdRatingIndexRoute
+  '/course/$id/stastical': typeof PrivateCourseIdStasticalIndexRoute
   '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
   '/schedule/history/$id': typeof PrivateScheduleHistoryIdIndexRoute
   '/schedule/request/new': typeof PrivateScheduleRequestNewIndexRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/system-monitoring': typeof PrivateSystemMonitoringIndexRoute
   '/course/$id': typeof PrivateCourseIdIndexRoute
   '/library/$query': typeof PrivateLibraryQueryIndexRoute
+  '/profile/$id': typeof PrivateProfileIdIndexRoute
   '/register-session/overview': typeof PrivateRegisterSessionOverviewIndexRoute
   '/schedule/$id': typeof PrivateScheduleIdIndexRoute
   '/schedule/history': typeof PrivateScheduleHistoryIndexRoute
@@ -254,8 +262,8 @@ export interface FileRoutesByTo {
   '/statistical/overview': typeof PrivateStatisticalOverviewIndexRoute
   '/statistical/reports': typeof PrivateStatisticalReportsIndexRoute
   '/course/$id/$name': typeof PrivateCourseIdNameIndexRoute
-  '/course/$id/members': typeof PrivateCourseIdMembersIndexRoute
   '/course/$id/rating': typeof PrivateCourseIdRatingIndexRoute
+  '/course/$id/stastical': typeof PrivateCourseIdStasticalIndexRoute
   '/course/$id/submissions': typeof PrivateCourseIdSubmissionsIndexRoute
   '/schedule/history/$id': typeof PrivateScheduleHistoryIdIndexRoute
   '/schedule/request/new': typeof PrivateScheduleRequestNewIndexRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/_private/system-monitoring/': typeof PrivateSystemMonitoringIndexRoute
   '/_private/course/$id/': typeof PrivateCourseIdIndexRoute
   '/_private/library/$query/': typeof PrivateLibraryQueryIndexRoute
+  '/_private/profile/$id/': typeof PrivateProfileIdIndexRoute
   '/_private/register-session/overview/': typeof PrivateRegisterSessionOverviewIndexRoute
   '/_private/schedule/$id/': typeof PrivateScheduleIdIndexRoute
   '/_private/schedule/history/': typeof PrivateScheduleHistoryIndexRoute
@@ -286,8 +295,8 @@ export interface FileRoutesById {
   '/_private/statistical/overview/': typeof PrivateStatisticalOverviewIndexRoute
   '/_private/statistical/reports/': typeof PrivateStatisticalReportsIndexRoute
   '/_private/course/$id/$name/': typeof PrivateCourseIdNameIndexRoute
-  '/_private/course/$id/members/': typeof PrivateCourseIdMembersIndexRoute
   '/_private/course/$id/rating/': typeof PrivateCourseIdRatingIndexRoute
+  '/_private/course/$id/stastical/': typeof PrivateCourseIdStasticalIndexRoute
   '/_private/course/$id/submissions/': typeof PrivateCourseIdSubmissionsIndexRoute
   '/_private/schedule/history/$id/': typeof PrivateScheduleHistoryIdIndexRoute
   '/_private/schedule/request/new/': typeof PrivateScheduleRequestNewIndexRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/system-monitoring'
     | '/course/$id'
     | '/library/$query'
+    | '/profile/$id'
     | '/register-session/overview'
     | '/schedule/$id'
     | '/schedule/history'
@@ -318,8 +328,8 @@ export interface FileRouteTypes {
     | '/statistical/overview'
     | '/statistical/reports'
     | '/course/$id/$name'
-    | '/course/$id/members'
     | '/course/$id/rating'
+    | '/course/$id/stastical'
     | '/course/$id/submissions'
     | '/schedule/history/$id'
     | '/schedule/request/new'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/system-monitoring'
     | '/course/$id'
     | '/library/$query'
+    | '/profile/$id'
     | '/register-session/overview'
     | '/schedule/$id'
     | '/schedule/history'
@@ -348,8 +359,8 @@ export interface FileRouteTypes {
     | '/statistical/overview'
     | '/statistical/reports'
     | '/course/$id/$name'
-    | '/course/$id/members'
     | '/course/$id/rating'
+    | '/course/$id/stastical'
     | '/course/$id/submissions'
     | '/schedule/history/$id'
     | '/schedule/request/new'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/_private/system-monitoring/'
     | '/_private/course/$id/'
     | '/_private/library/$query/'
+    | '/_private/profile/$id/'
     | '/_private/register-session/overview/'
     | '/_private/schedule/$id/'
     | '/_private/schedule/history/'
@@ -379,8 +391,8 @@ export interface FileRouteTypes {
     | '/_private/statistical/overview/'
     | '/_private/statistical/reports/'
     | '/_private/course/$id/$name/'
-    | '/_private/course/$id/members/'
     | '/_private/course/$id/rating/'
+    | '/_private/course/$id/stastical/'
     | '/_private/course/$id/submissions/'
     | '/_private/schedule/history/$id/'
     | '/_private/schedule/request/new/'
@@ -529,6 +541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateRegisterSessionOverviewIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/profile/$id/': {
+      id: '/_private/profile/$id/'
+      path: '/profile/$id'
+      fullPath: '/profile/$id'
+      preLoaderRoute: typeof PrivateProfileIdIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
     '/_private/library/$query/': {
       id: '/_private/library/$query/'
       path: '/library/$query'
@@ -564,18 +583,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateCourseIdSubmissionsIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/course/$id/stastical/': {
+      id: '/_private/course/$id/stastical/'
+      path: '/course/$id/stastical'
+      fullPath: '/course/$id/stastical'
+      preLoaderRoute: typeof PrivateCourseIdStasticalIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
     '/_private/course/$id/rating/': {
       id: '/_private/course/$id/rating/'
       path: '/course/$id/rating'
       fullPath: '/course/$id/rating'
       preLoaderRoute: typeof PrivateCourseIdRatingIndexRouteImport
-      parentRoute: typeof PrivateRoute
-    }
-    '/_private/course/$id/members/': {
-      id: '/_private/course/$id/members/'
-      path: '/course/$id/members'
-      fullPath: '/course/$id/members'
-      preLoaderRoute: typeof PrivateCourseIdMembersIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
     '/_private/course/$id/$name/': {
@@ -614,6 +633,7 @@ interface PrivateRouteChildren {
   PrivateSystemMonitoringIndexRoute: typeof PrivateSystemMonitoringIndexRoute
   PrivateCourseIdIndexRoute: typeof PrivateCourseIdIndexRoute
   PrivateLibraryQueryIndexRoute: typeof PrivateLibraryQueryIndexRoute
+  PrivateProfileIdIndexRoute: typeof PrivateProfileIdIndexRoute
   PrivateRegisterSessionOverviewIndexRoute: typeof PrivateRegisterSessionOverviewIndexRoute
   PrivateScheduleIdIndexRoute: typeof PrivateScheduleIdIndexRoute
   PrivateScheduleHistoryIndexRoute: typeof PrivateScheduleHistoryIndexRoute
@@ -622,8 +642,8 @@ interface PrivateRouteChildren {
   PrivateStatisticalOverviewIndexRoute: typeof PrivateStatisticalOverviewIndexRoute
   PrivateStatisticalReportsIndexRoute: typeof PrivateStatisticalReportsIndexRoute
   PrivateCourseIdNameIndexRoute: typeof PrivateCourseIdNameIndexRoute
-  PrivateCourseIdMembersIndexRoute: typeof PrivateCourseIdMembersIndexRoute
   PrivateCourseIdRatingIndexRoute: typeof PrivateCourseIdRatingIndexRoute
+  PrivateCourseIdStasticalIndexRoute: typeof PrivateCourseIdStasticalIndexRoute
   PrivateCourseIdSubmissionsIndexRoute: typeof PrivateCourseIdSubmissionsIndexRoute
   PrivateScheduleHistoryIdIndexRoute: typeof PrivateScheduleHistoryIdIndexRoute
   PrivateScheduleRequestNewIndexRoute: typeof PrivateScheduleRequestNewIndexRoute
@@ -643,6 +663,7 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateSystemMonitoringIndexRoute: PrivateSystemMonitoringIndexRoute,
   PrivateCourseIdIndexRoute: PrivateCourseIdIndexRoute,
   PrivateLibraryQueryIndexRoute: PrivateLibraryQueryIndexRoute,
+  PrivateProfileIdIndexRoute: PrivateProfileIdIndexRoute,
   PrivateRegisterSessionOverviewIndexRoute:
     PrivateRegisterSessionOverviewIndexRoute,
   PrivateScheduleIdIndexRoute: PrivateScheduleIdIndexRoute,
@@ -652,8 +673,8 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateStatisticalOverviewIndexRoute: PrivateStatisticalOverviewIndexRoute,
   PrivateStatisticalReportsIndexRoute: PrivateStatisticalReportsIndexRoute,
   PrivateCourseIdNameIndexRoute: PrivateCourseIdNameIndexRoute,
-  PrivateCourseIdMembersIndexRoute: PrivateCourseIdMembersIndexRoute,
   PrivateCourseIdRatingIndexRoute: PrivateCourseIdRatingIndexRoute,
+  PrivateCourseIdStasticalIndexRoute: PrivateCourseIdStasticalIndexRoute,
   PrivateCourseIdSubmissionsIndexRoute: PrivateCourseIdSubmissionsIndexRoute,
   PrivateScheduleHistoryIdIndexRoute: PrivateScheduleHistoryIdIndexRoute,
   PrivateScheduleRequestNewIndexRoute: PrivateScheduleRequestNewIndexRoute,

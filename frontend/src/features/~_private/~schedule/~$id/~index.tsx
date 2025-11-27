@@ -9,8 +9,7 @@ import { toast } from 'react-toastify'
 
 import { mockCourses } from '@/components/data/~mock-courses'
 import { getAllNames } from '@/components/data/~mock-names'
-import { mockLocations } from '@/components/data/~mock-register'
-import { getSessionById, updateSession, Session } from '@/components/data/~mock-session'
+import { getSessionById, updateSession, deleteSession, Session } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/_private/schedule/$id/')({
@@ -50,11 +49,12 @@ function RouteComponent() {
   const [locationVal, setLocationVal] = useState('')
   const [tutorNote, setTutorNote] = useState('')
 
-  const rawUserStore = localStorage.getItem('userStore');
-  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-  const State = userStore?.state ?? null;
-  const userLocalStore = State?.user ?? null;
-
+  // const rawUserStore = localStorage.getItem('userStore');
+  // const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  // const State = userStore?.state ?? null;
+  // const userLocalStore = State?.user ?? null;
+  const rawRole = localStorage.getItem('role');
+  const isManager = rawRole === 'tutor';
   // Helpers to convert ISO <-> input[type=datetime-local] value
   const toInputLocal = (iso?: string) => {
     if (!iso) return ''
@@ -149,6 +149,23 @@ function RouteComponent() {
     navigate({ to: '/schedule' })
   }
 
+  const handleDelete = () => {
+    if (!session) {
+      toast.error('Không tìm thấy buổi học để xóa')
+      return
+    }
+
+    if (window.confirm(`Bạn có chắc chắn muốn xóa buổi học "${session.title}"?`)) {
+      const success = deleteSession(session.id)
+      if (success) {
+        toast.success('Đã xóa buổi học thành công')
+        navigate({ to: '/schedule' })
+      } else {
+        toast.error('Không thể xóa buổi học')
+      }
+    }
+  }
+
   // Save tutor note after session time
   const handleSaveTutorNote = () => {
     if (!session) {
@@ -159,7 +176,7 @@ function RouteComponent() {
     toast.success('Ghi chú đã được lưu')
   }
 
-  if (!userLocalStore.isManager) {
+  if (!isManager) {
     return (
       <StudyLayout>
         <div className="min-h-screen bg-gray-50">
@@ -192,7 +209,10 @@ function RouteComponent() {
                       <label className="mb-1 block text-sm font-medium text-gray-600">Chủ đề:</label>
                       <p className="text-base text-gray-900">{session?.title || 'Chưa có thông tin'}</p>
                     </div>
-
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Tên môn học</label>
+                      <p className="text-base text-gray-900">{session?.courseTitle || 'Chưa có thông tin'}</p>
+                    </div>
                     <div>
                       <label className="mb-1 block text-sm font-medium text-gray-600">Khóa học:</label>
                       <p className="text-base text-gray-900">{session?.courseId || 'Chưa có thông tin'}</p>
@@ -209,6 +229,11 @@ function RouteComponent() {
                         {session?.start ? new Date(session.start).toLocaleString('vi-VN') : 'Chưa xác định'} - {session?.end ? new Date(session.end).toLocaleString('vi-VN') : 'Chưa xác định'}
                       </p>
                     </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-600">Mô tả:</label>
+                      <p className="text-base text-gray-900">{session?.desc || 'Không có mô tả'}</p>
+                    </div>
+
 
                     {session?.method === 'online' && session?.link && (
                       <div>
@@ -219,7 +244,7 @@ function RouteComponent() {
                       </div>
                     )}
 
-                    {session?.method === 'hybrid' && session?.location && (
+                    {session?.method === 'offline' && session?.location && (
                       <div>
                         <label className="mb-1 block text-sm font-medium text-gray-600">Địa điểm:</label>
                         <p className="text-base text-gray-900">{session.location}</p>
@@ -229,7 +254,9 @@ function RouteComponent() {
                     {session?.tutorNote && (
                       <div>
                         <label className="mb-1 block text-sm font-medium text-gray-600">Ghi chú của giảng viên:</label>
-                        <p className="whitespace-pre-wrap text-base text-gray-900">{session.tutorNote}</p>
+                        <Link
+                          to={session.tutorNote}
+                          className="whitespace-pre-wrap text-base text-blue-600 ">{session.tutorNote}</Link>
                       </div>
                     )}
                   </div>
@@ -249,8 +276,8 @@ function RouteComponent() {
                         <UserCircleIcon className="size-10 text-gray-400" />
                         <span className="mt-1 text-xs text-gray-700">{member.name}</span>
                         <span className={`mt-2 rounded-full px-2 py-1 text-xs font-medium ${isPresent
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
                           }`}>
                           {isPresent ? 'Có mặt' : 'Vắng mặt'}
                         </span>
@@ -290,6 +317,7 @@ function RouteComponent() {
               <BasicInfoSection
                 title={title}
                 courseId={courseId}
+                courseTitle={session?.courseTitle || ''}
                 sessionType={sessionType}
                 startLocal={startLocal}
                 endLocal={endLocal}
@@ -310,8 +338,8 @@ function RouteComponent() {
                   <textarea
                     value={tutorNote}
                     onChange={(e) => setTutorNote(e.target.value)}
-                    rows={4}
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                    // rows={4}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                     placeholder="Viết ghi chú, tóm tắt buổi học, link tài liệu, thông tin cần lưu ý..."
                   />
                   <div className="mt-3 flex justify-end">
@@ -333,7 +361,7 @@ function RouteComponent() {
               />
 
               {/* Section: Nút bấm */}
-              <FormActions onSave={handleSaved} />
+              <FormActions onSave={handleSaved} onDelete={handleDelete} />
 
             </div>
           </form>
@@ -351,6 +379,7 @@ function RouteComponent() {
 interface BasicInfoProps {
   title: string
   courseId: string
+  courseTitle: string
   sessionType: 'offline' | 'online'
   startLocal: string
   endLocal: string
@@ -489,16 +518,14 @@ function BasicInfoSection({
           </div>
         ) : (
           <div>
-            <FormSelect
+            <FormInput
               label="Địa điểm:"
               id="location"
               value={locationVal}
               onChange={(e) => onLocationChange(e.target.value)}
+              placeholder='Phòng học, địa chỉ cụ thể...'
             >
-              {mockLocations.map((loc) => (
-                <option key={loc.id} value={loc.name}>{loc.name}</option>
-              ))}
-            </FormSelect>
+            </FormInput>
           </div>
         )}
       </div>
@@ -555,24 +582,35 @@ function AttendanceSection({ members, attendance, onAttendanceChange }: Attendan
 }
 
 /**
- * Section 3: Nút bấm (Hủy, Lưu)
+ * Section 3: Nút bấm (Xóa, Hủy, Lưu)
  */
-function FormActions({ onSave }: { onSave?: () => void }) {
+function FormActions({ onSave, onDelete }: { onSave?: () => void; onDelete?: () => void }) {
   return (
-    <div className="mt-4 flex justify-end gap-4">
-      <Link
-        to="/schedule"
-        className="rounded-md border border-gray-300 bg-white px-6 py-2 font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
-      >
-        Hủy bỏ
-      </Link>
-      <button
-        onClick={onSave}
-        type="button"
-        className="rounded-md bg-blue-600 px-6 py-2 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        Lưu
-      </button>
+    <div className="mt-4 flex justify-between gap-4">
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          type="button"
+          className="rounded-md bg-red-600 px-6 py-2 font-medium text-white shadow-sm transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        >
+          Xóa buổi học
+        </button>
+      )}
+      <div className="ml-auto flex gap-4">
+        <Link
+          to="/schedule"
+          className="rounded-md border border-gray-300 bg-white px-6 py-2 font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+        >
+          Hủy bỏ
+        </Link>
+        <button
+          onClick={onSave}
+          type="button"
+          className="rounded-md bg-blue-600 px-6 py-2 font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Lưu
+        </button>
+      </div>
     </div>
   )
 }

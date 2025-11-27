@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
-import { 
-  mockConversations, 
-  Conversation, 
-  createGroupChat, 
+import {
+  mockConversations,
+  Conversation,
+  createGroupChat,
   getGroupChats,
   updateGroupName,
   addMemberToGroup,
   removeMemberFromGroup,
   deleteGroupChat,
-  GroupMember
+  GroupMember,
+  chatDataGroup1,
+  Message,
 } from '@/components/data/~mock-chat-data';
 import { getAllNames } from '@/components/data/~mock-names';
 
@@ -150,12 +152,7 @@ const CheckIcon = () => (
 
 // --- Component Chính ---
 
-type Message = {
-  id: string;
-  sender: 'user' | 'bot';
-  text: string;
-  timestamp: Date;
-};
+
 
 type ChatPopupProps = {
   isOpen: boolean;
@@ -169,7 +166,7 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Group chat states
   const [groupName, setGroupName] = useState('');
   // keep a Set for quick membership checks and an array for ordered/drag list
@@ -338,14 +335,22 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
   const handleSelectConversation = (conv: Conversation) => {
     setSelectedConversation(conv);
     setView('chat');
-    setMessages([
-      {
-        id: '1',
-        sender: 'bot',
-        text: `Xin chào! Tôi có thể giúp gì cho bạn về "${conv.title}"?`,
-        timestamp: new Date(),
-      },
-    ]);
+    if (conv.isGroup) {
+      if (conv.id === 'group-1') {
+        setMessages(chatDataGroup1);
+      } else {
+        setMessages([]);
+      }
+    } else {
+      setMessages([
+        {
+          id: '1',
+          sender: 'bot',
+          text: `Xin chào! Tôi có thể giúp gì cho bạn về "${conv.title}"?`,
+          timestamp: new Date(),
+        },
+      ]);
+    }
   };
 
   const handleBackToList = () => {
@@ -580,43 +585,42 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
                 </div>
               </div>
 
-                <div
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={onDropToSelected}
-                  className="overflow-auto rounded-lg border border-gray-200 p-2"
-                  style={{ maxHeight: '30vh', paddingRight: '0.5rem' }}
-                >
-                  {allStudents.map((student) => {
-                    const isSelected = selectedMembers.has(student.id);
-                    return (
-                      <div
-                        key={student.id}
-                        draggable
-                        onDragStart={(e) => onDragStartStudent(e, student.id)}
-                        onDragEnd={onDragEndStudent}
-                        onClick={() => toggleMember(student.id)}
-                        className={`cursor-pointer rounded-lg border-2 p-3 transition-all ${
-                          isSelected
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
+              <div
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={onDropToSelected}
+                className="overflow-auto rounded-lg border border-gray-200 p-2"
+                style={{ maxHeight: '30vh', paddingRight: '0.5rem' }}
+              >
+                {allStudents.map((student) => {
+                  const isSelected = selectedMembers.has(student.id);
+                  return (
+                    <div
+                      key={student.id}
+                      draggable
+                      onDragStart={(e) => onDragStartStudent(e, student.id)}
+                      onDragEnd={onDragEndStudent}
+                      onClick={() => toggleMember(student.id)}
+                      className={`cursor-pointer rounded-lg border-2 p-3 transition-all ${isSelected
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
                         }`}
-                        role="button"
-                        tabIndex={0}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-800">
-                            {student.name}
-                          </span>
-                          {isSelected && (
-                            <div className="text-blue-600">
-                              <CheckIcon />
-                            </div>
-                          )}
-                        </div>
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-800">
+                          {student.name}
+                        </span>
+                        {isSelected && (
+                          <div className="text-blue-600">
+                            <CheckIcon />
+                          </div>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -774,11 +778,14 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
                 >
                   <div
                     className={`max-w-[75%] rounded-lg px-4 py-2 ${message.sender === 'user'
-                        ? 'bg-[#0329E9] text-white'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-[#0329E9] text-white'
+                      : 'bg-gray-100 text-gray-800'
                       }`}
                   >
                     <p className="text-sm">{message.text}</p>
+                    <span className={`mt-1 block text-xs ${message.sender === 'user' ? 'text-right' : 'text-left'} opacity-70`}>
+                      {message.sender}
+                    </span>
                     <span className="mt-1 block text-right text-xs opacity-70">
                       {message.timestamp.toLocaleTimeString('vi-VN', {
                         hour: '2-digit',

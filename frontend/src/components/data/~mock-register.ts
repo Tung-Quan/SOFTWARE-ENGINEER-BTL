@@ -25,18 +25,19 @@ type DropdownOption = {
   name: string;
 };
 
-// Kiểu dữ liệu cho một đơn đăng ký đã gửi
-export type PastTutorRegistration = {
+// Kiểu dữ liệu cho một đơn đăng ký của GIA SƯ
+export type PastRegistration = {
   id: string;
-  studentName: string;
-  studentEmail: string;
-  course: DropdownOption; // Từ mockCourses
-  language: DropdownOption; // Từ mockLanguages
-  sessionType: DropdownOption; // 'hybrid' | 'offline'
-  location?: DropdownOption; // Từ mockLocations
+  Name: string;
+  Email: string;
+  subjects: DropdownOption[]; // Danh sách các môn học (từ mockCourses)
+  languages: DropdownOption[]; // Danh sách ngôn ngữ
+  sessionTypes: DropdownOption[]; // 'hybrid' | 'online'
+  locations: DropdownOption[]; // Danh sách địa điểm
+  meetLink?: string; // Optional meet link for hybrid sessions
   specialRequest: string;
+  declineReason?: string;
   status: 'Pending' | 'Approved' | 'Declined';
-  declineReason?: string; // Lý do (nếu bị 'Declined')
   createdAt: string; // ISO date string
 };
 
@@ -62,44 +63,44 @@ const courseOptions = mockCourses.map(c => ({
 // Tùy chọn loại hình
 const sessionTypeOptions = [
   { id: 'offline', name: 'Học trực tiếp' },
-  { id: 'hybrid', name: 'Học hybrid' },
+  { id: 'hybrid', name: 'Học trực tiếp kết hợp trực tuyến' },
 ];
 
 // --- Dữ liệu Mock ---
 
-export const mockPastRegistrations: PastTutorRegistration[] = [
+export const mockPastRegistrations: PastRegistration[] = [
   {
     id: 'reg-1',
-    studentName: NAMES_POOL[0].name,
-    studentEmail: createFakeEmail(NAMES_POOL[0].name),
-    course: courseOptions[2],
-    language: mockLanguages[0],
-    sessionType: sessionTypeOptions[1],
-    location: mockLocations[0],
+    Name: NAMES_POOL[0].name,
+    Email: createFakeEmail(NAMES_POOL[0].name),
+    subjects: [courseOptions[2]],
+    languages: [mockLanguages[0]],
+    sessionTypes: [sessionTypeOptions[1]],
+    locations: [mockLocations[0]],
     specialRequest: 'Em muốn học sâu về phần quản lý bộ nhớ và virtual memory. Em chỉ rảnh vào cuối tuần.',
     status: 'Approved',
     createdAt: '2025-11-01T10:00:00Z',
   },
   {
     id: 'reg-2',
-    studentName: NAMES_POOL[1].name,
-    studentEmail: createFakeEmail(NAMES_POOL[1].name),
-    course: courseOptions[0],
-    language: mockLanguages[1],
-    sessionType: sessionTypeOptions[0],
-    location: mockLocations[2],
+    Name: NAMES_POOL[1].name,
+    Email: createFakeEmail(NAMES_POOL[1].name),
+    subjects: [courseOptions[0]],
+    languages: [mockLanguages[1]],
+    sessionTypes: [sessionTypeOptions[0]],
+    locations: [mockLocations[2]],
     specialRequest: 'I need help with subnetting and routing protocols. My availability is flexible.',
     status: 'Pending',
     createdAt: '2025-11-05T14:30:00Z',
   },
   {
     id: 'reg-3',
-    studentName: NAMES_POOL[2].name,
-    studentEmail: createFakeEmail(NAMES_POOL[2].name),
-    course: courseOptions[4],
-    language: mockLanguages[0],
-    sessionType: sessionTypeOptions[1],
-    location: mockLocations[1],
+    Name: NAMES_POOL[2].name,
+    Email: createFakeEmail(NAMES_POOL[2].name),
+    subjects: [courseOptions[4]],
+    languages: [mockLanguages[0]],
+    sessionTypes: [sessionTypeOptions[1]],
+    locations: [mockLocations[1]],
     specialRequest: 'Em bị mất gốc thuật toán. Em cần học lại từ đầu, đặc biệt là Big O và các thuật toán sắp xếp.',
     status: 'Declined',
     declineReason: 'Yêu cầu của bạn quá rộng. Chương trình tutor chỉ hỗ trợ giải đáp thắc mắc hoặc ôn tập cho các chủ đề cụ thể, không phải dạy lại từ đầu. Vui lòng đăng ký lại với yêu cầu cụ thể hơn.',
@@ -108,11 +109,12 @@ export const mockPastRegistrations: PastTutorRegistration[] = [
   ,
   {
     id: 'reg-4',
-    studentName: 'Student',
-    studentEmail: createFakeEmail(NAMES_POOL[3].name),
-    course: courseOptions[1],
-    language: mockLanguages[1],
-    sessionType: sessionTypeOptions[1],
+    Name: 'Student',
+    Email: createFakeEmail(NAMES_POOL[3].name),
+    subjects: [courseOptions[1]],
+    languages: [mockLanguages[1]],
+    sessionTypes: [sessionTypeOptions[1]],
+    locations: [],
     // hybrid registration; omit explicit location so code can default to hybrid when needed
     specialRequest: 'Muốn luyện kỹ năng giải đề và chấm bài mẫu trước kỳ thi cuối khoá.',
     status: 'Pending',
@@ -123,27 +125,27 @@ export const mockPastRegistrations: PastTutorRegistration[] = [
 // --- Helpers to create new registrations ---
 /**
  * Create and store a new PastTutorRegistration.
- * If studentName/email are not provided, a random name from NAMES_POOL is used
+ * If Name/email are not provided, a random name from NAMES_POOL is used
  * and an email generated.
  */
-export function createPastRegistration(input: Partial<PastTutorRegistration> & {
+export function createPastRegistration(input: Partial<PastRegistration> & {
   course: DropdownOption;
   language: DropdownOption;
   sessionType: DropdownOption;
   location?: DropdownOption;
   specialRequest: string;
-}): PastTutorRegistration {
-  const name = input.studentName ?? NAMES_POOL[Math.floor(Math.random() * NAMES_POOL.length)].name;
-  const email = input.studentEmail ?? createFakeEmail(name);
+}): PastRegistration {
+  const name = input.Name ?? NAMES_POOL[Math.floor(Math.random() * NAMES_POOL.length)].name;
+  const email = input.Email ?? createFakeEmail(name);
   const id = `reg-${Date.now()}`;
-  const record: PastTutorRegistration = {
+  const record: PastRegistration = {
     id,
-    studentName: name,
-    studentEmail: email,
-    course: input.course,
-    language: input.language,
-    sessionType: input.sessionType,
-    location: input.location ?? { id: 'hybrid', name: 'hybrid' },
+    Name: name,
+    Email: email,
+    subjects: [input.course],
+    languages: [input.language],
+    sessionTypes: [input.sessionType],
+    locations: [input.location ?? { id: 'hybrid', name: 'hybrid' }],
     specialRequest: input.specialRequest,
     status: 'Pending',
     createdAt: new Date().toISOString(),

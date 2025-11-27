@@ -30,7 +30,7 @@ export type CourseCreationRequest = {
 // Tùy chọn loại hình
 const sessionTypeOptions = [
   { id: 'online', name: 'Học trực tiếp' },
-  { id: 'hybrid', name: 'Học hybrid' },
+  { id: 'hybrid', name: 'Học trực tiếp kết hợp trực tuyến' },
 ];
 
 // --- Dữ liệu Mock ---

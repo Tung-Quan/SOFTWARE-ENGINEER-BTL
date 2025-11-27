@@ -11,9 +11,10 @@ import {
 import React, { useState, useMemo } from 'react'
 
 import { mockCourses } from '@/components/data/~mock-courses'
-import { mockPastRegistrations } from '@/components/data/~mock-register'
+import { mockPastRegistrations, type PastRegistration } from '@/components/data/~mock-register'
 import { mockSessions, type Session } from '@/components/data/~mock-session'
 import { mockTutorRegistrations } from '@/components/data/~mock-tutor-register'
+import { Trash } from '@/components/icons'
 import useLockBodyScroll from '@/hooks/use-lock-body-scroll'
 
 import { MatchingPopup } from './popup'
@@ -102,12 +103,12 @@ export function ResultTab() {
     // Xử lý Student Registrations
     const studentRequests: UnifiedRegistration[] = mockPastRegistrations.map(r => ({
       id: r.id,
-      courseCode: r.course.name.split('(')[1]?.replace(')', '') ?? 'N/A',
-      name: r.studentName,
-      language: r.language.name,
-      type: r.sessionType.name,
+      courseCode: r.subjects?.[0]?.name?.split('(')?.[1]?.replace(')', '') ?? 'N/A',
+      name: r.Name,
+      language: r.languages?.[0]?.name ?? 'N/A',
+      type: r.sessionTypes?.[0]?.name ?? 'N/A',
       role: 'Student',
-      location: r.location?.name ?? 'hybrid',
+      location: r.locations?.[0]?.name ?? 'hybrid',
       request: r.specialRequest,
       status: r.status,
     }));
@@ -115,12 +116,12 @@ export function ResultTab() {
     // Xử lý Tutor Registrations
     const tutorRequests: UnifiedRegistration[] = mockTutorRegistrations.map(r => ({
       id: r.id,
-      courseCode: r.subjects[0]?.name.split('(')[1]?.replace(')', '') ?? 'N/A',
-      name: r.tutorName,
-      language: r.languages[0]?.name ?? 'N/A',
-      type: r.sessionTypes[0]?.name ?? 'N/A',
+      courseCode: r.subjects?.[0]?.name?.split('(')?.[1]?.replace(')', '') ?? 'N/A',
+      name: r.Name,
+      language: r.languages?.[0]?.name ?? 'N/A',
+      type: r.sessionTypes?.[0]?.name ?? 'N/A',
       role: 'Tutor',
-      location: r.locations[0]?.name ?? 'N/A',
+      location: r.locations?.[0]?.name ?? 'N/A',
       request: r.specialRequest,
       status: r.status,
     }));
@@ -171,19 +172,17 @@ export function ResultTab() {
     setIsAssignPopupOpen(true);
   };
 
-  const getAvailablePeople = () => {
+  const getAvailablePeople = (): { people: PastRegistration[]; label: string } => {
     if (!selectedRegistration) return { people: [], label: '' };
     const courseCode = selectedRegistration.courseCode;
 
     if (selectedRegistration.role === 'Student') {
       const matchingTutors = mockTutorRegistrations
-        .filter(tutor => tutor.subjects.some(subject => subject.name.includes(courseCode)))
-        .map(tutor => ({ id: tutor.id, name: tutor.tutorName }));
+        .filter(tutor => tutor.subjects.some(subject => subject?.name?.includes(courseCode)));
       return { people: matchingTutors, label: 'Tutor' };
     } else {
       const matchingStudents = mockPastRegistrations
-        .filter(student => (student.course.name.split('(')[1]?.replace(')', '') ?? '') === courseCode)
-        .map(student => ({ id: student.id, name: student.studentName }));
+        .filter(student => (student.subjects?.[0]?.name?.split('(')?.[1]?.replace(')', '') ?? '') === courseCode);
       return { people: matchingStudents, label: 'Student' };
     }
   };
@@ -227,9 +226,9 @@ export function ResultTab() {
                 <React.Fragment key={courseGroup.courseId}>
                   {/* Hàng chính của môn học */}
                   <tr className="hover:bg-gray-50">
-                    <Td>{(topCurrentPage - 1) * ITEMS_PER_PAGE_TOP + index + 1}</Td>
-                    <Td>{courseGroup.courseCode}</Td>
-                    <Td>{courseGroup.courseTitle}</Td>
+                    <Td className="px-6">{(topCurrentPage - 1) * ITEMS_PER_PAGE_TOP + index + 1}</Td>
+                    <Td className="max-w-24 truncate">{courseGroup.courseCode}</Td>
+                    <Td className="max-w-[40ch] truncate">{courseGroup.courseTitle}</Td>
                     <Td>
                       <button
                         onClick={() => toggleRow(courseGroup.courseId)}
@@ -326,15 +325,23 @@ export function ResultTab() {
               <tbody className="divide-y divide-gray-200 bg-white">
                 {paginatedBottomRequests.map((req) => (
                   <tr key={req.id}>
-                    <Td>{req.courseCode}</Td>
-                    <Td>{req.name}</Td>
-                    <Td>{req.language}</Td>
-                    <Td>{req.type}</Td>
-                    <Td>{req.role}</Td>
-                    <Td>{req.location}</Td>
-                    <Td>
-                      <span className="block w-32 truncate" title={req.request}>
-                        {req.request.substring(0, 20)}...
+                    <Td className="max-w-24 truncate">{req.courseCode}</Td>
+                    <Td className="max-w-xs truncate">
+                      <a  
+                        href={`/profile/${req.id}` as string}
+                        className="font-medium text-blue-600 hover:underline"
+                      >
+                        {req.name}
+                      </a>
+
+                    </Td>
+                    <Td className="px-2">{req.language}</Td>
+                    <Td className="px-2">{req.type}</Td>
+                    <Td className="px-2">{req.role}</Td>
+                    <Td className="max-w-32 truncate">{req.location}</Td>
+                    <Td className="max-w-48">
+                      <span className="block w-full truncate" title={req.request}>
+                        {req.request}
                       </span>
                     </Td>
                     <Td>
@@ -360,6 +367,19 @@ export function ResultTab() {
             totalPages={bottomTotalPages}
             onPageChange={setBottomCurrentPage}
           />
+        </div>
+        <div className='flex justify-end'>
+          {/*  nút xác nhận: chờ 5 giây và quay trở lại /dashboard */}
+          <button
+            onClick={() => {
+              setTimeout(() => {
+                window.location.href = '/dashboard';
+              }, 1000);
+            }}
+            className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            Xác nhận
+          </button>
         </div>
       </div>
 
@@ -398,7 +418,7 @@ function SessionDetailsRow({ session }: { session: Session }) {
   return (
     <div className="rounded-lg border border-gray-300 bg-white p-4">
       {/* Hàng thông tin chi tiết */}
-      <div className="mb-4 grid grid-cols-5 gap-4 text-sm">
+      <div className="mb-4 grid grid-cols-6 gap-4 text-sm">
         <div>
           <div className="font-medium text-gray-500">Mã lớp</div>
           <div className="truncate font-semibold text-gray-900" title={session.title}>{session.title}</div>
@@ -418,6 +438,18 @@ function SessionDetailsRow({ session }: { session: Session }) {
         <div>
           <div className="font-medium text-gray-500">Hình thức</div>
           <div className="font-semibold capitalize text-gray-900">{session.method}</div>
+        </div>
+        <div className="flex flex-col items-end">
+          <div className="font-medium text-gray-500">Giải tán lớp</div>
+          <button
+            type="button"
+            aria-label="Giải tán lớp"
+            title="Giải tán lớp"
+            className="mt-1 rounded p-1 text-red-500 hover:text-red-700"
+            onClick={() => alert('Giải tán lớp')}
+          >
+            <Trash className="size-5" />
+          </button>
         </div>
       </div>
 
@@ -447,8 +479,8 @@ const Th = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Helper: Ô Bảng
-const Td = ({ children }: { children: React.ReactNode }) => (
-  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
+const Td = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <td className={`truncate px-6 py-4 text-sm text-gray-700 ${className ?? ''}`}>
     {children}
   </td>
 );

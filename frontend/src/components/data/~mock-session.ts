@@ -6,12 +6,12 @@ export type SessionMember = { id: number; name: string; present: boolean };
 export type Session = {
   id: string;
   courseId: string;
+  courseTitle: string;
   title: string;
   desc?: string;
-  // Optional note written by tutor after the session
-  tutorNote?: string;
+  tutorNote?: string; // link to tutor's notes
   instructor: string;
-  method: 'hybrid' | 'online';
+  method: 'offline' | 'online';
   link?: string;
   location?: string;
   start: string; // ISO datetime
@@ -23,6 +23,12 @@ export type Session = {
   requestType?: 'makeup' | 'new' | 'absent';
   createdAt: string;
 };
+
+export function getSessionMember (sessionId: string, memberId: number): SessionMember | undefined {
+  const session = mockSessions.find(s => s.id === sessionId);
+  console.log('Looking for member', memberId, 'in session', sessionId, session);
+  return session?.members.find(m => m.id === memberId);
+}
 
 // A few deterministic-ish helper values to vary sessions
 const now = new Date('2025-12-01T08:00:00.000Z');
@@ -53,10 +59,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-1',
     courseId: mockCourses[0].id,
+    courseTitle: mockCourses[0].title,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-1',
     title: `${mockCourses[0].title} - Buổi 1`,
     desc: 'Orient and setup. Giới thiệu syllabus và môi trường học tập.',
     instructor: mockCourses[0].instructor,
-    method: 'hybrid',
+    method: 'online',
     link: 'https://meet.example.com/abc-123',
     start: toISO(new Date('2025-12-17T09:00:00')),
     end: toISO(new Date('2025-12-17T10:00:00')),
@@ -71,10 +79,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-2',
     courseId: mockCourses[1].id,
+    courseTitle: mockCourses[1].title,
     title: `${mockCourses[1].title} - Lab`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-2',
     desc: 'Bài lab: Thiết kế schema và queries cơ bản',
     instructor: mockCourses[1].instructor,
-    method: 'online',
+    method: 'offline',
     location: 'Phòng A-101',
     start: toISO(new Date('2025-12-17T13:00:00')),
     end: toISO(new Date('2025-12-17T15:00:00')),
@@ -89,7 +99,9 @@ export const mockSessions: Session[] = [
   {
     id: 's-3',
     courseId: mockCourses[2].id,
+    courseTitle: mockCourses[2].title,
     title: `${mockCourses[2].title} - Tổng hợp`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-3',
     desc: 'Tổng hợp chương 1-3 và Q&A',
     instructor: mockCourses[2].instructor,
     method: 'online',
@@ -107,10 +119,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-4',
     courseId: mockCourses[3].id,
+    courseTitle: mockCourses[3].title,
     title: `${mockCourses[3].title} - Bài tập về nhà`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-4',
     desc: 'Nộp bài tập về nhà và chấm điểm sơ bộ',
     instructor: mockCourses[3].instructor,
-    method: 'hybrid',
+    method: 'online',
     link: 'https://meet.example.com/homework-1',
     start: toISO(new Date('2025-12-20T14:00:00')),
     end: toISO(new Date('2025-12-20T15:00:00')),
@@ -125,7 +139,9 @@ export const mockSessions: Session[] = [
   {
     id: 's-5',
     courseId: mockCourses[4].id,
+    courseTitle: mockCourses[4].title,
     title: `${mockCourses[4].title} - Kiểm tra giữa kỳ`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-5',
     desc: 'Midterm test; phòng thi được phân bổ',
     instructor: mockCourses[4].instructor,
     method: 'online',
@@ -144,10 +160,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-7',
     courseId: mockCourses[5].id,
+    courseTitle: mockCourses[5].title,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-7',
     title: `${mockCourses[5].title} - Buổi bổ sung`,
     desc: 'Buổi bổ sung: ôn tập và giải đáp',
     instructor: mockCourses[5].instructor,
-    method: 'hybrid',
+    method: 'online',
     link: 'https://meet.example.com/s7',
     start: toISO(new Date('2025-11-11T09:00:00')),
     end: toISO(new Date('2025-11-11T11:00:00')),
@@ -162,7 +180,9 @@ export const mockSessions: Session[] = [
   {
     id: 's-8',
     courseId: mockCourses[6].id,
+    courseTitle: mockCourses[6].title,
     title: `${mockCourses[6].title} - Lab mở rộng`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-8',
     desc: 'Lab mở rộng dành cho các nhóm muốn ôn tập thêm',
     instructor: mockCourses[6].instructor,
     method: 'online',
@@ -180,10 +200,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-9',
     courseId: mockCourses[7].id,
+    courseTitle: mockCourses[7].title,
     title: `${mockCourses[7].title} - Hợp nhất nội dung`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-9',
     desc: 'Tổng hợp nội dung chính dành cho buổi học',
     instructor: mockCourses[7].instructor,
-    method: 'hybrid',
+    method: 'online',
     link: 'https://meet.example.com/s9',
     start: toISO(new Date('2025-12-13T10:00:00')),
     end: toISO(new Date('2025-12-13T12:00:00')),
@@ -199,10 +221,12 @@ export const mockSessions: Session[] = [
   {
     id: 's-6',
     courseId: mockCourses[0].id,
+    courseTitle: mockCourses[0].title,
     title: `${mockCourses[0].title} - Buổi thử nghiệm`,
+    tutorNote: 'https://docs.example.com/tutor-notes/session-6',
     desc: 'Buổi thử nghiệm đã hoàn tất',
     instructor: mockCourses[0].instructor,
-    method: 'hybrid',
+    method: 'online',
     link: 'https://meet.example.com/done-1',
     start: toISO(new Date('2025-11-20T09:00:00')),
     end: toISO(new Date('2025-11-20T10:00:00')),
@@ -281,10 +305,11 @@ export function createRequestSession(request: Partial<Session> & {
   const newSession: Session = {
     id,
     courseId: request.courseId,
+    courseTitle: request.courseTitle ?? 'Unknown Course',
     title: request.title,
     desc: request.desc ?? '',
     instructor: request.instructor ?? 'TBD',
-    method: request.method ?? 'hybrid',
+    method: request.method ?? 'offline',
     link: request.link,
     location: request.location,
     start: defaultStart,
@@ -296,4 +321,15 @@ export function createRequestSession(request: Partial<Session> & {
   }
 
   return saveSession(newSession)
+}
+
+/**
+ * Delete a session by ID from mockSessions array.
+ * Returns true if session was found and deleted, false otherwise.
+ */
+export function deleteSession(id: string): boolean {
+  const idx = mockSessions.findIndex((s) => s.id === id)
+  if (idx === -1) return false
+  mockSessions.splice(idx, 1)
+  return true
 }

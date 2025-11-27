@@ -18,6 +18,8 @@ import { useAuthStore } from '@/stores';
 import { User } from '@/types';
 import storage from '@/utils/storage';
 
+import SendNotificationToAll from './send-notification-to-all';
+
 type HeaderProps = {
   user: User | null;
   setUser: (user: User | null) => void;
@@ -38,6 +40,7 @@ const Header = ({
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [chatOpened, setChatOpened] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openPopupSendNotification, setOpenPopupSendNotification] = useState(false);
   const navigate = useNavigate();
 
   // subscribe to notification store so badge count stays in sync
@@ -124,6 +127,16 @@ const Header = ({
               </span>
             )}
           </div>
+          {user?.isCoordinator && (
+            <button
+              onClick={() => setOpenPopupSendNotification(true)}
+              aria-label="Gửi thông báo"
+              className="relative mr-4 flex items-center gap-2 rounded-lg bg-[#0329E9] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#0226b8] md:px-6 3xl:px-8 3xl:text-base"
+            >
+              <NotificationIcon className="size-4 fill-white" />
+              <span>Gửi thông báo</span>
+            </button>
+          )}
 
           <div
             className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border-[0.5px] border-solid border-tertiary p-1 xl:h-12 xl:w-80 xl:justify-between"
@@ -191,6 +204,8 @@ const Header = ({
       <NotificationPopup isOpen={notificationOpened} onClose={() => setNotificationOpened(false)} />
       {/* Chat Popup (activated by sticky SVG button) */}
       <ChatPopup isOpen={chatOpened} onClose={() => setChatOpened(false)} />
+      {/* Send Notification Popup */}
+      <SendNotificationToAll isOpen={openPopupSendNotification} onClose={() => setOpenPopupSendNotification(false)} />
     </div>
   );
 };

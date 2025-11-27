@@ -46,3 +46,7 @@ export function getRandomMembers(count = 8) {
 export function getAllNames() {
   return NAMES_POOL.map((n, i) => ({ id: i, name: n.name, present: n.present }));
 }
+
+export const getNameById = (id: number): NameEntry | undefined => {
+  return NAMES_POOL[id];
+}

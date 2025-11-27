@@ -4,100 +4,101 @@
  */
 
 export type SubmissionData = {
-  sessionId: string
+  submissionId: string
   memberId: number
   score?: number // undefined means "chưa chấm"
   comment?: string
   submittedAt?: string // ISO datetime
+  file?: string // URL or file path
 }
 
 // Helper to create a unique key for each submission
-export function getSubmissionKey(sessionId: string, memberId: number): string {
-  return `${sessionId}-${memberId}`
+export function getSubmissionKey(submissionId: string, memberId: number): string {
+  return `${submissionId}-${memberId}`
 }
 
 // Mock submissions data - initialize with some sample data
 // In a real app, this would come from a backend API
 const submissionsMap = new Map<string, SubmissionData>()
 
-// Initialize with some sample data for a few sessions
+// Initialize with some sample data for a few Submissions
 const initialData: SubmissionData[] = [
-  // Session s-1
-  { sessionId: 's-1', memberId: 1, score: 8.5, comment: 'Bài làm tốt, logic rõ ràng.' },
-  { sessionId: 's-1', memberId: 2, score: 7.0, comment: 'Cần cải thiện phần xử lý lỗi.' },
-  { sessionId: 's-1', memberId: 3, score: 9.0, comment: 'Xuất sắc! Code sạch và có documentation.' },
-  { sessionId: 's-1', memberId: 4, score: 6.5, comment: 'Đúng yêu cầu nhưng thiếu comments.' },
-  { sessionId: 's-1', memberId: 5, score: undefined, comment: '' }, // Chưa chấm
-  { sessionId: 's-1', memberId: 6, score: 7.5, comment: 'Tốt, nhưng có thể tối ưu thêm.' },
-  { sessionId: 's-1', memberId: 7, score: 8.0, comment: 'Rất tốt, logic chặt chẽ.' },
-  { sessionId: 's-1', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có test cases đầy đủ.' },
+  // Submission s-1
+  { submissionId: 's1', memberId: 1, score: 8.5, comment: 'Bài làm tốt, logic rõ ràng.', submittedAt: '2024-10-12T20:00:00' },
+  { submissionId: 's1', memberId: 2, score: 7.0, comment: 'Cần cải thiện phần xử lý lỗi.', submittedAt: '2024-10-12T19:30:00' },
+  { submissionId: 's1', memberId: 3, score: 9.0, comment: 'Xuất sắc! Code sạch và có documentation.', submittedAt: '2024-10-12T21:15:00' },
+  { submissionId: 's1', memberId: 4, score: 6.5, comment: 'Đúng yêu cầu nhưng thiếu comments.', submittedAt: '2024-10-12T18:50:00' },
+  { submissionId: 's1', memberId: 5, score: undefined, comment: '', submittedAt: '' }, 
+  { submissionId: 's1', memberId: 6, score: 7.5, comment: 'Tốt, nhưng có thể tối ưu thêm.', submittedAt: '2024-10-12T20:10:00' },
+  { submissionId: 's1', memberId: 7, score: 8.0, comment: 'Rất tốt, logic chặt chẽ.', submittedAt: '2024-10-12T20:30:00' },
+  { submissionId: 's1', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có test cases đầy đủ.', submittedAt: '2024-10-12T21:30:00' },
+  
+  // Submission s-2
+  { submissionId: 's2', memberId: 1, score: 7.5, comment: 'Schema thiết kế tốt.', submittedAt: '2024-11-01T14:30:00' },
+  { submissionId: 's2', memberId: 2, score: 8.0, comment: 'Queries hiệu quả.', submittedAt: '2024-11-01T15:00:00' },
+  { submissionId: 's2', memberId: 3, score: undefined, comment: '', submittedAt: '2024-11-01T15:10:00' },
+  { submissionId: 's2', memberId: 4, score: 6.0, comment: 'Cần optimize queries thêm.', submittedAt: '2024-11-01T13:50:00' },
+  { submissionId: 's2', memberId: 5, score: 7.0, comment: 'Đạt yêu cầu cơ bản.', submittedAt: '2024-11-01T14:10:00' },
+  { submissionId: 's2', memberId: 6, score: 9.0, comment: 'Rất tốt! Index đúng chỗ.', submittedAt: '2024-11-01T16:00:00' },
 
-  // Session s-2
-  { sessionId: 's-2', memberId: 1, score: 7.5, comment: 'Schema thiết kế tốt.' },
-  { sessionId: 's-2', memberId: 2, score: 8.0, comment: 'Queries hiệu quả.' },
-  { sessionId: 's-2', memberId: 3, score: undefined, comment: '' },
-  { sessionId: 's-2', memberId: 4, score: 6.0, comment: 'Cần optimize queries thêm.' },
-  { sessionId: 's-2', memberId: 5, score: 7.0, comment: 'Đạt yêu cầu cơ bản.' },
-  { sessionId: 's-2', memberId: 6, score: 9.0, comment: 'Rất tốt! Index đúng chỗ.' },
+  // Submission s-3
+  { submissionId: 's3', memberId: 1, score: 8.5, comment: 'Tổng hợp tốt các kiến thức.', submittedAt: '2024-12-01T10:00:00' },
+  { submissionId: 's3', memberId: 2, score: 7.5, comment: 'Đầy đủ nhưng có thể chi tiết hơn.', submittedAt: '2024-12-01T10:15:00' },
+  { submissionId: 's3', memberId: 3, score: 9.0, comment: 'Xuất sắc! Hiểu sâu vấn đề.', submittedAt: '2024-12-01T10:30:00' },
+  { submissionId: 's3', memberId: 4, score: undefined, comment: '', submittedAt: '2024-12-01T11:00:00' },
+  { submissionId: 's3', memberId: 5, score: 6.5, comment: 'Cần bổ sung thêm ví dụ.', submittedAt: '2024-12-01T11:15:00' },
+  { submissionId: 's3', memberId: 6, score: 8.0, comment: 'Tốt, trình bày rõ ràng.', submittedAt: '2024-12-01T11:30:00' },
+  { submissionId: 's3', memberId: 7, score: 7.0, comment: 'Đạt yêu cầu.', submittedAt: '2024-12-01T12:00:00' },
+  { submissionId: 's3', memberId: 8, score: 8.5, comment: 'Rất hay! Có so sánh các phương pháp.', submittedAt: '2024-12-01T12:15:00' },
+  { submissionId: 's3', memberId: 9, score: 9.5, comment: 'Hoàn hảo! Phân tích sâu sắc.', submittedAt: '2024-12-01T12:30:00' },
+  { submissionId: 's3', memberId: 10, score: 7.5, comment: 'Tốt, nhưng thiếu một số chi tiết.', submittedAt: '2024-12-01T12:45:00' },
 
-  // Session s-3
-  { sessionId: 's-3', memberId: 1, score: 8.5, comment: 'Tổng hợp tốt các kiến thức.' },
-  { sessionId: 's-3', memberId: 2, score: 7.5, comment: 'Đầy đủ nhưng có thể chi tiết hơn.' },
-  { sessionId: 's-3', memberId: 3, score: 9.0, comment: 'Xuất sắc! Hiểu sâu vấn đề.' },
-  { sessionId: 's-3', memberId: 4, score: undefined, comment: '' },
-  { sessionId: 's-3', memberId: 5, score: 6.5, comment: 'Cần bổ sung thêm ví dụ.' },
-  { sessionId: 's-3', memberId: 6, score: 8.0, comment: 'Tốt, trình bày rõ ràng.' },
-  { sessionId: 's-3', memberId: 7, score: 7.0, comment: 'Đạt yêu cầu.' },
-  { sessionId: 's-3', memberId: 8, score: 8.5, comment: 'Rất hay! Có so sánh các phương pháp.' },
-  { sessionId: 's-3', memberId: 9, score: 9.5, comment: 'Hoàn hảo! Phân tích sâu sắc.' },
-  { sessionId: 's-3', memberId: 10, score: 7.5, comment: 'Tốt, nhưng thiếu một số chi tiết.' },
+  // Submission s-4
+  { submissionId: 's4', memberId: 1, score: 8.0, comment: 'Bài tập đầy đủ.', submittedAt: '2025-01-05T09:00:00' },
+  { submissionId: 's4', memberId: 2, score: 7.0, comment: 'Đúng hướng nhưng chưa hoàn thiện.', submittedAt: '2025-01-05T09:15:00' },
+  { submissionId: 's4', memberId: 3, score: 9.0, comment: 'Tuyệt vời! Có thêm test cases.', submittedAt: '2025-01-05T09:30:00' },
+  { submissionId: 's4', memberId: 4, score: undefined, comment: '', submittedAt: '2025-01-05T10:00:00' },
+  { submissionId: 's4', memberId: 5, score: 6.5, comment: 'Cần sửa lại một số phần.', submittedAt: '2025-01-05T10:15:00' },
+  { submissionId: 's4', memberId: 6, score: 8.5, comment: 'Rất tốt! Code gọn gàng.', submittedAt: '2025-01-05T10:30:00' },
+  { submissionId: 's4', memberId: 7, score: 7.5, comment: 'Tốt, có thể cải thiện performance.', submittedAt: '2025-01-05T10:45:00' },
+  { submissionId: 's4', memberId: 8, score: 9.5, comment: 'Xuất sắc! Có bonus features.', submittedAt: '2025-01-05T11:00:00' },
 
-  // Session s-4
-  { sessionId: 's-4', memberId: 1, score: 8.0, comment: 'Bài tập đầy đủ.' },
-  { sessionId: 's-4', memberId: 2, score: 7.0, comment: 'Đúng hướng nhưng chưa hoàn thiện.' },
-  { sessionId: 's-4', memberId: 3, score: 9.0, comment: 'Tuyệt vời! Có thêm test cases.' },
-  { sessionId: 's-4', memberId: 4, score: undefined, comment: '' },
-  { sessionId: 's-4', memberId: 5, score: 6.5, comment: 'Cần sửa lại một số phần.' },
-  { sessionId: 's-4', memberId: 6, score: 8.5, comment: 'Rất tốt! Code gọn gàng.' },
-  { sessionId: 's-4', memberId: 7, score: 7.5, comment: 'Tốt, có thể cải thiện performance.' },
-  { sessionId: 's-4', memberId: 8, score: 9.5, comment: 'Xuất sắc! Có bonus features.' },
-
-  // Session s-5
-  { sessionId: 's-5', memberId: 1, score: 7.5, comment: 'Bài thi đạt yêu cầu.' },
-  { sessionId: 's-5', memberId: 2, score: 8.0, comment: 'Tốt, logic đúng.' },
-  { sessionId: 's-5', memberId: 3, score: 9.0, comment: 'Rất tốt! Giải chi tiết.' },
-  { sessionId: 's-5', memberId: 4, score: 6.0, comment: 'Chưa đầy đủ một số phần.' },
-  { sessionId: 's-5', memberId: 5, score: 7.0, comment: 'Đạt.' },
-  { sessionId: 's-5', memberId: 6, score: 8.5, comment: 'Xuất sắc! Có giải thích rõ ràng.' },
-  { sessionId: 's-5', memberId: 7, score: undefined, comment: '' },
-  { sessionId: 's-5', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có ví dụ minh họa.' },
-  { sessionId: 's-5', memberId: 9, score: 7.5, comment: 'Tốt, nhưng thiếu một số bước.' },
-  { sessionId: 's-5', memberId: 10, score: 8.0, comment: 'Rất tốt! Trình bày khoa học.' },
-  { sessionId: 's-5', memberId: 11, score: 6.5, comment: 'Cần bổ sung thêm.' },
-  { sessionId: 's-5', memberId: 12, score: 9.0, comment: 'Tuyệt vời! Logic chặt chẽ.' },
+  // Submission s-5
+  { submissionId: 's5', memberId: 1, score: 7.5, comment: 'Bài thi đạt yêu cầu.', submittedAt: '2025-02-10T14:00:00' },
+  { submissionId: 's5', memberId: 2, score: 8.0, comment: 'Tốt, logic đúng.', submittedAt: '2025-02-10T14:10:00' },
+  { submissionId: 's5', memberId: 3, score: 9.0, comment: 'Rất tốt! Giải chi tiết.', submittedAt: '2025-02-10T14:20:00' },
+  { submissionId: 's5', memberId: 4, score: 6.0, comment: 'Chưa đầy đủ một số phần.', submittedAt: '2025-02-10T14:30:00' },
+  { submissionId: 's5', memberId: 5, score: 7.0, comment: 'Đạt.', submittedAt: '2025-02-10T14:40:00' },
+  { submissionId: 's5', memberId: 6, score: 8.5, comment: 'Xuất sắc! Có giải thích rõ ràng.', submittedAt: '2025-02-10T14:50:00' },
+  { submissionId: 's5', memberId: 7, score: undefined, comment: '', submittedAt: '2025-02-10T15:00:00' },
+  { submissionId: 's5', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có ví dụ minh họa.', submittedAt: '2025-02-10T15:10:00' },
+  { submissionId: 's5', memberId: 9, score: 7.5, comment: 'Tốt, nhưng thiếu một số bước.', submittedAt: '2025-02-10T15:20:00' },
+  { submissionId: 's5', memberId: 10, score: 8.0, comment: 'Rất tốt! Trình bày khoa học.', submittedAt: '2025-02-10T15:30:00' },
+  { submissionId: 's5', memberId: 11, score: 6.5, comment: 'Cần bổ sung thêm.', submittedAt: '2025-02-10T15:40:00' },
+  { submissionId: 's5', memberId: 12, score: 9.0, comment: 'Tuyệt vời! Logic chặt chẽ.', submittedAt: '2025-02-10T15:50:00' },
 ]
 
 // Populate the map
 initialData.forEach((data) => {
-  const key = getSubmissionKey(data.sessionId, data.memberId)
+  const key = getSubmissionKey(data.submissionId, data.memberId)
   submissionsMap.set(key, data)
 })
 
 /**
- * Get submission data for a specific member in a specific session
+ * Get submission data for a specific member in a specific Submission
  */
-export function getSubmission(sessionId: string, memberId: number): SubmissionData | undefined {
-  const key = getSubmissionKey(sessionId, memberId)
+export function getSubmission(submissionId: string, memberId: number): SubmissionData | undefined {
+  const key = getSubmissionKey(submissionId, memberId)
   return submissionsMap.get(key)
 }
 
 /**
- * Get all submissions for a session
+ * Get all submissions for a Submission
  */
-export function getSessionSubmissions(sessionId: string): SubmissionData[] {
+export function getSubmissionSubmissions(submissionId: string): SubmissionData[] {
   const submissions: SubmissionData[] = []
   submissionsMap.forEach((data) => {
-    if (data.sessionId === sessionId) {
+    if (data.submissionId === submissionId) {
       submissions.push(data)
     }
   })
@@ -108,15 +109,15 @@ export function getSessionSubmissions(sessionId: string): SubmissionData[] {
  * Update or create a submission
  */
 export function updateSubmission(
-  sessionId: string,
+  submissionId: string,
   memberId: number,
   updates: Partial<Pick<SubmissionData, 'score' | 'comment' | 'submittedAt'>>
 ): SubmissionData {
-  const key = getSubmissionKey(sessionId, memberId)
+  const key = getSubmissionKey(submissionId, memberId)
   const existing = submissionsMap.get(key)
 
   const updated: SubmissionData = {
-    sessionId,
+    submissionId,
     memberId,
     score: updates.score !== undefined ? updates.score : existing?.score,
     comment: updates.comment !== undefined ? updates.comment : existing?.comment,
@@ -132,4 +133,14 @@ export function updateSubmission(
  */
 export function getAllSubmissions(): SubmissionData[] {
   return Array.from(submissionsMap.values())
+}
+
+export const getSubmissionBySubmissionId = (submissionId: string): SubmissionData[] => {
+  const results: SubmissionData[] = []
+  submissionsMap.forEach((data) => {
+    if (data.submissionId === submissionId) {
+      results.push(data)
+    }
+  })
+  return results
 }

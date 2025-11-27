@@ -28,10 +28,12 @@ function RouteComponent() {
   const [page, setPage] = useState(1)
   const pageSize = 4
 
-  const rawUserStore = localStorage.getItem('userStore');
-  const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
-  const State = userStore?.state ?? null;
-  const userLocalStore = State.user ?? null;
+  const [role, setRole] = useState<'student' | 'tutor'>('student');
+
+  // const rawUserStore = localStorage.getItem('userStore');
+  // const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+  // const State = userStore?.state ?? null;
+  // const userLocalStore = State.user ?? null;
 
   const filtered = useMemo(() => {
     const t = qTitle.trim().toLowerCase()
@@ -48,6 +50,15 @@ function RouteComponent() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize)
 
+
+  const handleXemChiTiet = async (role: string, id: string) => {
+    // lưu localstorage role
+    localStorage.setItem('role', role);
+    setRole(role as 'student' | 'tutor');
+    // chuyển trang
+    window.location.href = `/schedule/history/${id}`;
+  }
+    
   return (
     <StudyLayout>
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -60,9 +71,25 @@ function RouteComponent() {
         </Link>
 
         <h1 className="mb-6 text-2xl font-bold text-gray-800">Yêu cầu buổi học mới</h1>
-
+        <div className='mb-6 flex flex-col gap-y-4'>
+          <span className="text-gray-600">Xem như: </span>
+          <div>
+            <button
+              onClick={() => setRole('student')}
+              className={`mr-4 rounded-md px-4 py-2 text-sm font-medium ${role === 'student' ? 'bg-blue-600 text-white shadow' : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'}`}
+            >
+              Yêu cầu của tôi
+            </button>
+            <button
+              onClick={() => setRole('tutor')}
+              className={`rounded-md px-4 py-2 text-sm font-medium ${role === 'tutor' ? 'bg-blue-600 text-white shadow' : 'bg-white text-gray-800 shadow-sm hover:bg-blue-50'}`}
+            >
+              Yêu cầu từ sinh viên
+            </button>
+          </div>
+        </div>
         {/* Filters */}
-        {userLocalStore?.isManager ? (
+        {role === 'tutor' ? (
           <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <input
@@ -134,13 +161,12 @@ function RouteComponent() {
 
             // Display requestType badge if present
             const typeBadge = s.requestType ? (
-              <span className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
-                s.requestType === 'makeup' 
-                  ? 'bg-orange-100 text-orange-800' 
+              <span className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${s.requestType === 'makeup'
+                  ? 'bg-orange-100 text-orange-800'
                   : s.requestType === 'absent'
-                  ? 'bg-purple-100 text-purple-800'
-                  : 'bg-blue-100 text-blue-800'
-              }`}>
+                    ? 'bg-purple-100 text-purple-800'
+                    : 'bg-blue-100 text-blue-800'
+                }`}>
                 {s.requestType === 'makeup' ? 'Buổi bù' : s.requestType === 'absent' ? 'Xin nghỉ' : 'Buổi học mới'}
               </span>
             ) : null
@@ -162,7 +188,11 @@ function RouteComponent() {
                         {typeBadge}
                         {statusBadge}
                       </div>
-                      <Link to={`/schedule/history/${s.id}` as string} className="rounded-md bg-blue-600 px-4 py-1 text-sm font-medium text-white hover:bg-blue-700">Xem chi tiết</Link>
+                      <button
+                       onClick={() => handleXemChiTiet(role, s.id)} className="rounded-md bg-blue-600 px-4 py-1 text-sm font-medium text-white hover:bg-blue-700">
+                      
+                      Xem chi tiết
+                      </button>
                     </div>
                   </div>
 

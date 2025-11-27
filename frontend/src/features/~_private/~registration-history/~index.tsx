@@ -4,12 +4,11 @@ import { useState, useEffect, SVGProps } from 'react';
 
 import {
   mockPastRegistrations,
-  type PastTutorRegistration,
+  type PastRegistration,
   deletePastRegistration
 } from '@/components/data/~mock-register';
 import {
   mockTutorRegistrations,
-  type PastTutorRegistration as TutorReg,
   deleteTutorRegistration
 } from '@/components/data/~mock-tutor-register';
 import StudyLayout from '@/components/study-layout';
@@ -23,7 +22,7 @@ interface UserProfile {
 }
 
 // [THÊM] Gộp 2 kiểu registration lại
-type AnyRegistration = (PastTutorRegistration | TutorReg) & {
+type AnyRegistration = (PastRegistration ) & {
   // Thêm 1 trường để phân biệt, vì studentName và tutorName khác nhau
   registrationType: 'Student' | 'Tutor';
 };
@@ -65,18 +64,18 @@ function RouteComponent() {
           setRegistrations(allRegs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
         } else if (userLocalStore.isTutor) {
           const myTutorRegs = mockTutorRegistrations
-            .filter(r => r.tutorName.includes(userLocalStore.firstName))
+            .filter(r => r.Name.includes(userLocalStore.firstName))
             .map(r => ({ ...r, registrationType: 'Tutor' as const }));
           setRegistrations(myTutorRegs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
         } else {
           const name = userLocalStore.firstName;
 
           const myStudentRegs = mockPastRegistrations
-            .filter(r => r.studentName.includes(name))
+            .filter(r => r.Name.includes(name))
             .map(r => ({ ...r, registrationType: 'Student' as const }));
 
           const myTutorRegs = mockTutorRegistrations
-            .filter(r => r.tutorName.includes(name))
+            .filter(r => r.Name.includes(name))
             .map(r => ({ ...r, registrationType: 'Tutor' as const }));
 
           setRegistrations([...myStudentRegs, ...myTutorRegs].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
@@ -185,20 +184,12 @@ function RegistrationTable({ registrations, isManager, onDelete }: { registratio
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
           {registrations.map((reg) => {
-            // Lấy tên/email tùy thuộc vào loại
-            const name = (reg as PastTutorRegistration).studentName || (reg as TutorReg).tutorName;
+            // Both types now use PastRegistration structure with Name
+            const name = reg.Name;
 
-            const isStudent = reg.registrationType === 'Student';
-
-            // For Student registrations we have `course` and `language` fields.
-            // For Tutor registrations we have `subjects` and `languages` arrays.
-            const courseDisplay = isStudent
-              ? ((reg as PastTutorRegistration).course?.name?.split(' (')[0] ?? '')
-              : ((reg as TutorReg).subjects?.map(s => s.name.split(' (')[0]).join(', ') ?? '');
-
-            const languageDisplay = isStudent
-              ? ((reg as PastTutorRegistration).language?.name ?? '')
-              : ((reg as TutorReg).languages?.map(l => l.name).join(', ') ?? '');
+            // Both use arrays now: subjects[], languages[]
+            const courseDisplay = reg.subjects?.map((s: { name: string }) => s.name.split(' (')[0]).join(', ') ?? '';
+            const languageDisplay = reg.languages?.map((l: { name: string }) => l.name).join(', ') ?? '';
 
             return (
               <tr key={reg.id}>
