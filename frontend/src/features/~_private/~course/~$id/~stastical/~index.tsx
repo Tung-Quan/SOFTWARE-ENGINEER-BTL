@@ -7,7 +7,8 @@ import {
   createFileRoute,
   useParams,
   // Link,
-  useNavigate
+  useNavigate,
+  Link
 } from '@tanstack/react-router'
 import React from 'react'
 
@@ -292,7 +293,9 @@ function RouteComponent() {
                             {index + 1}
                           </td>
                           <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
-                            {student.name}
+                            <Link to={`/profile/$id` as string} className="text-sm font-medium text-gray-800">
+                              {student.name}
+                            </Link>
                           </td>
                           <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-600">
                             {student.email}

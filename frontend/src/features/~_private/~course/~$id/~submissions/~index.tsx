@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { type SVGProps, useState, useMemo } from 'react'; // << [THAY ĐỔI] Import thêm useState, useMemo
 
-import { mockCourses } from '@/components/data/~mock-courses';
+import { mockCourses, dataCourses } from '@/components/data/~mock-courses';
 import { mockSessions } from '@/components/data/~mock-session';
+import { getAllSubmissions } from '@/components/data/~mock-submissions';
 import ArrowLeft from '@/components/icons/arrow-left';
 import Search from '@/components/icons/search';
 import StudyLayout from '@/components/study-layout';
+
 
 // === ICONS (Giữ nguyên) ===
 export function ClockIcon(props: SVGProps<SVGSVGElement>) {
@@ -43,28 +45,32 @@ type SubmissionEntry = {
   email: string;
   submittedAt: string;
   score?: number;
-  submissionName?: string; // Thêm để biết entry này thuộc bài tập nào
+  submissionName?: string; 
+  submissionId?: string;
 };
 
 function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId: string }) {
-  const { name, email, submittedAt, score, submissionName } = entry;
+  const { name, email, submittedAt, score, submissionName, submissionId } = entry;
   const scoreColor = getScoreColor(score);
 
   const stuname = email.split('@')[0];
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-gray-700 bg-white p-5 shadow-custom-yellow">
-      {/* Thông tin sinh viên & thời gian */}
+      {/* Thông tin sinh viên & thời gian và tên bài nộp*/}
       <div className="flex items-center gap-4">
         <UserCircleIcon className="size-12 shrink-0 text-gray-500" />
         <div className="flex flex-col gap-1.5">
           <div>
-            <p className="text-xs font-semibold text-gray-900">{name}</p>
+            <Link to={`/profile/$id` as string} className="text-xs font-semibold text-blue-600">{name}</Link>
             <p className="text-sm text-gray-500">{email}</p>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <ClockIcon className="size-4" />
             <span>{submittedAt}</span>
+          </div>
+          <div className="text-sm text-gray-600">
+            Bài nộp: <span className="font-medium text-gray-900">{submissionName}</span>
           </div>
         </div>
       </div>
@@ -80,7 +86,7 @@ function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId:
         )}
         <Link
           to={"/course/$id/$name/$stuname" as any}
-          params={{ id: courseId, name: submissionName || 'submission1', stuname } as any}
+          params={{ id: courseId, name: submissionId || 'submission1', stuname } as any}
           className="rounded-lg bg-[#0329E9] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
         >
           Xem bài nộp
@@ -91,7 +97,6 @@ function SubmissionItem({ entry, courseId }: { entry: SubmissionEntry; courseId:
 }
 
 
-// === [THAY ĐỔI] Thêm hàm helper để parse ngày tháng (Giữ nguyên) ===
 function parseSubmissionDate(dateString: string): Date {
   try {
     const parts = dateString.split(' '); // ['19:00', '10/10/2024']
@@ -111,7 +116,6 @@ function parseSubmissionDate(dateString: string): Date {
   }
 }
 
-// === [THAY ĐỔI] Thêm các hàm helper mới ===
 function formatISODate(isoString: string): string {
   try {
     const date = new Date(isoString);
@@ -124,17 +128,6 @@ function formatISODate(isoString: string): string {
   }
 }
 
-// Dựa theo "hướng dẫn" từ mockSubmissionEntries (điểm 2.5, 5, 7.5)
-function generateRandomScore(): number | undefined {
-  const possibleScores = [2.0, 2.5, 3.0, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0];
-  // 30% cơ hội "chưa chấm" (undefined)
-  if (Math.random() < 0.3) {
-    return undefined;
-  }
-  return possibleScores[Math.floor(Math.random() * possibleScores.length)];
-}
-
-// Tạo email giả vì mockSessions không có
 function createFakeEmail(name: string): string {
   const noDiacritics = name
     .toLowerCase()
@@ -145,7 +138,6 @@ function createFakeEmail(name: string): string {
   return `${emailPrefix}@gmail.com`;
 }
 
-// === [THAY ĐỔI] Component chính của Route ===
 
 function RouteComponent() {
   const { id } = Route.useParams() as { id: string }; // 'id' này là courseId
@@ -155,34 +147,53 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
   const course = mockCourses.find(c => c.id === id)!;
 
-  // === [THAY ĐỔI] Logic lấy TẤT CẢ bài nộp từ mockSessions ===
   const allSubmissions: SubmissionEntry[] = useMemo(() => {
-    // 1. Lọc các session thuộc khóa học này
-    const courseSessions = mockSessions.filter(
-      (s) => s.courseId === id,
-    );
+    // // 1. Lọc các session thuộc khóa học này
+    // const courseSessions = mockSessions.filter(
+    //   (s) => s.courseId === id,
+    // );
 
-    // 2. Gộp tất cả members từ các session đó thành 1 mảng
-    // Mỗi (member + session) là một "bài nộp"
-    return courseSessions.flatMap((session) =>
-      session.members.map(member => {
-        // 3. Tạo dữ liệu 'SubmissionEntry'
-        const score = generateRandomScore(); // Tạo điểm ngẫu nhiên
+    // return courseSessions.flatMap((session) =>
+    //   session.members.map(member => {
+    //     // 3. Tạo dữ liệu 'SubmissionEntry'
+    //     const score = generateRandomScore(); // Tạo điểm ngẫu nhiên
+    //     return {
+    //       name: member.name,
+    //       email: createFakeEmail(member.name), // Tạo email giả
+    //       submittedAt: formatISODate(session.start), // Dùng ngày bắt đầu session
+    //       score: score,
+    //       submissionName: session.title, // Dùng tiêu đề session làm "submissionName"
+    //     };
+    //   })
+    // );
+    const submission = getAllSubmissions();
+    const courseData = dataCourses.find(c => c.id === id);
+    
+    return submission
+      .filter(sub => sub.submittedAt) 
+      .map((sub) => {
+        const member = mockSessions
+          .flatMap(s => s.members)
+          .find(m => m.id === sub.memberId);
+        
+        // Tìm submission content từ dataCourses
+        const submissionContent = courseData?.content.find(
+          item => item.id === sub.submissionId && item.type === 'submission'
+        );
+        
         return {
-          name: member.name,
-          email: createFakeEmail(member.name), // Tạo email giả
-          submittedAt: formatISODate(session.start), // Dùng ngày bắt đầu session
-          score: score,
-          submissionName: session.title, // Dùng tiêu đề session làm "submissionName"
+          name: member ? member.name : 'Unknown',
+          email: createFakeEmail(member ? member.name : 'unknown'),
+          submittedAt: formatISODate(sub.submittedAt!),
+          score: sub.score,
+          submissionName: submissionContent?.title || 'Submission',
+          submissionId: sub.submissionId,
         };
-      })
-    );
-  }, [id]); // Tính toán lại khi 'id' (courseId) thay đổi
+      });
+  }, [id]); 
 
-  // === [THAY ĐỔI] Logic lọc và sắp xếp (giữ nguyên, chỉ đổi tên biến) ===
   const displayedSubmissions = allSubmissions
     .filter(entry =>
-      // 3. Lọc theo email (không phân biệt hoa thường)
       entry.email.toLowerCase().includes(searchEmail.toLowerCase())
     )
     .sort((a, b) => {
@@ -306,7 +317,6 @@ function RouteComponent() {
         </div>
       </div>
 
-      {/* Hiển thị danh sách (giữ nguyên) */}
       <div className="space-y-6">
         {displayedSubmissions.length > 0 ? (
           displayedSubmissions.map((entry) => (

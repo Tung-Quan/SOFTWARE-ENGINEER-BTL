@@ -53,29 +53,29 @@ const initialData: SubmissionData[] = [
   { submissionId: 's3', memberId: 9, score: 9.5, comment: 'Hoàn hảo! Phân tích sâu sắc.', submittedAt: '2024-12-01T12:30:00' },
   { submissionId: 's3', memberId: 10, score: 7.5, comment: 'Tốt, nhưng thiếu một số chi tiết.', submittedAt: '2024-12-01T12:45:00' },
 
-  // Submission s-4
-  { submissionId: 's4', memberId: 1, score: 8.0, comment: 'Bài tập đầy đủ.', submittedAt: '2025-01-05T09:00:00' },
-  { submissionId: 's4', memberId: 2, score: 7.0, comment: 'Đúng hướng nhưng chưa hoàn thiện.', submittedAt: '2025-01-05T09:15:00' },
-  { submissionId: 's4', memberId: 3, score: 9.0, comment: 'Tuyệt vời! Có thêm test cases.', submittedAt: '2025-01-05T09:30:00' },
-  { submissionId: 's4', memberId: 4, score: undefined, comment: '', submittedAt: '2025-01-05T10:00:00' },
-  { submissionId: 's4', memberId: 5, score: 6.5, comment: 'Cần sửa lại một số phần.', submittedAt: '2025-01-05T10:15:00' },
-  { submissionId: 's4', memberId: 6, score: 8.5, comment: 'Rất tốt! Code gọn gàng.', submittedAt: '2025-01-05T10:30:00' },
-  { submissionId: 's4', memberId: 7, score: 7.5, comment: 'Tốt, có thể cải thiện performance.', submittedAt: '2025-01-05T10:45:00' },
-  { submissionId: 's4', memberId: 8, score: 9.5, comment: 'Xuất sắc! Có bonus features.', submittedAt: '2025-01-05T11:00:00' },
+  // // Submission s-4
+  // { submissionId: 's4', memberId: 1, score: 8.0, comment: 'Bài tập đầy đủ.', submittedAt: '2025-01-05T09:00:00' },
+  // { submissionId: 's4', memberId: 2, score: 7.0, comment: 'Đúng hướng nhưng chưa hoàn thiện.', submittedAt: '2025-01-05T09:15:00' },
+  // { submissionId: 's4', memberId: 3, score: 9.0, comment: 'Tuyệt vời! Có thêm test cases.', submittedAt: '2025-01-05T09:30:00' },
+  // { submissionId: 's4', memberId: 4, score: undefined, comment: '', submittedAt: '2025-01-05T10:00:00' },
+  // { submissionId: 's4', memberId: 5, score: 6.5, comment: 'Cần sửa lại một số phần.', submittedAt: '2025-01-05T10:15:00' },
+  // { submissionId: 's4', memberId: 6, score: 8.5, comment: 'Rất tốt! Code gọn gàng.', submittedAt: '2025-01-05T10:30:00' },
+  // { submissionId: 's4', memberId: 7, score: 7.5, comment: 'Tốt, có thể cải thiện performance.', submittedAt: '2025-01-05T10:45:00' },
+  // { submissionId: 's4', memberId: 8, score: 9.5, comment: 'Xuất sắc! Có bonus features.', submittedAt: '2025-01-05T11:00:00' },
 
-  // Submission s-5
-  { submissionId: 's5', memberId: 1, score: 7.5, comment: 'Bài thi đạt yêu cầu.', submittedAt: '2025-02-10T14:00:00' },
-  { submissionId: 's5', memberId: 2, score: 8.0, comment: 'Tốt, logic đúng.', submittedAt: '2025-02-10T14:10:00' },
-  { submissionId: 's5', memberId: 3, score: 9.0, comment: 'Rất tốt! Giải chi tiết.', submittedAt: '2025-02-10T14:20:00' },
-  { submissionId: 's5', memberId: 4, score: 6.0, comment: 'Chưa đầy đủ một số phần.', submittedAt: '2025-02-10T14:30:00' },
-  { submissionId: 's5', memberId: 5, score: 7.0, comment: 'Đạt.', submittedAt: '2025-02-10T14:40:00' },
-  { submissionId: 's5', memberId: 6, score: 8.5, comment: 'Xuất sắc! Có giải thích rõ ràng.', submittedAt: '2025-02-10T14:50:00' },
-  { submissionId: 's5', memberId: 7, score: undefined, comment: '', submittedAt: '2025-02-10T15:00:00' },
-  { submissionId: 's5', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có ví dụ minh họa.', submittedAt: '2025-02-10T15:10:00' },
-  { submissionId: 's5', memberId: 9, score: 7.5, comment: 'Tốt, nhưng thiếu một số bước.', submittedAt: '2025-02-10T15:20:00' },
-  { submissionId: 's5', memberId: 10, score: 8.0, comment: 'Rất tốt! Trình bày khoa học.', submittedAt: '2025-02-10T15:30:00' },
-  { submissionId: 's5', memberId: 11, score: 6.5, comment: 'Cần bổ sung thêm.', submittedAt: '2025-02-10T15:40:00' },
-  { submissionId: 's5', memberId: 12, score: 9.0, comment: 'Tuyệt vời! Logic chặt chẽ.', submittedAt: '2025-02-10T15:50:00' },
+  // // Submission s-5
+  // { submissionId: 's5', memberId: 1, score: 7.5, comment: 'Bài thi đạt yêu cầu.', submittedAt: '2025-02-10T14:00:00' },
+  // { submissionId: 's5', memberId: 2, score: 8.0, comment: 'Tốt, logic đúng.', submittedAt: '2025-02-10T14:10:00' },
+  // { submissionId: 's5', memberId: 3, score: 9.0, comment: 'Rất tốt! Giải chi tiết.', submittedAt: '2025-02-10T14:20:00' },
+  // { submissionId: 's5', memberId: 4, score: 6.0, comment: 'Chưa đầy đủ một số phần.', submittedAt: '2025-02-10T14:30:00' },
+  // { submissionId: 's5', memberId: 5, score: 7.0, comment: 'Đạt.', submittedAt: '2025-02-10T14:40:00' },
+  // { submissionId: 's5', memberId: 6, score: 8.5, comment: 'Xuất sắc! Có giải thích rõ ràng.', submittedAt: '2025-02-10T14:50:00' },
+  // { submissionId: 's5', memberId: 7, score: undefined, comment: '', submittedAt: '2025-02-10T15:00:00' },
+  // { submissionId: 's5', memberId: 8, score: 9.5, comment: 'Hoàn hảo! Có ví dụ minh họa.', submittedAt: '2025-02-10T15:10:00' },
+  // { submissionId: 's5', memberId: 9, score: 7.5, comment: 'Tốt, nhưng thiếu một số bước.', submittedAt: '2025-02-10T15:20:00' },
+  // { submissionId: 's5', memberId: 10, score: 8.0, comment: 'Rất tốt! Trình bày khoa học.', submittedAt: '2025-02-10T15:30:00' },
+  // { submissionId: 's5', memberId: 11, score: 6.5, comment: 'Cần bổ sung thêm.', submittedAt: '2025-02-10T15:40:00' },
+  // { submissionId: 's5', memberId: 12, score: 9.0, comment: 'Tuyệt vời! Logic chặt chẽ.', submittedAt: '2025-02-10T15:50:00' },
 ]
 
 // Populate the map

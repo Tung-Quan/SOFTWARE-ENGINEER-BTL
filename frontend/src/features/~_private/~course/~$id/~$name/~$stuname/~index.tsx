@@ -4,7 +4,7 @@ import React, { useState, type SVGProps, useMemo } from 'react';
 
 import { mockCourses } from '@/components/data/~mock-courses';
 import { mockSessions } from '@/components/data/~mock-session';
-import { getSubmission, updateSubmission } from '@/components/data/~mock-submissions';
+import { getSubmissionBySubmissionId, updateSubmission } from '@/components/data/~mock-submissions';
 import { ArrowLeft } from '@/components/icons';
 import StudyLayout from '@/components/study-layout';
 import filePDF from '/group07_report 02.pdf';
@@ -72,41 +72,55 @@ function RouteComponent() {
   const { id, name, stuname } = useParams({ from: Route.id });
 
   const matchingEntry = useMemo(() => {
-    // 1. Tìm session khớp
-    const session = mockSessions.find(
-      (s) => s.courseId === id && s.title === name
-    );
-    if (!session) return null;
+    // Normalize stuname (chuyển về lowercase và xóa khoảng trắng)
+    const normalizedStuname = stuname.toLowerCase().replace(/\s+/g, '.');
+    
+    // 1. Lấy tất cả submissions cho submissionId này (name là submissionId như s1, s2, s3)
+    const submissions = getSubmissionBySubmissionId(name);
+    
+    if (submissions.length === 0) {
+      return null;
+    }
 
-    // 2. Tìm member khớp
-    const member = session.members.find((m) => {
+    // 2. Lấy tất cả members từ tất cả sessions (chỉ lấy 1 lần)
+    const allMembers = mockSessions.flatMap(s => s.members);
+
+    // 3. Tìm tất cả members có tên khớp với stuname
+    const matchingMembers = allMembers.filter(m => {
       const email = createFakeEmail(m.name);
       const emailSlug = email.split('@')[0];
-      return emailSlug === stuname;
+      return emailSlug === normalizedStuname;
     });
-    if (!member) return null;
 
-    // 3. Lấy submission data từ mock-submissions
-    const submissionData = getSubmission(session.id, member.id);
+    // 4. Duyệt qua submissions để tìm member có trong matchingMembers
+    for (const sub of submissions) {
+      // Tìm member trong danh sách matching
+      const member = matchingMembers.find(m => m.id === sub.memberId);
+      
+      if (member && sub.submittedAt) {
+        const email = createFakeEmail(member.name);
+        
+        return {
+          submissionId: name,
+          memberId: sub.memberId,
+          name: member.name,
+          email: email,
+          submittedAt: formatISODate(sub.submittedAt),
+          score: sub.score,
+          comment: sub.comment ?? '',
+          fileUrl: sub.file ?? filePDF,
+        };
+      }
+    }
 
-    // 4. Tạo dữ liệu cho entry này
-    return {
-      sessionId: session.id,
-      memberId: member.id,
-      name: member.name,
-      email: createFakeEmail(member.name),
-      submittedAt: formatISODate(session.start),
-      score: submissionData?.score, // Lấy từ mock-submissions
-      comment: submissionData?.comment ?? '', // Lấy từ mock-submissions
-      fileUrl: submissionData?.file ?? filePDF, // Vẫn dùng file mẫu
-    };
-  }, [id, name, stuname]); // Tính toán lại khi URL thay đổi
+    return null;
+  }, [name, stuname, id]);
 
 
   // [THAY ĐỔI] Khởi tạo state từ dữ liệu động
   const [activeTab, setActiveTab] = useState<'baiLam' | 'nhanXet'>('baiLam');
   const [comment, setComment] = useState(matchingEntry?.comment || '');
-  const [score, setScore] = useState(matchingEntry?.score);
+  const [score, setScore] = useState<number | undefined>(matchingEntry?.score);
 
   // Track if there are unsaved changes
   const [hasChanges, setHasChanges] = useState(false);
@@ -133,7 +147,7 @@ function RouteComponent() {
   const handleSave = () => {
     if (!matchingEntry) return;
 
-    updateSubmission(matchingEntry.sessionId, matchingEntry.memberId, {
+    updateSubmission(matchingEntry.submissionId, matchingEntry.memberId, {
       score,
       comment,
     });
@@ -237,7 +251,7 @@ function RouteComponent() {
                 max="10"
                 step="0.5"
                 value={score}
-                onChange={(e) => setScore(parseFloat(e.target.value) || 0)}
+                onChange={(e) => setScore(parseFloat(e.target.value))}
                 aria-label="Điểm số"
                 className={`w-20 rounded-md border-gray-300 px-2 py-1 text-sm font-bold ${scoreColor} shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500`}
               />

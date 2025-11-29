@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import {
@@ -569,7 +570,12 @@ const ChatPopup = ({ isOpen, onClose }: ChatPopupProps) => {
                           className="cursor-move rounded-lg bg-white p-3"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-gray-800">{member.name}</span>
+                            <Link
+                              to={`/profile/${member.id}` as string}
+                            className="text-sm font-medium text-gray-800">
+
+                              {member.name}
+                            </Link>
                             <button
                               onClick={() => handleRemoveSelectedById(id)}
                               aria-label={`Xóa ${member.name}`}

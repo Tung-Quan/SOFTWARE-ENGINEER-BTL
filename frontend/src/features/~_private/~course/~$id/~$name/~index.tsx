@@ -66,7 +66,7 @@ function SubmissionRow({ entry, dueDate , id }: { entry: SubmissionData, dueDate
   return (
     <tr className="border-b last-of-type:border-0">
       <td className="px-4 py-3">
-        <div className="font-medium text-gray-900">{nameEntry ? nameEntry.name : 'Unknown'}</div>
+        <Link to={`/profile/$id` as string} className="font-medium text-blue-600">{nameEntry ? nameEntry.name : 'Unknown'}</Link>
       </td>
       <td className="px-4 py-3">
         <div className={`font-medium ${getScoreColor(entry.score)}`}>
@@ -87,7 +87,7 @@ function SubmissionRow({ entry, dueDate , id }: { entry: SubmissionData, dueDate
       </td>
       <td className="px-4 py-3">
         <Link
-          to={`/course/4/Principles%20of%20Programming%20Language%20-%20B%C3%A0i%20t%E1%BA%ADp%20v%E1%BB%81%20nh%C3%A0/${nameEntry?.name}` as any}
+          to={`/course/4/s1/${nameEntry?.name}` as any}
           className="text-blue-600 hover:underline"
         >
           Xem bài nộp
