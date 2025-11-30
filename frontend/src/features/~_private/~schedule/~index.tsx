@@ -91,7 +91,6 @@ function dayIndexFromISO(iso: string) {
 function RouteComponent() {
   // Reference date (any date within the currently visible week). We start at today.
   const [referenceDate, setReferenceDate] = useState(new Date());
-
   // Compute week labels for the header based on the referenceDate
   const weekLabels = getWeekLabels(referenceDate);
 
@@ -103,7 +102,7 @@ function RouteComponent() {
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 7);
 
-  const [role, setRole] = useState<'student' | 'tutor'>('student');
+  const [role, setRole] = useState<'student' | 'tutor'>(localStorage.getItem('role') === 'tutor' ? 'tutor' : 'student');
 
 
   // const rawUserStore = localStorage.getItem('userStore');

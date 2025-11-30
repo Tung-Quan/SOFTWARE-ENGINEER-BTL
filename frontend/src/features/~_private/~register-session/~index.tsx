@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import StudyLayout from '@/components/study-layout'
 
+import AdminRegister from './components/admin-register';
 import { CoordinatorRegister } from './components/coordinator-register';
 import { StudentRegister } from './components/student-register';
 import { TutorRegister } from './components/tutor-register';
-import AdminRegister from './components/admin-register';
 
 export const Route = createFileRoute('/_private/register-session/')({
   component: RouteComponent,
