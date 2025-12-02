@@ -350,7 +350,7 @@ function CalendarGrid({ items, weekLabels, role }: CalendarGridProps) {
   const totalRows = (22 - 7) * 2; // = 30 rows (1 row = 30 minutes)
 
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto shadow-custom-yellow">
       <div
         className="grid"
         // Cột 1 cho thời gian, 7 cột cho các ngày

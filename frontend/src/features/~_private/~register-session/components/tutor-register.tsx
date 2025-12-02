@@ -11,7 +11,8 @@ import {
   mockLanguages,
   mockLocations
 } from '@/components/data/~mock-register';
-import { mockTutorRegistrations, type PastTutorRegistration as TutorReg } from '@/components/data/~mock-tutor-register';
+import type { PastRegistration as TutorReg } from '@/components/data/~mock-register';
+import { mockTutorRegistrations } from '@/components/data/~mock-tutor-register';
 
 // --- BIẾN ĐỔI SVG THÀNH COMPONENT ---
 // (Tái sử dụng các SVG bạn đã cung cấp)
@@ -271,8 +272,8 @@ export function TutorRegister() {
 
                 const newReg: TutorReg = {
                   id: `tutor-reg-${Date.now()}`,
-                  tutorName,
-                  tutorEmail,
+                  Name: tutorName,
+                  Email: tutorEmail,
                   subjects: addedSubjects.length ? addedSubjects : [],
                   languages: addedLanguages.length ? addedLanguages : [],
                   sessionTypes: addedSessionTypes.length ? addedSessionTypes : [],
