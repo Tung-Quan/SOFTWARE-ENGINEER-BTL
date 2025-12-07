@@ -12,6 +12,9 @@ import StudyLayout from '@/components/study-layout'
 import { ScheduleDetailPopup } from './components/schedule-detail-popup'
 
 export const Route = createFileRoute('/_private/schedule/')({
+  beforeLoad: async () => {
+    document.title = 'Schedule -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 

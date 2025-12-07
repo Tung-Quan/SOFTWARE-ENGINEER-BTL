@@ -10,6 +10,9 @@ import { StudentRegister } from './components/student-register';
 import { TutorRegister } from './components/tutor-register';
 
 export const Route = createFileRoute('/_private/register-session/')({
+  beforeLoad: async () => {
+    document.title = 'Register Tutor Program -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 
@@ -23,7 +26,7 @@ function getFormComponent(role: 'tutor' | 'student') {
 function RouteComponent() {
 
   useEffect(() => {
-    document.title = 'Register Tutor Program - BK Learning';
+    document.title = 'Register Tutor Program -  Tutor Support System';
   }, []);
 
 

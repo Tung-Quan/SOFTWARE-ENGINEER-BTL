@@ -83,6 +83,29 @@ export function TutorRegister() {
 
   const navigate = useNavigate();
 
+  const [isSaved, setIsSaved] = useState(true);
+  const [showSaveStatus, setShowSaveStatus] = useState(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleChange = () => {
+    setShowSaveStatus(true);
+    setIsSaved(false);
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    saveTimeoutRef.current = setTimeout(() => {
+      setIsSaved(true);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Local arrays for items the tutor adds
   const [addedSubjects, setAddedSubjects] = useState<DropdownOption[]>([]);
   const [addedLanguages, setAddedLanguages] = useState<DropdownOption[]>([]);
@@ -106,6 +129,13 @@ export function TutorRegister() {
   return (
     <div className="min-h-screen bg-gray-100">
 
+      {showSaveStatus && (
+        <div className={`rounded px-4 py-2 text-center text-white shadow-lg transition-colors ${
+          isSaved ? 'bg-green-500' : 'bg-orange-500'
+          }`}>
+          {isSaved ? 'Đã lưu' : 'Chưa lưu'}
+        </div>
+      )}
 
       {/* Form Content */}
       <main className="p-6">
@@ -128,6 +158,7 @@ export function TutorRegister() {
                 onClick={() => {
                   // add the selected course (avoid duplicates)
                   addIfNotExists(addedSubjects, setAddedSubjects, courseSelected);
+                  handleChange();
                 }}
               />
 
@@ -151,7 +182,11 @@ export function TutorRegister() {
                 selected={language}
                 onSelect={setLanguage}
               />
-              <AddButton title="Thêm ngôn ngữ" onClick={() => addIfNotExists(addedLanguages, setAddedLanguages, language)} />
+              <AddButton title="Thêm ngôn ngữ" onClick={() => {
+                 addIfNotExists(addedLanguages, setAddedLanguages, language);
+                 handleChange();
+                }
+              } />
 
               {addedLanguages.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -173,7 +208,10 @@ export function TutorRegister() {
                 selected={sessionType}
                 onSelect={setSessionType}
               />
-              <AddButton title="Thêm loại hình" onClick={() => addIfNotExists(addedSessionTypes, setAddedSessionTypes, sessionType)} />
+              <AddButton title="Thêm loại hình" onClick={() => {
+                addIfNotExists(addedSessionTypes, setAddedSessionTypes, sessionType);
+                handleChange();
+              }} />
 
               {addedSessionTypes.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -193,10 +231,16 @@ export function TutorRegister() {
                   icon={<LocationIcon className="size-5" />}
                   options={mockLocations}
                   selected={location}
-                  onSelect={setLocation}
+                  onSelect={(option) => {
+                    setLocation(option);
+                    handleChange();
+                  }}
                 />
                 <div className="mt-2">
-                  <AddButton title="Thêm địa điểm" onClick={() => addIfNotExists(addedLocations, setAddedLocations, location)} />
+                  <AddButton title="Thêm địa điểm" onClick={() => {
+                    addIfNotExists(addedLocations, setAddedLocations, location);
+                    handleChange();
+                  }} />
                   {addedLocations.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {addedLocations.map(l => (
@@ -215,7 +259,10 @@ export function TutorRegister() {
               <input
                 type="text"
                 value={meetLink}
-                onChange={(e) => setMeetLink(e.target.value)}
+                onChange={(e) => {
+                  setMeetLink(e.target.value);
+                  handleChange();
+                }}
                 placeholder="https://meet.example.com/abc-123"
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
               />
@@ -225,7 +272,10 @@ export function TutorRegister() {
             <FormSection title="Yêu cầu đặc biệt">
               <FormTextArea
                 value={specialRequest}
-                onChange={(e) => setSpecialRequest(e.target.value)}
+                onChange={(e) => {
+                  setSpecialRequest(e.target.value);
+                  handleChange();
+                }}
                 rows={8}
               />
             </FormSection>
@@ -235,7 +285,10 @@ export function TutorRegister() {
               <FormSection title="Thành tựu">
                 <FormTextArea
                   value={achievements}
-                  onChange={(e) => setAchievements(e.target.value)}
+                  onChange={(e) => {
+                    setAchievements(e.target.value);
+                    handleChange();
+                  }}
                   rows={8}
                   placeholder="Nhập thành tựu của bạn ở đây..."
                 />
@@ -392,8 +445,8 @@ function FormDropdown({ icon, options, selected, onSelect }: FormDropdownProps) 
               <li
                 key={option.id}
                 className={`cursor-pointer px-4 py-2 text-gray-900 ${option.id === selected.id
-                    ? 'bg-blue-700 text-white'
-                    : 'hover:bg-blue-50'
+                  ? 'bg-blue-700 text-white'
+                  : 'hover:bg-blue-50'
                   }`}
                 onClick={() => {
                   onSelect(option);

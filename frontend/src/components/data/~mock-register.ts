@@ -2,10 +2,10 @@ import { mockCourses } from './~mock-courses';
 import { NAMES_POOL } from './~mock-names';
 
 export const mockLanguages = [
-  { id: 'vi', name: 'Vietnamese' },
+  { id: 'vi', name: 'Tiếng Việt' },
   { id: 'en', name: 'English' },
-  { id: 'cn', name: 'Chinese' },
-  { id: 'th', name: 'Thailand' },
+  { id: 'cn', name: '简体中文' },
+  { id: 'th', name: 'ภาษาไทย' },
 ];
 
 /**

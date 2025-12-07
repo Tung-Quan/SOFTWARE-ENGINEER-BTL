@@ -61,13 +61,6 @@ const HistoryIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// SVG cho nút Overview (màu trắng)
-const OverviewIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <rect x="3" y="6" width="22" height="16" rx="2" stroke="white" strokeWidth="2" />
-    <path d="M7 10h14M7 14h6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 
 
 // --- Định nghĩa kiểu dữ liệu ---
@@ -134,14 +127,6 @@ export function CoordinatorRegister() {
             Create New Course - Coordinator
           </h1>
           <div className="mt-4 flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => navigate({ to: '/register-session/overview' })}
-              className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-white transition hover:bg-white/30"
-            >
-              <OverviewIcon className="size-6" />
-              <span className="font-medium">Overview</span>
-            </button>
             <button
               type="button"
               onClick={() => setIsHistoryModalOpen(true)}

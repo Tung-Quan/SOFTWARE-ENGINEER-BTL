@@ -8,6 +8,19 @@ import StudyLayout from '@/components/study-layout'
 
 // Định nghĩa route
 export const Route = createFileRoute('/_private/system-monitoring/')({
+  beforeLoad: async () => {
+    document.title = 'System Monitoring -  Tutor Support System';
+    if (!localStorage.getItem('userStore')) {
+      window.location.assign('/login');
+    };
+    const rawUserStore = localStorage.getItem('userStore');
+    const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+    const State = userStore?.state ?? null;
+    const userLocalStore = State.user ?? null;
+    if (!userLocalStore || !userLocalStore.isCoordinator) {
+      window.location.assign('/dashboard');
+    }
+  },
   component: RouteComponent,
 })
 
@@ -60,13 +73,13 @@ const AreaChart: React.FC<AreaChartProps> = ({ title, series, categories, yaxisL
     chart: {
       type: 'area',
       height: 300,
-      stacked: true, 
+      stacked: true,
       toolbar: { show: false },
       zoom: { enabled: false },
       animations: {
         enabled: true,
         dynamicAnimation: {
-          speed: 1000, 
+          speed: 1000,
         },
       }
     },
@@ -86,7 +99,7 @@ const AreaChart: React.FC<AreaChartProps> = ({ title, series, categories, yaxisL
       categories: categories,
       tickAmount: 6, // Hiển thị ít nhãn thời gian hơn
       labels: {
-        formatter: (value :string) => value ? value.split(' ')[0] : '', // Chỉ hiện HH:mm:ss
+        formatter: (value: string) => value ? value.split(' ')[0] : '', // Chỉ hiện HH:mm:ss
       }
     },
     yaxis: {
@@ -129,7 +142,7 @@ interface SystemStats {
   memoryUsage: number
   diskUsage: number
   swapUsage: number
-  
+
   // Cho Area Charts
   cpuDetail: {
     user: number
@@ -159,7 +172,7 @@ function RouteComponent() {
 
   // State cho Area Charts
   const [timeLabels, setTimeLabels] = useState<string[]>(createInitialLabels(MAX_DATA_POINTS))
-  
+
   // ===== THAY ĐỔI 2: Dùng type 'ChartDataSeries[]' thay vì 'ApexAxisChartSeries' =====
   const [cpuSeries, setCpuSeries] = useState<ChartDataSeries[]>([
     { name: 'Busy User', data: createInitialData(MAX_DATA_POINTS) },
@@ -177,7 +190,7 @@ function RouteComponent() {
         const response = await fetch('http://localhost:5000/api/stats')
         if (!response.ok) throw new Error('Không kết nối được server Python')
         const data: SystemStats = await response.json()
-        
+
         // Cập nhật Gauges
         setStats(data)
 
@@ -186,13 +199,13 @@ function RouteComponent() {
 
         // Cập nhật state cho Area Charts
         setTimeLabels((prev) => [...prev.slice(1), newTime]) // Thêm mới, bỏ cũ
-        
+
         // Dòng 181 của bạn giờ sẽ hoạt động
         setCpuSeries((prev) => [ // Giờ 'prev' được TypeScript hiểu là 'ChartDataSeries[]'
           { name: 'Busy User', data: [...prev[0].data.slice(1), data.cpuDetail.user] },
           { name: 'Busy IQRs', data: [...prev[1].data.slice(1), data.cpuDetail.system] },
         ])
-        
+
         setMemSeries((prev) => [ // Tương tự
           { name: 'Total', data: [...prev[0].data.slice(1), data.memDetail.totalGB] },
           { name: 'Used', data: [...prev[1].data.slice(1), data.memDetail.usedGB] },
@@ -202,7 +215,7 @@ function RouteComponent() {
         console.error('Lỗi khi lấy thông số hệ thống:', error)
       }
     }
-    
+
     // Cập nhật mỗi 2 giây
     const interval = setInterval(fetchStats, 2000)
     return () => clearInterval(interval)
@@ -218,7 +231,7 @@ function RouteComponent() {
           <GaugeChart title="Disk Usage" series={stats?.diskUsage || 0} />
           <GaugeChart title="Swap Usage" series={stats?.swapUsage || 0} />
         </div>
-        
+
         {/* Hàng Area Charts MỚI */}
         <div className="grid grid-cols-1 gap-6">
           <AreaChart

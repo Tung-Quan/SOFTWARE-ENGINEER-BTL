@@ -7,6 +7,9 @@ import { getMockSessions } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/_private/schedule/history/')({
+  beforeLoad: async () => {
+    document.title = 'Lịch sử buổi học -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 

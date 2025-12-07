@@ -1,0 +1,568 @@
+\section{Frontend Test Cases}
+
+% ===========================================================================
+% TC-01: User Authentication
+% ===========================================================================
+
+\subsection{Successful User Login}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{01: Successful User Login}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{01: Successful User Login (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify user can successfully authenticate and access the system. \\ \hline
+
+\textbf{Related screens} & Login page, Dashboard \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is not authenticated
+    \item Login page is displayed
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Enter valid email address
+    \item Enter corresponding password
+    \item Click login button
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Valid user credentials \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Success message is displayed
+    \item User is redirected to dashboard
+    \item User session is active
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser on Windows 10/11 or macOS \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-02: Invalid Login
+% ===========================================================================
+
+\subsection{Invalid Login Credentials}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{02: Invalid Login Credentials}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{02: Invalid Login Credentials (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify system rejects invalid credentials and displays appropriate error. \\ \hline
+
+\textbf{Related screens} & Login page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is on login page
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Enter invalid email or password
+    \item Click login button
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Invalid credentials \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Error message is displayed
+    \item Input fields are highlighted
+    \item User remains on login page
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-03: Dashboard Display
+% ===========================================================================
+
+\subsection{Dashboard Display}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{03: Dashboard Display}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{03: Dashboard Display (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify dashboard displays correctly based on user role. \\ \hline
+
+\textbf{Related screens} & Dashboard \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is authenticated
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Navigate to dashboard
+    \item Verify displayed components
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & User role (Student/Tutor/Coordinator) \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Role-appropriate menu items are visible
+    \item User information is displayed
+    \item Statistics and widgets load correctly
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-04: Course List View
+% ===========================================================================
+
+\subsection{Course List Display}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{04: Course List Display}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{04: Course List Display (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify all courses are displayed with correct information. \\ \hline
+
+\textbf{Related screens} & Course listing page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is authenticated
+    \item Courses exist in system
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Navigate to course page
+    \item View course list
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & None \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item All courses are displayed
+    \item Each course shows title, description, and tutor
+    \item Courses are properly formatted
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-05: Course Search
+% ===========================================================================
+
+\subsection{Course Search Functionality}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{05: Course Search Functionality}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{05: Course Search Functionality (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify search filters courses correctly. \\ \hline
+
+\textbf{Related screens} & Course listing page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is on course page
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Enter search term in search box
+    \item Press enter or click search
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Course name or keyword \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Only matching courses are displayed
+    \item Results update in real-time
+    \item Empty state shows if no results found
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-06: Course Detail View
+% ===========================================================================
+
+\subsection{Course Detail Display}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{06: Course Detail Display}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{06: Course Detail Display (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify course details are displayed correctly. \\ \hline
+
+\textbf{Related screens} & Course detail page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User selects a course from list
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Click on course
+    \item View course information
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Course selection \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Complete course information is displayed
+    \item Enrollment status is shown
+    \item Action buttons are visible based on user role
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-07: Profile View and Edit
+% ===========================================================================
+
+\subsection{User Profile Management}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{07: User Profile Management}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{07: User Profile Management (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify user can view and update profile information. \\ \hline
+
+\textbf{Related screens} & Profile page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is authenticated
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Navigate to profile page
+    \item Click edit button
+    \item Modify profile fields
+    \item Save changes
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Updated profile information \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Profile information is displayed correctly
+    \item Changes are saved successfully
+    \item Success notification is shown
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-08: Schedule Calendar
+% ===========================================================================
+
+\subsection{Schedule Calendar View}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{08: Schedule Calendar View}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{08: Schedule Calendar View (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify schedule is displayed in calendar format. \\ \hline
+
+\textbf{Related screens} & Schedule page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User has enrolled courses
+    \item Sessions are scheduled
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Navigate to schedule page
+    \item View calendar
+    \item Click on session for details
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & None \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item Sessions appear on correct dates
+    \item Session details are accessible
+    \item Calendar navigation works correctly
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-09: Registration History
+% ===========================================================================
+
+\subsection{Registration History Display}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{09: Registration History Display}} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{09: Registration History Display (continued)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Verify registration records are displayed with status tracking. \\ \hline
+
+\textbf{Related screens} & Registration history page \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User has registration history
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item Navigate to registration history
+    \item View list of registrations
+    \item Filter by status
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Filter criteria \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*]
+    \item All registrations are listed
+    \item Status badges are color-coded
+    \item Details are accessible for each record
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Chrome/Firefox browser \\ \hline
+\end{longtable}
+
+% ===========================================================================
+% TC-10: Course Registration
+% ===========================================================================
+
+\subsection{New Course Registration}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{TC-SSO-01: Full HCMUT SSO Flow}} \\ \hline
+\endfirsthead
+
+% Lặp lại header nếu bảng sang trang mới
+\hline
+\rowcolor{black}
+\textbf{\textcolor{white}{Test case}} & \textbf{\textcolor{white}{TC-SSO-01: Full HCMUT SSO Flow (tiếp theo)}} \\ \hline
+\endhead
+
+\textbf{Test description} & Test the full HCMUT SSO flow including exchange, datacore profile fetch and internal user creation. \\ \hline
+
+\textbf{Pre-conditions} & 
+\begin{enumerate}[nosep, leftmargin=*]
+    \item User is not logged in.
+    \item Backend is connected to Datacore service.
+\end{enumerate} \\ \hline
+
+\textbf{Actions} & 
+\begin{enumerate}[nosep, leftmargin=*, topsep=0pt, partopsep=0pt, after=\vspace{\baselineskip}]
+    \item Click ``Đăng nhập với tài khoản HCMUT'' (frontend).
+    \item Redirect to SSO provider and complete authentication (simulate callback with code).
+    \item Backend exchanges code $\rightarrow$ access token.
+    \item Backend calls \texttt{datacoreSSO} and fetch profile.
+    \item Backend creates/updates User and issues internal JWTs.
+    \item Frontend receives tokens, calls \texttt{GET /api/auth/me}.
+\end{enumerate} \\ \hline
+
+\textbf{Inputs} & Valid HCMUT SSO Credentials / Auth Code \\ \hline
+
+\textbf{Expected Outputs} & 
+\begin{itemize}[nosep, leftmargin=*, topsep=0pt, partopsep=0pt, after=\vspace{\baselineskip}]
+    \item \texttt{GET /api/auth/me} returns user with same email as SSO.
+    \item Roles (student/tutor/coordinator) set per datacore values.
+    \item Tokens are stored in frontend (\texttt{authStore/localStorage}).
+    \item HTTP responses: \texttt{200} for success; proper errors for invalid state/code.
+\end{itemize} \\ \hline
+
+\textbf{Testing environment} & Browser: Chrome/Firefox, Environment: Staging/Local \\ \hline
+
+\end{longtable}
+\subsection{Classroom Multi-Role Access Control}
+
+\subsubsection{Description}
+Verify role-based permissions for classroom actions.
+
+\subsubsection*{Scenarios \& Assertions}
+\begin{itemize}
+    \item Student attempts to create assignment: \texttt{403 Forbidden}.
+    \item Tutor grades submission: \texttt{200 OK}; grade persisted.
+    \item Coordinator archives classroom: \texttt{200 OK}; \texttt{classroom.status} changes.
+    \item Student accesses materials for enrolled classroom: \texttt{200 OK}.
+\end{itemize}
+
+\subsection{Student Registration Flow (PENDING to APPROVED)}
+\textbf{Priority:} CRITICAL \hfill \textbf{Type:} End-to-End
+
+\subsubsection*{Description}
+Full flow from student submission: coordinator approval then classroom creation/enrollment.
+
+\subsubsection{Steps}
+\begin{enumerate}
+    \item Student submits registration via \texttt{POST /api/registrations}.
+    \item Coordinator lists pending registrations \texttt{GET /api/registrations?status=pending}.
+    \item Coordinator approves: \texttt{PATCH /api/registrations/:id/approve} (select tutor/classroom).
+    \item System creates or updates classroom and enrolls student.
+    \item Notifications sent to student and tutor.
+\end{enumerate}
+
+\subsubsection{Expected / Assertions}
+\begin{itemize}
+    \item \texttt{registration.status} transitions to \texttt{APPROVED}.
+    \item \texttt{classroom.studentIds} includes the student.
+    \item Notifications created for student and tutor.
+    \item Student can access classroom resources.
+\end{itemize}
+
+\subsection{AI Matching Service}
+
+\subsubsection{Description}
+Verify matching algorithm returns a scored recommendation and reasons.
+
+\subsubsection{Inputs}
+\begin{itemize}
+    \item StudentProfile (preferences, academicData, availability)
+    \item CourseRequirement (language, session types, duration)
+\end{itemize}
+
+\subsubsection{Assertions}
+\begin{itemize}
+    \item \texttt{matchStudentToCourse()} returns \texttt{matchScore} between 0–100.
+    \item \texttt{recommendedTutor} must satisfy capability overlap.
+    \item \texttt{reasons} includes human-readable rules explaining match.
+    \item Weighting: language 25\%, sessionType 20\%, location 15\%, timeSlot 20\%, rating 10\%, academicFit 10\% (verify calculation logic with deterministic inputs).
+\end{itemize}
+
+\subsection{Assignment Lifecycle (DRAFT $\rightarrow$ PUBLISHED $\rightarrow$ SUBMITTED $\rightarrow$ GRADED)}
+\textbf{Priority:} HIGH \hfill \textbf{Type:} Integration
+
+\subsubsection{Flow \& Assertions}
+\begin{enumerate}
+    \item Tutor creates assignment (DRAFT) $\rightarrow$ \texttt{POST /api/assignments} (201).
+    \item Tutor publishes $\rightarrow$ \texttt{POST /api/assignments/:id/publish} $\rightarrow$ \texttt{assignment.status = PUBLISHED}.
+    \item Student submits file $\rightarrow$ \texttt{POST /api/submissions} $\rightarrow$ \texttt{submission.status SUBMITTED} (or \texttt{LATE} if after deadline).
+    \item Tutor grades $\rightarrow$ \texttt{PATCH /api/submissions/:id/grade} $\rightarrow$ grade persisted, \texttt{gradedAt} set.
+    \item Notifications created at publish and grade events.
+\end{enumerate}
+
+\subsection{Session Attendance \& Rating}
+
+\subsubsection{Description \& Assertions}
+\begin{itemize}
+    \item Create session with valid times (start $<$ end) and correct fields per type (\texttt{meetingLink} for online).
+    \item Mark attendance: ensure \texttt{AttendanceRecord} created and correctness of \texttt{isPresent} flags.
+    \item After session completion, student can rate tutor once: rating stored, \texttt{overallScore} computed as average.
+\end{itemize}
+
+\subsection{Real-time Chat \& Notification}
+
+\subsubsection{Description}
+Test message send $\rightarrow$ WebSocket broadcast $\rightarrow$ persistence $\rightarrow$ notification.
+
+\subsubsection{Steps \& Assertions}
+\begin{enumerate}
+    \item User posts message in channel (\texttt{POST /api/messages} or via WebSocket).
+    \item Message received by other clients (WebSocket event).
+    \item Message saved to DB and \texttt{chatChannel.lastMessage} updated.
+    \item Notification created for recipient and unread count incremented.
+\end{enumerate}
+
+\subsection{Registration Validation \& Business Rules}
+
+\subsubsection{Key Rules to Test}
+\begin{itemize}
+    \item Student cannot create duplicate registration for same course concurrently.
+    \item OFFLINE/HYBRID must include \texttt{location} (\texttt{400} if missing).
+    \item Registration for archived/invalid course $\rightarrow$ \texttt{400/404}.
+    \item Only one active registration per (student, course) pair.
+\end{itemize}
+
+\subsection{Submission Deadline Extension}
+
+\subsubsection{Scenarios \& Assertions}
+\begin{itemize}
+    \item Submit before deadline $\rightarrow$ status \texttt{SUBMITTED}, not late.
+    \item Submit after deadline $\rightarrow$ status flagged \texttt{LATE}.
+    \item Tutor extends deadline $\rightarrow$ \texttt{assignment.status EXTENDED} and subsequent submissions considered on-time until new deadline.
+    \item Grade limits enforced (0 $\leq$ grade $\leq$ maxScore).
+\end{itemize}
+
+\subsection{Library Integration \& Book Search}
+
+
+\subsubsection{Description}
+Test calls to HCMUT library endpoints and caching behavior.
+
+\subsubsection{Steps \& Assertions}
+\begin{enumerate}
+    \item Search \texttt{/api/library?query=Computer+Network} returns list with \texttt{title, author, isbn, availability}.
+    \item Availability values are \texttt{available|borrowed|reserved}.
+    \item Cache stored for 5 minutes; repeated search returns cached results (verify cache hit).
+    \item Response time reasonable (target $<$ 2s in QA environment).
+\end{enumerate}

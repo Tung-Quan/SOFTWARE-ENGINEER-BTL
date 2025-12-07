@@ -19,6 +19,9 @@ import pdfIcon from './components/pdfIcon.png';
 
 
 export const Route = createFileRoute('/_private/course/$id/')({
+  beforeLoad: async () => {
+    document.title = 'Chi tiết khóa học - Tutor Support System';
+  },
   component: CourseDetailsComponent,
 });
 
@@ -2694,8 +2697,7 @@ function CourseDetailsComponent() {
                     }}
                   >
                     <div>
-                      <CreateMaterialIcon className="mr-2 inline-block " /> Tạo
-                      danh mục
+                      <CreateMaterialIcon className="mr-2 inline-block " /> Thêm tài liệu
                     </div>
                   </button>
                 </div>

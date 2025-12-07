@@ -16,6 +16,7 @@ import StudyLayout from '@/components/study-layout'
 export const Route = createFileRoute('/_private/schedule/request/')({
   beforeLoad: async () => {
     // check 'role' in localStorage
+    document.title = 'Tạo buổi học mới -  Tutor Support System';
     const role = localStorage.getItem('role') || 'student'
     if (role !== 'tutor') {
       // Redirect to /schedule if not tutor

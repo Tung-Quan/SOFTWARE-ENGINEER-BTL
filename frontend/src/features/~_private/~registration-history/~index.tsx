@@ -37,6 +37,9 @@ export function RemoveIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 export const Route = createFileRoute('/_private/registration-history/')({
+  beforeLoad: async () => {
+    document.title = 'Lịch sử đăng ký -  Tutor Support System';
+  },
   component: RouteComponent,
 });
 

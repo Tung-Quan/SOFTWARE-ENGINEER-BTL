@@ -137,10 +137,12 @@ function RouteComponent() {
   // When the user confirms their ratings/comments, persist and navigate
   const handleConfirm = () => {
     // Ensure we persist the latest ratings (effect also keeps localStorage up-to-date)
-    localStorage.setItem(`course-ratings-${id}`, JSON.stringify(ratings));
-
+    // localStorage.setItem(`course-ratings-${id}`, JSON.stringify(ratings));
+    alert('Đã lưu đánh giá');
     // Navigate back to the overview page
-    window.location.assign(`/course/${id}`);
+    setTimeout(() => {
+    window.location.assign(`/course/${id}`)
+    }, 500);
   };
 
   if (isStudent)
@@ -406,7 +408,9 @@ function RouteComponent() {
             placeholder="Nhận xét"
           ></input>
         </div>
-        <button className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
+        <button 
+          onClick={handleConfirm}
+        className="mt-8 flex items-center justify-center self-end rounded-lg bg-primary px-4 py-2">
           <p className="font-bold text-white">Xác nhận</p>
         </button>
       </StudyLayout>

@@ -11,6 +11,9 @@ import { DeclinePopup } from './components/decline-popup'
 
 
 export const Route = createFileRoute('/_private/schedule/history/$id/')({
+  beforeLoad: async () => {
+    document.title = 'Chi tiết buổi học -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 

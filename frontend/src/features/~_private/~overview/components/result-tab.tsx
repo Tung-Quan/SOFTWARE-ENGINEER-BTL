@@ -372,13 +372,15 @@ export function ResultTab() {
           {/*  nút xác nhận: chờ 5 giây và quay trở lại /dashboard */}
           <button
             onClick={() => {
+              // xác nhận tạo lớp
+              alert('Xác nhận tạo lớp thành công...');
               setTimeout(() => {
                 window.location.href = '/dashboard';
               }, 1000);
             }}
             className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
-            Xác nhận
+            Xác nhận tạo lớp
           </button>
         </div>
       </div>

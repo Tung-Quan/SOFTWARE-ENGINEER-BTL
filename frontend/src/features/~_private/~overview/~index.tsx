@@ -13,7 +13,20 @@ import { ResultTab } from './components/result-tab'
 // SVG helpers removed — icons used inside DataTab now
 
 // --- Định nghĩa Type --- (moved into DataTab)
-export const Route = createFileRoute('/_private/register-session/overview/')({
+export const Route = createFileRoute('/_private/overview/')({
+  beforeLoad: async () => {
+    document.title = 'Overview -  Tutor Support System';
+    if (!localStorage.getItem('userStore')) {
+      window.location.assign('/login');
+    };
+    const rawUserStore = localStorage.getItem('userStore');
+    const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+    const State = userStore?.state ?? null;
+    const userLocalStore = State.user ?? null;
+    if (!userLocalStore || !userLocalStore.isCoordinator) {
+      window.location.assign('/dashboard');
+    }
+  },
   component: RouteComponent,
 })
 
@@ -89,7 +102,7 @@ function RouteComponent() {
             onClick={() => handleMatching()}
             className="rounded-lg border border-blue-600 bg-white px-5 py-2.5 text-sm font-medium text-blue-600 shadow-sm hover:bg-blue-600 hover:text-white"
           >
-            Matching
+            Gợi ý AI
           </button>
         </header>
 

@@ -14,6 +14,19 @@ import StudyLayout from '@/components/study-layout';
 
 
 export const Route = createFileRoute('/statistical/' as any)({
+  beforeLoad: async () => {
+    document.title = 'Dashboard -  Tutor Support System';
+    if (!localStorage.getItem('userStore')) {
+      window.location.assign('/login');
+    };
+    const rawUserStore = localStorage.getItem('userStore');
+    const userStore = rawUserStore ? JSON.parse(rawUserStore as string) : null;
+    const State = userStore?.state ?? null;
+    const userLocalStore = State.user ?? null;
+    if (!userLocalStore || !userLocalStore.isCoordinator) {
+      window.location.assign('/dashboard');
+    }
+  },
   component: RouteComponent,
 })
 
@@ -47,7 +60,7 @@ const CourseStatsCard: React.FC<{ course: typeof mockCourseData[0] }> = ({ cours
       {/* Phần nút bấm */}
       <div>
         <button
-          onClick={() => navigate({ to: '/statistical/reports'})}
+          onClick={() => navigate({ to: '/statistical/reports' })}
           className="whitespace-nowrap rounded-md bg-[#0329E9] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Xem thống kê

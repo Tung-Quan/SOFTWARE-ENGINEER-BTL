@@ -8,6 +8,9 @@ import { createRequestSession } from '@/components/data/~mock-session'
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/_private/schedule/request/new/')({
+  beforeLoad: async () => {
+    document.title = 'Tạo buổi học mới -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 

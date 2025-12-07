@@ -189,7 +189,7 @@ export function MatchingPopup({ onClose, onMatch, availablePeople, tabLabel }: M
               }
             `}
           >
-            Match Now
+            Ghép đôi
           </button>
         </div>
 

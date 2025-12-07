@@ -100,6 +100,7 @@ function RouteComponent() {
 
       if (!foundUser) {
         // toast.error('Email hoặc mật khẩu không đúng!');
+        alert('Email hoặc mật khẩu không đúng!');
         setWrongCredentials(true);
         return;
       }
@@ -222,10 +223,10 @@ function RouteComponent() {
                 required
               />
               <ViewPassworIcon className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" />
-              {wrongCredentials && (
-                <p className="mt-1 text-xs text-red-600">sai mật khẩu</p>
-              )}
             </div>
+            {wrongCredentials && (
+              <p className="mt-1 text-xs text-red-600">sai mật khẩu</p>
+            )}
 
           </div>
           {/* checkbox remember this device and forgot password link */}

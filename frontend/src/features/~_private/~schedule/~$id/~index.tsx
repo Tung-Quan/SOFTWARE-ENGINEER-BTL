@@ -13,6 +13,9 @@ import { getSessionById, updateSession, deleteSession, Session } from '@/compone
 import StudyLayout from '@/components/study-layout'
 
 export const Route = createFileRoute('/_private/schedule/$id/')({
+  beforeLoad: async () => {
+    document.title = 'Chi tiết buổi học -  Tutor Support System';
+  },
   component: RouteComponent,
 })
 

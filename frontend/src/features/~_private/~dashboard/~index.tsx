@@ -102,12 +102,24 @@ function DashboardComponent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [sortOrder, setSortOrder] = useState('newest');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const totalPages = Math.max(1, Math.ceil(mockCourses.length / itemsPerPage));
+  // Filter courses by search query
+  const filteredCourses = mockCourses.filter((course) => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      course.title.toLowerCase().includes(query) ||
+      course.code.toLowerCase().includes(query) ||
+      course.instructor.toLowerCase().includes(query)
+    );
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredCourses.length / itemsPerPage));
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const displayedCourses = mockCourses.slice(startIndex, endIndex);
+  const displayedCourses = filteredCourses.slice(startIndex, endIndex);
   
 
   // Pagination window logic: show up to `maxPageButtons` pages, centered on currentPage when possible
@@ -142,6 +154,11 @@ function DashboardComponent() {
             <input
               type="text"
               placeholder="Nhập tên khóa học để tìm kiếm..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1); // Reset to first page when searching
+              }}
               className="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -168,14 +185,18 @@ function DashboardComponent() {
           </div>
         </div>
 
-        {mockCourses.length === 0 ? (
+        {filteredCourses.length === 0 ? (
           <div className="mb-8 flex flex-col items-center justify-center py-12">
             <img
               src={boxSvg}
               alt="Không có khóa học"
               className="mb-6 size-28 opacity-90"
             />
-            <p className="text-gray-500">Hiện không có khóa học nào</p>
+            <p className="text-gray-500">
+              {searchQuery 
+                ? `Không tìm thấy khóa học với từ khóa "${searchQuery}"`
+                : 'Hiện không có khóa học nào'}
+            </p>
           </div>
         ) : (
           <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

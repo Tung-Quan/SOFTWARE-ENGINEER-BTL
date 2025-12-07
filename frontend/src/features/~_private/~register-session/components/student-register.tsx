@@ -56,11 +56,32 @@ export function StudentRegister() {
   // State cho form
   // Dropdown option arrays for subject and session type (from mock data)
   const subjectOptions: DropdownOption[] = mockCourses.map((c) => ({ id: c.id, name: `${c.title} (${c.code})` }));
-
+  const [isSaved, setIsSaved] = useState(true);
+  const [showSaveStatus, setShowSaveStatus] = useState(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const sessionTypeOptions: DropdownOption[] = [
     { id: 'online', name: 'Học trực tuyến' },
     { id: 'hybrid', name: 'Học trực tuyến và trực tiếp' },
   ];
+
+  const handleChange = () => {
+    setShowSaveStatus(true);
+    setIsSaved(false);
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    saveTimeoutRef.current = setTimeout(() => {
+      setIsSaved(true);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const [subject, setSubject] = useState<DropdownOption>(subjectOptions[0]);
   const [language, setLanguage] = useState(mockLanguages[0]); // Mặc định là Vietnamese
@@ -86,7 +107,13 @@ export function StudentRegister() {
   return (
     <div className="min-h-screen bg-gray-100">
 
-
+      {showSaveStatus && (
+        <div className={`rounded px-4 py-2 text-center text-white shadow-lg transition-colors ${
+          isSaved ? 'bg-green-500' : 'bg-orange-500'
+        }`}>
+          {isSaved ? 'Đã lưu' : 'Chưa lưu'}
+        </div>
+      )}
       {/* Form Content */}
       <main className="p-6">
         <form
@@ -101,7 +128,10 @@ export function StudentRegister() {
                 icon={<SubjectIcon className="size-5" />}
                 options={subjectOptions}
                 selected={subject}
-                onSelect={setSubject}
+                onSelect={(option) => {
+                  setSubject(option);
+                  handleChange();
+                }}
               />
             </FormSection>
 
@@ -111,7 +141,10 @@ export function StudentRegister() {
                 icon={<LanguageIcon className="size-5" />}
                 options={mockLanguages}
                 selected={language}
-                onSelect={setLanguage}
+                onSelect={(option) => {
+                  setLanguage(option);
+                  handleChange();
+                }}
               />
             </FormSection>
 
@@ -121,7 +154,10 @@ export function StudentRegister() {
                 icon={<SessionTypeIcon className="size-5" />}
                 options={sessionTypeOptions}
                 selected={sessionType}
-                onSelect={setSessionType}
+                onSelect={(option) => {
+                  setSessionType(option);
+                  handleChange();
+                }}
               />
             </FormSection>
 
@@ -132,7 +168,10 @@ export function StudentRegister() {
                   icon={<LocationIcon className="size-5" />}
                   options={mockLocations}
                   selected={location}
-                  onSelect={setLocation as (o: DropdownOption) => void}
+                  onSelect={(option) => {
+                    setLocation(option);
+                    handleChange();
+                  }}
                 />
               </FormSection>
             )}
@@ -142,7 +181,10 @@ export function StudentRegister() {
             <FormSection title="Yêu cầu đặc biệt">
               <FormTextArea
                 value={specialRequest}
-                onChange={(e) => setSpecialRequest(e.target.value)}
+                onChange={(e) => {
+                  setSpecialRequest(e.target.value);
+                  handleChange();
+                }}
                 rows={8}
                 placeholder={
                   `In MiniGo, an identifier is the name used to identify variables, constants, types, functions, or other user-defined elements within a program. Identifiers must adhere to the following rules:\n\n• Composition: An identifier must start with a letter (A-Z or a-z) or an underscore (_). Subsequent characters can include letters, digits (0-9), or underscores.\n• Case Sensitivity: Identifiers are case-sensitive, meaning myVariable and MyVariable are treated as distinct identifiers.\n• Length: There is no explicit limit on the length of an identifier, but it is recommended to use concise yet descriptive names for clarity.\n• Keywords Restriction: Identifiers cannot be the same as any reserved keyword in MiniGo.`
@@ -161,6 +203,7 @@ export function StudentRegister() {
                   }
                   const n = parseFloat(v);
                   if (Number.isFinite(n)) setDesiredScore(n);
+                  handleChange();
                 }}
                 rows={1}
                 placeholder="4.0"
