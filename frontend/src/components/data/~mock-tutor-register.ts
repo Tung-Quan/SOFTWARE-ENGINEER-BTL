@@ -64,8 +64,8 @@ export const mockTutorRegistrations: PastRegistration[] = [
     Name: Names[2], // Ngô Thị Vân
     Email: createFakeEmail(Names[2]),
     subjects: [courseOptions[2]], // Operating System
-    languages: [mockLanguages[1]], // English
-    sessionTypes: [sessionTypeOptions[0]], // Chỉ online
+    languages: [mockLanguages[1], mockLanguages[0]], // English
+    sessionTypes: [sessionTypeOptions[0], sessionTypeOptions[1]], // Chỉ online
     locations: [mockLocations[0], mockLocations[2], mockLocations[3]], // P1, P3, P4
     specialRequest: 'Kinh nghiệm dạy OS, tập trung vào process scheduling và memory management. Chỉ dạy online.',
     status: 'Approved',
