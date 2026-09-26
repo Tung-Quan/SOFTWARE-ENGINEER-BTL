@@ -1,3 +1,7 @@
+import { api } from '@/services/api-client';
+import { createRemoteDataStore } from '@/services/data-store';
+import { getCurrentViewerContext } from '@/services/viewer-context';
+
 import { mockLanguages, mockLocations } from './~mock-register';
 
 // --- Định nghĩa Type ---
@@ -11,6 +15,8 @@ type DropdownOption = {
 // Kiểu dữ liệu cho một yêu cầu tạo môn học của COORDINATOR
 export type CourseCreationRequest = {
   id: string;
+  ownerRole?: 'student' | 'tutor' | 'coordinator' | 'chairman';
+  ownerEmail?: string;
   coordinatorName: string;
   coordinatorEmail: string;
   courseName: string; // Tên môn học mới
@@ -115,3 +121,21 @@ export const mockCourseCreationRequests: CourseCreationRequest[] = [
     updatedAt: '2025-11-09T09:20:00Z',
   },
 ];
+
+/** API-backed course creation request store. */
+export const courseCreationRequestStore = createRemoteDataStore(
+  mockCourseCreationRequests,
+  {
+    list: async () => (await api.getCourseCreationRequests(getCurrentViewerContext())).data.items,
+    create: async (record) => (await api.createCourseCreationRequest({
+      ...getCurrentViewerContext(),
+      item: { ...record, ownerRole: 'coordinator', ownerEmail: record.coordinatorEmail },
+    })).data.item,
+    update: async (id, patch) => (await api.updateCourseCreationRequest({
+      ...getCurrentViewerContext(),
+      requestId: id,
+      patch,
+    })).data.item,
+    remove: async (id) => (await api.deleteCourseCreationRequest(id, getCurrentViewerContext())).data.deleted,
+  },
+);

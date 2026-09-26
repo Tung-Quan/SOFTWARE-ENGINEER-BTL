@@ -2,8 +2,9 @@ import { UserCircleIcon } from '@heroicons/react/24/solid';
 import { Link } from '@tanstack/react-router';
 import React from 'react';
 
-import { getSessionById } from '@/components/data/~mock-session';
+import { sessionStore } from '@/components/data/~mock-session';
 import useLockBodyScroll from '@/hooks/use-lock-body-scroll';
+import { useDataStore } from '@/services/use-data-store';
 
 /**
  * Props cho component ScheduleDetailPopup
@@ -66,8 +67,9 @@ interface ScheduleDetailPopupProps {
  * Component Popup hiển thị chi tiết lịch học
  */
 export function ScheduleDetailPopup({ onClose, position, title, desc, id, isManager }: ScheduleDetailPopupProps) {
-  // Load actual session data from mock store
-  const session = id ? getSessionById(id) : undefined
+  // Load actual session data from the API-backed store
+  const sessions = useDataStore(sessionStore);
+  const session = id ? sessions.find((item) => item.id === id) : undefined
   const sessionMembers = session?.members ?? []
 
   // Format datetime for display

@@ -1,23 +1,16 @@
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from '@tanstack/react-router';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Import dữ liệu giả (điều chỉnh đường dẫn nếu cần)
-import { mockCourses } from '@/components/data/~mock-courses';
+import { courseStore } from '@/components/data/~mock-courses';
 import {
   mockLanguages,
   mockLocations,
   createPastRegistration,
 } from '@/components/data/~mock-register';
+import { useDataStore } from '@/services/use-data-store';
 
-// --- BIẾN ĐỔI SVG THÀNH COMPONENT ---
-
-// SVG cho icon đầu mỗi danh mục
-const SectionIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M15.8333 2.5H4.16667C3.24167 2.5 2.5 3.25 2.5 4.16667V15.8333C2.5 16.75 3.24167 17.5 4.16667 17.5H15.8333C16.75 17.5 17.5 16.75 17.5 15.8333V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5ZM14.1667 10.8333H10.8333V14.1667H9.16667V10.8333H5.83333V9.16667H9.16667V5.83333H10.8333V9.16667H14.1667V10.8333Z" fill="#3D4863" />
-  </svg>
-);
+import { FormDropdown, FormSection, FormTextArea, type DropdownOption } from './tutor-register-form';
 
 // SVG cho Môn học
 const SubjectIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -53,9 +46,10 @@ const LocationIcon = (props: React.SVGProps<SVGSVGElement>) => (
 // === COMPONENT CHÍNH ===
 
 export function StudentRegister() {
+  const courses = useDataStore(courseStore);
   // State cho form
   // Dropdown option arrays for subject and session type (from mock data)
-  const subjectOptions: DropdownOption[] = mockCourses.map((c) => ({ id: c.id, name: `${c.title} (${c.code})` }));
+  const subjectOptions: DropdownOption[] = courses.map((c) => ({ id: c.id, name: `${c.title} (${c.code})` }));
   const [isSaved, setIsSaved] = useState(true);
   const [showSaveStatus, setShowSaveStatus] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -264,104 +258,6 @@ export function StudentRegister() {
           </div>
         </form>
       </main>
-    </div>
-  );
-}
-
-// --- CÁC COMPONENT FORM HELPER ---
-
-// Helper: FormSection
-interface FormSectionProps {
-  title: string;
-  children: React.ReactNode;
-}
-function FormSection({ title, children }: FormSectionProps) {
-  return (
-    <div className="space-y-3">
-      <label className="flex items-center gap-2 text-base font-semibold text-gray-800">
-        <SectionIcon />
-        {title}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-
-// Helper: FormTextArea
-function FormTextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:ring-blue-500"
-      {...props}
-    />
-  );
-}
-
-// Helper: FormDropdown (Dropdown tùy chỉnh)
-interface DropdownOption {
-  id: string;
-  name: string;
-}
-interface FormDropdownProps {
-  icon: React.ReactElement<React.SVGProps<SVGSVGElement>>;
-  options: DropdownOption[];
-  selected: DropdownOption;
-  onSelect: (option: DropdownOption) => void;
-}
-function FormDropdown({ icon, options, selected, onSelect }: FormDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Đóng dropdown khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        type="button"
-        className="relative w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-12 pr-10 text-left text-gray-900 shadow-custom-yellow focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-          {React.cloneElement(icon, { className: "h-5 w-5 text-gray-400" })}
-        </span>
-        <span className="block truncate">{selected.name}</span>
-        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-          <ChevronDownIcon className={`size-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-        </span>
-      </button>
-
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
-          <ul className="py-1">
-            {options.map((option) => (
-              <li
-                key={option.id}
-                className={`cursor-pointer px-4 py-2 text-gray-900 ${option.id === selected.id
-                  ? 'bg-blue-700 text-white'
-                  : 'hover:bg-blue-50'
-                  }`}
-                onClick={() => {
-                  onSelect(option);
-                  setIsOpen(false);
-                }}
-              >
-                {option.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }

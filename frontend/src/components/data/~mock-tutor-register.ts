@@ -1,3 +1,7 @@
+import { api } from '@/services/api-client';
+import { createRemoteDataStore } from '@/services/data-store';
+import { getCurrentViewerContext } from '@/services/viewer-context';
+
 import { mockCourses } from './~mock-courses';
 import { mockLanguages, mockLocations , PastRegistration} from './~mock-register';
 
@@ -73,9 +77,26 @@ export const mockTutorRegistrations: PastRegistration[] = [
   },
 ];
 
+/** API-backed store for tutor registrations. */
+export const tutorRegistrationStore = createRemoteDataStore(
+  mockTutorRegistrations,
+  {
+    list: async () => (await api.getRegistrations({ ...getCurrentViewerContext(), registrationType: 'tutor' })).data.items,
+    create: async (record) => (await api.createRegistration({
+      ...getCurrentViewerContext(),
+      registrationType: 'tutor',
+      item: { ...record, ownerRole: 'tutor', ownerEmail: record.Email },
+    })).data.item,
+    update: async (id, patch) => (await api.updateRegistration({
+      ...getCurrentViewerContext(),
+      registrationType: 'tutor',
+      registrationId: id,
+      patch,
+    })).data.item,
+    remove: async (id) => (await api.deleteRegistration(id, getCurrentViewerContext())).data.deleted,
+  },
+);
+
 export function deleteTutorRegistration(id: string): boolean {
-  const idx = mockTutorRegistrations.findIndex(r => r.id === id);
-  if (idx === -1) return false;
-  mockTutorRegistrations.splice(idx, 1);
-  return true;
+  return tutorRegistrationStore.remove(id);
 }

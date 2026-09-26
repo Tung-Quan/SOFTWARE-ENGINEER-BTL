@@ -1,6 +1,9 @@
 import bgBlue from '@/assets/bg-dashboard-blue.png';
 import bgGreen from '@/assets/bg-dashboard-green.png';
 import bgRed from '@/assets/bg-dashboard-red.png';
+import { api } from '@/services/api-client';
+import { createRemoteDataStore } from '@/services/data-store';
+import type { CourseDetail } from '@/types/course-content';
 
 
 export type Course = {
@@ -193,19 +196,29 @@ export const mockCourses: Course[] = [
     sessionsOrganized: 17,
   },
 ];
-export type DataCourses={
-  id: string,
-  code: string,
-  title: string,
-  instructor: string,
-  content:{
-    id: string,
-    type: string,
-    data: any
-  }[]
-}
 
-export const dataCourses = [
+/** API-backed course catalogue. The local list is only the first paint fallback. */
+export const withCoursePresentation = (serverCourse: Omit<Course, 'bgImage'>): Course => {
+  const localCourse = mockCourses.find((course) => course.id === serverCourse.id);
+
+  return {
+    ...(localCourse ?? mockCourses[0]),
+    ...serverCourse,
+    stats: { ...(localCourse?.stats ?? serverCourse.stats), ...serverCourse.stats },
+    students: serverCourse.students?.length
+      ? serverCourse.students
+      : (localCourse?.students ?? []),
+    bgImage: localCourse?.bgImage ?? bgBlue,
+  };
+};
+
+export const courseStore = createRemoteDataStore(mockCourses, {
+  list: async () =>
+    (await api.getCourses({ viewerRole: 'coordinator' })).data.items.map(withCoursePresentation),
+});
+export type DataCourses = CourseDetail;
+
+export const dataCourses: DataCourses[] = [
   {
     id: '4',
     code: '79748_CO2013_003186_CLC',
@@ -340,6 +353,16 @@ export const dataCourses = [
     ],
   },
 ];
+
+/** API-backed course content store used by the detail/submission screens. */
+export const courseDetailStore = createRemoteDataStore(dataCourses, {
+  list: async () => {
+    const records = await Promise.all(
+      dataCourses.map(async (course) => (await api.getCourseDetail(course.id)).data.detail),
+    );
+    return records;
+  },
+});
 // Mock: số lượng bài đã nộp theo khóa học và submission
 // key: courseId -> key: submission key (tên hoặc id) -> số bài đã nộp
 export const mockSubmissionSubmittedCounts: Record<

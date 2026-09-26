@@ -1,3 +1,7 @@
+import { api } from '@/services/api-client';
+import { createRemoteDataStore } from '@/services/data-store';
+import { getCurrentViewerContext } from '@/services/viewer-context';
+
 import { mockCourses } from './~mock-courses';
 import { NAMES_POOL } from './~mock-names';
 
@@ -20,7 +24,7 @@ export const mockLocations = [
 // --- Định nghĩa Type ---
 
 // Kiểu dữ liệu cho các tùy chọn dropdown
-type DropdownOption = {
+export type DropdownOption = {
   id: string;
   name: string;
 };
@@ -28,6 +32,8 @@ type DropdownOption = {
 // Kiểu dữ liệu cho một đơn đăng ký của GIA SƯ
 export type PastRegistration = {
   id: string;
+  ownerRole?: 'student' | 'tutor' | 'coordinator' | 'chairman';
+  ownerEmail?: string;
   Name: string;
   Email: string;
   subjects: DropdownOption[]; // Danh sách các môn học (từ mockCourses)
@@ -122,6 +128,26 @@ export const mockPastRegistrations: PastRegistration[] = [
   }
 ];
 
+/** API-backed store replacing direct writes to mockPastRegistrations. */
+export const pastRegistrationStore = createRemoteDataStore(
+  mockPastRegistrations,
+  {
+    list: async () => (await api.getRegistrations({ ...getCurrentViewerContext(), registrationType: 'student' })).data.items,
+    create: async (record) => (await api.createRegistration({
+      ...getCurrentViewerContext(),
+      registrationType: 'student',
+      item: { ...record, ownerRole: 'student', ownerEmail: record.Email },
+    })).data.item,
+    update: async (id, patch) => (await api.updateRegistration({
+      ...getCurrentViewerContext(),
+      registrationType: 'student',
+      registrationId: id,
+      patch,
+    })).data.item,
+    remove: async (id) => (await api.deleteRegistration(id, getCurrentViewerContext())).data.deleted,
+  },
+);
+
 // --- Helpers to create new registrations ---
 /**
  * Create and store a new PastTutorRegistration.
@@ -150,13 +176,9 @@ export function createPastRegistration(input: Partial<PastRegistration> & {
     status: 'Pending',
     createdAt: new Date().toISOString(),
   };
-  mockPastRegistrations.unshift(record);
-  return record;
+  return pastRegistrationStore.create(record);
 }
 
 export function deletePastRegistration(id: string): boolean {
-  const idx = mockPastRegistrations.findIndex(r => r.id === id);
-  if (idx === -1) return false;
-  mockPastRegistrations.splice(idx, 1);
-  return true;
+  return pastRegistrationStore.remove(id);
 }
